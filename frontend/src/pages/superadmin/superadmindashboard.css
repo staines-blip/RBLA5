@@ -1,11 +1,11 @@
 :root {
-  --dark-bg: #1a1c23;
-  --card-bg: #24262d;
-  --text-primary: #ffffff;
-  --text-secondary: #9ea3b5;
-  --accent-red: #ff4757;
+  --dark-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --accent-red: #dc3545;
   --accent-blue: #2196f3;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(0, 0, 0, 0.1);
 }
 
 .dashboard {
