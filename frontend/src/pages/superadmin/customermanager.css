@@ -1,16 +1,18 @@
+/* Global Styles */
 .customer-manager {
   padding: 24px;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  min-height: calc(100vh - 48px);
+  min-height: 100vh;
   animation: gradientShift 15s ease infinite;
 }
 
+
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
+  0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -26,21 +28,14 @@
 }
 
 @keyframes slideDown {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .header h1 {
   font-size: 28px;
   font-weight: 600;
   color: #2563eb;
-  margin: 0;
   position: relative;
   padding-bottom: 8px;
 }
@@ -62,6 +57,7 @@
   50% { width: 80px; }
 }
 
+/* Search and Actions */
 .actions {
   display: flex;
   gap: 16px;
@@ -74,8 +70,8 @@
   border-radius: 8px;
   width: 300px;
   font-size: 14px;
-  transition: all 0.3s ease;
   background: #f9fafb;
+  transition: all 0.3s ease;
 }
 
 .search-input:focus {
@@ -85,6 +81,7 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+/* Add Customer & Cancel Buttons */
 .actions button {
   padding: 12px 24px;
   background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
@@ -100,28 +97,34 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-}
-
-.actions button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: 0.5s;
-}
-
-.actions button:hover::before {
-  left: 100%;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
 .actions button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.5);
+  animation: pulseShadow 1s infinite alternate;
 }
 
+@keyframes pulseShadow {
+  from { box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+  to { box-shadow: 0 8px 25px rgba(37, 99, 235, 0.6); }
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+}
+
+.cancel-btn:hover {
+  animation: pulseShadowRed 1s infinite alternate;
+}
+
+@keyframes pulseShadowRed {
+  from { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+  to { box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6); }
+}
+
+/* Table */
 .table-container {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
@@ -133,18 +136,23 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-tr {
-  transition: all 0.3s ease;
+/* Proper spacing in table */
+th, td {
+  padding: 16px 24px; /* Increased padding for more space */
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #1f2937;
+  text-align: left;
+}
+
+th {
+  background: #f8fafc;
+  color: #4b5563;
+  font-weight: 600;
 }
 
 tr:hover td {
@@ -152,108 +160,30 @@ tr:hover td {
   transform: scale(1.01);
 }
 
-th {
-  text-align: left;
-  padding: 16px;
-  background: #f8fafc;
-  color: #4b5563;
-  font-weight: 600;
-  font-size: 14px;
-  border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;
-}
+/* Badges */
+.status.active { background: linear-gradient(135deg, #4ade80, #22c55e); color: white; }
+.status.inactive { background: linear-gradient(135deg, #f87171, #ef4444); color: white; }
+.store.varnam { background: linear-gradient(135deg, #60a5fa, #3b82f6); color: white; }
 
-td {
-  padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
-  color: #1f2937;
-  transition: background-color 0.3s ease;
-}
-
-.status, .store, .customer-type {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  text-transform: capitalize;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
-}
-
-.status:hover, .store:hover, .customer-type:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Store badges with gradients */
-.store.varnam {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  color: white;
-}
-
-.store.sirugugal {
-  background: linear-gradient(135deg, #c084fc 0%, #8b5cf6 100%);
-  color: white;
-}
-
-.store.vaagai {
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  color: white;
-}
-
-/* Customer type badges with gradients */
-.customer-type.buyer {
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-  color: white;
-}
-
-.customer-type.vendor {
-  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-  color: white;
-}
-
-/* Status badges with gradients */
-.status.active {
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  color: white;
-}
-
-.status.inactive {
-  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-  color: white;
-}
-
+/* Buttons */
 .edit-btn, .delete-btn {
   padding: 8px 16px;
-  border: none;
   border-radius: 6px;
-  margin-right: 8px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
 }
 
-.edit-btn {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  color: white;
-}
-
-.delete-btn {
-  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-  color: white;
-}
+.edit-btn { background: linear-gradient(135deg, #60a5fa, #3b82f6); color: white; }
+.delete-btn { background: linear-gradient(135deg, #f87171, #ef4444); color: white; }
 
 .edit-btn:hover, .delete-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Modal */
 .modal {
   position: fixed;
   top: 0;
@@ -269,221 +199,49 @@ td {
   animation: modalFadeIn 0.3s ease-out;
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    backdrop-filter: blur(0);
-  }
-  to {
-    opacity: 1;
-    backdrop-filter: blur(8px);
-  }
-}
-
 .modal-content {
   background: white;
   padding: 32px;
   border-radius: 16px;
   width: 600px;
   max-width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   animation: modalSlideUp 0.3s ease-out;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 }
+/* Column Spacing for Full Screen */
+th:nth-child(1), td:nth-child(1) { width: 15%; } /* Name */
+th:nth-child(2), td:nth-child(2) { width: 15%; } /* Email */
+th:nth-child(3), td:nth-child(3) { width: 15%; } /* Phone */
+th:nth-child(4), td:nth-child(4) { width: 15%; } /* Store */
+th:nth-child(5), td:nth-child(5) { width: 15%; } /* Type */
+th:nth-child(6), td:nth-child(6) { width: 15%; } /* Orders */
+th:nth-child(7), td:nth-child(7) { width: 15%; } /* Status */
+th:nth-child(8), td:nth-child(8) { width: 15%; } /* Action */
 
-@keyframes modalSlideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
+th {
+  background: #f8fafc;
   color: #4b5563;
+  font-weight: 600;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  background: #f9fafb;
+tr:hover td {
+  background: rgba(37, 99, 235, 0.05);
+  transform: scale(1.01);
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #2563eb;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  transform: translateY(-1px);
-}
+/* Status Badges */
+.status.active { background: linear-gradient(135deg, #4ade80, #22c55e); color: white; }
+.status.inactive { background: linear-gradient(135deg, #f87171, #ef4444); color: white; }
 
-.form-group textarea {
-  height: 120px;
-  resize: vertical;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.modal-actions button {
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.modal-actions button[type="submit"] {
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-  background-size: 200% 100%;
-  animation: rainbow 6s linear infinite;
-  color: white;
-  border: none;
-}
-
-@keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.modal-actions button[type="button"] {
-  background: #f3f4f6;
-  color: #4b5563;
-  border: none;
-}
-
-.modal-actions button[type="button"]:hover {
-  background: #e5e7eb;
-  color: #1f2937;
-}
-
-.loading {
-  text-align: center;
-  padding: 48px;
-  color: #6b7280;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.loading::after {
-  content: '';
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  border: 3px solid #e5e7eb;
-  border-radius: 50%;
-  border-top-color: #2563eb;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive adjustments */
+/* Responsive Design */
 @media (max-width: 1024px) {
-  .header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .search-input {
-    width: 100%;
-  }
+  .header { flex-direction: column; gap: 16px; align-items: stretch; }
+  .actions { flex-direction: column; }
+  .search-input { width: 100%; }
 }
 
 @media (max-width: 768px) {
-  .table-container {
-    overflow-x: auto;
-  }
-
-  table {
-    min-width: 800px;
-  }
-}
-
-/* Pulse animation for important elements */
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
-  }
-}
-
-.actions button:focus {
-  animation: pulse 1.5s infinite;
-}
-
-/* Floating animation for cards */
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.table-container {
-  animation: float 6s ease-in-out infinite;
+  .table-container { overflow-x: auto; }
+  table { min-width: 800px; }
 }
