@@ -11,12 +11,11 @@ import Workers from './pages/superadmin/workers';
 import CustomerManager from './pages/superadmin/customermanager';
 
 axios.defaults.baseURL = 'http://localhost:5000';
-// admin routes and the superadmin routes are changed and implemented here and the starting point og 
-// the project is the User Login page inside the pages directory
+
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="App"> 
+      <div className="App">
         <Routes>
           {/* Set UserLogin as the landing page */}
           <Route path="/" element={<UserLogin />} />
