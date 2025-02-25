@@ -1,0 +1,30 @@
+GIT 
+Overall Progress
+
+
+
+User Modules 
+Backend -- ##
+Frontend - Work done but many improvements Needed  50% Complete
+----
+
+
+
+Admin Modules (8-9 ) ##Finished 
+Backend
+-Work Started 
+Dashboard Work Started 
+Product Module First Starting 
+Frontend 
+-##
+
+
+SuperAdmin Modules(8-9) 3 Finished 
+Backend Finished 
+1.WORKERS
+2.UNITS 
+3.CUSTOMERS 
+Frontend Finished 
+1.WORKERS
+2.UNITS 
+3.CUSTOMERS 
