@@ -1,0 +1,171 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.contact-us {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Contact Banner */
+.contact-banner {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Dark Overlay Effect */
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  text-align: center;
+  color: white;
+  width: 100%;
+}
+
+/* Heading Style */
+.overlay h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Breadcrumbs and Logo */
+.overlay p {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.overlay a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Contact Banner Logo */
+.contactba-logo {
+  width: 40px;
+  height: auto;
+}
+
+/* Contact Icons */
+.contact-icons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.contact-icons img {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease-in-out;
+  filter: brightness(0) invert(1);
+}
+
+.contact-icons img:hover {
+  transform: scale(1.1);
+}
+
+/* Contact Form Section */
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 40px 20px;
+}
+
+.contact-form,
+.contact-info {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 45%;
+  min-width: 300px;
+  margin-bottom: 20px;
+}
+
+.contact-form .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.contact-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #c50227;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #c50227;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: #a0021f;
+  transform: scale(1.05);
+}
+
+/* Contact Information Section */
+.contact-info h2 {
+  font-size: 1.8rem;
+  color: #c50227;
+  margin-bottom: 15px;
+}
+
+.contact-info p {
+  font-size: 1rem;
+  color: #555;
+  margin: 5px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-container {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .contact-form,
+  .contact-info {
+      width: 90%;
+  }
+}
