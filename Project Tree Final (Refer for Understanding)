@@ -5,7 +5,7 @@
 RBLA2
 ├─ backend
 │  ├─ .env
-│  ├─ conection string.txt
+│  ├─ connection string.txt
 │  ├─ controllers
 │  │  ├─ admin               # Admin-specific controllers
 │  │  │  ├─ OrderController.js

@@ -1,0 +1,142 @@
+.user-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2196F3 0%, #3F51B5 100%);
+    padding: 20px;
+  }
+  
+  .login-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+  
+  .business-logo {
+    margin-bottom: 30px;
+  }
+  
+  .business-logo img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+  
+  .business-logo h2 {
+    color: #1976D2;
+    font-size: 28px;
+    margin: 0 0 15px 0;
+  }
+  
+  .organization-desc {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+    text-align: justify;
+    padding: 0 10px;
+  }
+  
+  .welcome-section {
+    margin-bottom: 30px;
+  }
+  
+  .welcome-section h1 {
+    color: #1976D2;
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .welcome-section p {
+    color: #666;
+    font-size: 16px;
+  }
+  
+  .login-form {
+    text-align: left;
+    margin-bottom: 25px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #f5f5f5;
+  }
+  
+  .form-group input:focus {
+    border-color: #1976D2;
+    background: white;
+    outline: none;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+  
+  .forgot-password {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+  
+  .forgot-password:hover {
+    color: #1976D2;
+    text-decoration: underline;
+  }
+  
+  .login-type-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .type-button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 160px;
+  }
+  
+  .admin-btn {
+    background: #2196F3;
+    color: white;
+  }
+  
+  .admin-btn:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .superadmin-btn {
+    background: #3F51B5;
+    color: white;
+  }
+  
+  .superadmin-btn:hover {
+    background: #303F9F;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  

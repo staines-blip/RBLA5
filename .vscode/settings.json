@@ -1,6 +1,22 @@
 {
     "postman.settings.dotenv-detection-notification-visibility": false,
     "cSpell.words": [
+        "adminmiddleware",
+        "adminroutes",
+        "createsuperadmin",
+        "customermanager",
+        "customermiddleware",
+        "customerroutes",
+        "doucment",
+        "RBLA",
+        "superadminauthroutes",
+        "superadmincontroller",
+        "superadmindashboard",
+        "superadminlogin",
+        "superadminmiddleware",
+        "superadminroutes",
+        "treee",
+        "workercontroller",
         "workersapi"
     ]
 }
