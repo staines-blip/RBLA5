@@ -4,11 +4,11 @@ import './UserLogin.css';
 
 const UserLogin = () => {
   const navigate = useNavigate();
-
+/* this is the user admin login file*/
   const handleAdminLogin = () => {
     navigate('/admin/login');
   };
-
+/* this is the user handling the admin  file*/
   const handleSuperAdminLogin = () => {
     navigate('/superadmin/login');
   };

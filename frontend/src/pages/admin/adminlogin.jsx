@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './adminlogin.css';
-
+// admin login module and their parts
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
-
+// handling the inputchange in the admin module 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -21,7 +21,7 @@ const AdminLogin = () => {
     // TODO: Implement admin login logic
     console.log('Admin login attempt:', formData);
   };
-
+// from this is going to be the login container 
   return (
     <div className="admin-login-container">
       <div className="stars"></div>
@@ -31,7 +31,7 @@ const AdminLogin = () => {
         <div className="mountain mountain-3"></div>
         <div className="mountain mountain-4"></div>
       </div>
-      
+    
       <div className="login-card">
         <div className="header-section">
           <h1>HELLO & WELCOME</h1>
