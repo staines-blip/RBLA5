@@ -183,13 +183,11 @@ tr:hover td {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Modal */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -197,18 +195,99 @@ tr:hover td {
   z-index: 1000;
   backdrop-filter: blur(8px);
   animation: modalFadeIn 0.3s ease-out;
+  width: 100vw;
+  height: 100vh;
 }
+
+/* addcustomer.css */
 
 .modal-content {
   background: white;
-  padding: 32px;
-  border-radius: 16px;
-  width: 600px;
-  max-width: 90%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  animation: modalSlideUp 0.3s ease-out;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 25px;
+  border-radius: 10px;
+  width: 450px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  font-family: Arial, sans-serif;
 }
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.add-btn {
+  background: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-btn:hover {
+  background: #0056b3;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn:hover {
+  background: #b02a37;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    padding: 24px;
+  }
+}
+
 /* Column Spacing for Full Screen */
 th:nth-child(1), td:nth-child(1) { width: 15%; } /* Name */
 th:nth-child(2), td:nth-child(2) { width: 15%; } /* Email */
