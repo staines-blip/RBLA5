@@ -1,9 +1,6 @@
 import React, { useState, lazy, Suspense } from 'react';
 import axios from 'axios';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import Marquee from './pages/Marquee';
 import Chatbot from './components/Chatbot/Chatbot';
 import { WishlistProvider } from "./Context/WishlistContext";
 import { CartProvider } from "./Context/CartContext";
@@ -95,8 +92,7 @@ const App = () => {
     <WishlistProvider>
       <CartProvider>
         <BrowserRouter>
-          <Header />
-          <Marquee />
+          
           <div className="App">
             <Routes>
               {/* Home route */}
@@ -136,7 +132,7 @@ const App = () => {
               } />
             </Routes>
           </div>
-          <Footer />
+          
           <Chatbot />
         </BrowserRouter>
       </CartProvider>

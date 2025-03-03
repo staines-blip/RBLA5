@@ -4,6 +4,8 @@ import './Bags.css';
 import { WishlistContext } from '../WishlistContext'; // Wishlist context
 import { CartContext } from '../CartContext'; // Cart context
 import Header from '../components/Header/Header'; // Corrected import path
+import Footer from '../components/Footer/Footer';
+import Marquee from './Marquee';
 
 
 
@@ -45,8 +47,11 @@ const Bags = () => {
   };*/
 
   return (
+  
+    
     <div className="bags-container">
-   
+    <Header/>
+    <Marquee/>
 
       <h1>Welcome to the bags Collection!</h1>
 
@@ -125,6 +130,7 @@ const Bags = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

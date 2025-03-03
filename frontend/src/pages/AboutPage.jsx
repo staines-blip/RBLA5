@@ -12,6 +12,9 @@ import about1 from "../components/Assets/about1.png";
 import about3 from "../components/Assets/about3.png";
 import vaalogo from "../components/Assets/vaalogo.png";
 import sirlogo from "../components/Assets/sirlogo.png";
+import Header from "../components/Header/Header";
+import Marquee from "./Marquee";
+import Footer from "../components/Footer/Footer";
 
 const AboutPage = () => {
   const navigate = useNavigate();
@@ -35,6 +38,9 @@ const AboutPage = () => {
   };
 
   return (
+    <>
+    <Header/>
+    <Marquee/>
     <div className="about-page">
       {/* Header */}
       <header className="about-header">
@@ -125,7 +131,9 @@ const AboutPage = () => {
       <footer className="about-footer">
         <p>&copy; 2025 Your Company. All rights reserved.</p>
       </footer>
+      <Footer/>
     </div>
+    </>
   );
 };
 

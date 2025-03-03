@@ -9,6 +9,9 @@ import './Cupcoaster.css';
 import { WishlistContext } from '../WishlistContext'; // Wishlist context
 import { CartContext } from '../CartContext'; // Cart context
 import { Link } from 'react-router-dom';
+import Header from '../components/Header/Header';
+import Marquee from './Marquee';
+import Footer from '../components/Footer/Footer';
 
 const Cupcoaster = () => {
   // Access context values
@@ -44,6 +47,8 @@ const Cupcoaster = () => {
 
   return (
     <div>
+      <Header/>
+      <Marquee/>
       <h1>Welcome to the Cup Coasters category page!</h1>
       <div className="container">
         {cupcoaster.map((coaster) => (
@@ -82,6 +87,7 @@ const Cupcoaster = () => {
         <center>Click Here</center> 
         <span className="tooltip">Customize Your Own Product</span>
       </Link>
+      <Footer/>
     </div>
   );
 };

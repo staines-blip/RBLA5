@@ -20,6 +20,8 @@ import v15 from "../components/Assets/v15.png";
 import v16 from "../components/Assets/v16.png";
 
 
+
+
 const Varnam = () => {
   const navigate = useNavigate(); // React Router navigation hook
   const [showMore, setShowMore] = useState(false);
@@ -54,6 +56,7 @@ const Varnam = () => {
 
   return (
     <div className="varnam-page">
+
       {/* Header */}
       <header className="varnam-header" style={{ backgroundImage: `url(${v6})` }}>
         <div className="header-overlay">
@@ -138,7 +141,9 @@ const Varnam = () => {
       <footer className="varnam-footer">
         <p>&copy; 2025 Varnam Unit. All rights reserved.</p>
       </footer>
+    
     </div>
+  
   );
 };
 

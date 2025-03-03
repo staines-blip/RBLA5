@@ -4,6 +4,8 @@ import './Towels.css';
 import { WishlistContext } from '../WishlistContext'; // Wishlist context
 import { CartContext } from '../CartContext'; // Cart context
 import Header from '../components/Header/Header'; // Corrected import path
+import Footer from '../components/Footer/Footer';
+import Marquee from './Marquee';
 
 /*const bedsheets = [
   { id: 1, name: 'Floral Bedsheet', image: B1_img, new_price: 50.0, old_price: 65.0 },
@@ -53,7 +55,8 @@ const Towels = () => {
 
   return (
     <div className="Towels-container">
-    
+    <Header/>
+    <Marquee/>
 
       <h1>Welcome to the Towels Collection!</h1>
 
@@ -132,6 +135,7 @@ const Towels = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

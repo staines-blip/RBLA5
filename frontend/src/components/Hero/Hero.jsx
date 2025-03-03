@@ -3,9 +3,15 @@ import './Hero.css';
 import user from '../Assets/user.png'; // Ensure the image exists
 import home from '../Assets/home.png'; // Ensure the image exists
 import logo from '../Assets/logo.png'; // Ensure the image exists
+import Header from '../Header/Header';
+import Marquee from '../../pages/Marquee';
+import Footer from '../Footer/Footer';
 
 export const Hero = () => {
   return (
+    <>
+    <Header/>
+    <Marquee/>
     <div className="hero">
       <div className="hero-left">
         <h2>NEW ARRIVALS ONLY</h2>
@@ -26,5 +32,7 @@ export const Hero = () => {
         <img src={logo} alt="Logo" className="hero-logo" />
       </div>
     </div>
+    <Footer/>
+</>
   );
 };

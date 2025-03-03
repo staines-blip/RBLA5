@@ -4,11 +4,13 @@ import "./Vaagai.css";
 import vaalogo from "../components/Assets/vaalogo.png"; // Adjust the path if needed
 
 
+
 const Vaagai = () => {
   const navigate = useNavigate(); // React Router navigation hook
 
   return (
     <div className="vaagai-page">
+      
       {/* Header */}
       <header className="vaagai-header">
         <img src={vaalogo} alt="Vaagai Logo" className="vaagai-logo" />
@@ -51,6 +53,7 @@ const Vaagai = () => {
       <footer className="vaagai-footer">
         <p>&copy; 2025 Vaagai Unit. All rights reserved.</p>
       </footer>
+    
     </div>
   );
 };

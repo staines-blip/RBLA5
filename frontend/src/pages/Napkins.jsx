@@ -8,6 +8,9 @@ import N5_img from '../components/Assets/N5.png';
 import './Napkins.css';
 import { WishlistContext } from '../WishlistContext'; // Wishlist context
 import { CartContext } from '../CartContext'; // Cart context
+import Header from '../components/Header/Header';
+import Marquee from './Marquee';
+import Footer from '../components/Footer/Footer';
 
 
 const napkins = [
@@ -33,7 +36,8 @@ const Napkins = () => {
 
   return (
     <div>
-     
+     <Header/>
+     <Marquee/>
       <h1>Welcome to the Napkins category page!</h1>
       <div className="container">
         {napkins.map((napkin) => (
@@ -65,7 +69,7 @@ const Napkins = () => {
           </div>
         ))}
       </div>
-      
+      <Footer/>
     </div>
   );
 };

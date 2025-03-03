@@ -5,6 +5,9 @@ import './Bedsheets.css';
 //import { CartContext } from '../CartContext'; // Cart context
 import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import Marquee from './Marquee';
 
 
 const Bedsheets = () => {
@@ -39,6 +42,9 @@ const Bedsheets = () => {
   const isInWishlist = (product) => wishlist.some((item) => item.productid === product.productid);
   const isInCart = (product) => cart.some((item) => item.productid === product.productid);
   return (
+    <>
+    <Header/>
+    <Marquee/>
     <div className="bedsheets-container">
 
 
@@ -122,6 +128,8 @@ const Bedsheets = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

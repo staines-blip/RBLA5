@@ -4,6 +4,7 @@ import "./siragugal.css"; // Update to the correct CSS file for Siragugal
 import siragugalLogo from "../components/Assets/sirlogo.png"; // Adjust the path if needed
 
 
+
 const Siragugal = () => {
   const navigate = useNavigate(); // React Router navigation hook
   const [showMore, setShowMore] = useState(false);
@@ -15,6 +16,7 @@ const Siragugal = () => {
 
   return (
     <div className="siragugal-page">
+      
       {/* Header */}
       <header className="siragugal-header">
         <img src={siragugalLogo} alt="Siragugal Logo" className="siragugal-logo" />
