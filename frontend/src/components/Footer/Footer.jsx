@@ -46,7 +46,7 @@ const Footer = () => {
         <div className="footer-country">
           <button>English</button>
           <button>India</button>
-          <Link to="/superadmin/login" className="superadmin-link">Superadmin Login</Link>
+          <Link to="/UserLogin" className="superadmin-link">super/admin login</Link>
         </div>
       </div>
     </footer>
