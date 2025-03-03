@@ -52,6 +52,23 @@
   text-decoration: underline;
 }
 
+/* Superadmin Login Link Styles */
+.superadmin-link {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.superadmin-link:hover {
+  background-color: rgb(216, 132, 241);
+  color: white;
+  text-decoration: none;
+}
+
 /* Footer Bottom Section */
 .footer-bottom {
   display: flex;
