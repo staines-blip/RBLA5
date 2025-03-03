@@ -16,17 +16,34 @@ const SuperadminLogin = () => {
     setError('');
 
     try {
+      console.log('Attempting login...'); // Debug log
       const response = await axios.post(
         'http://localhost:5000/api/superadmin/login',
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
 
+      console.log('Login response:', response.data); // Debug log
+
       if (response.data.token) {
-        localStorage.setItem('superadminToken', response.data.token);
+        // Clear any existing tokens
+        localStorage.clear();
+        
+        // Store the new token
+        localStorage.setItem('token', response.data.token);
+        
+        console.log('Token stored:', response.data.token); // Debug log
+        
+        // Store superadmin info if needed
+        if (response.data.superadmin) {
+          localStorage.setItem('superadmin', JSON.stringify(response.data.superadmin));
+        }
+
+        // Navigate to dashboard
         navigate('/superadmin/dashboard');
       }
     } catch (err) {
+      console.error('Login error:', err.response?.data || err.message); // Debug log
       setError(
         err.response?.data?.message || 'Invalid credentials or server error. Please try again.'
       );

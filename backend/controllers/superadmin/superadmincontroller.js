@@ -1,47 +1,62 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const SuperAdmin = require('../../models/superadmin');
 require('dotenv').config();
 
 const loginSuperadmin = async (req, res) => {
-  console.log('Login attempt received:', req.body);
-  const { username, password } = req.body;
-
   try {
-    console.log('Looking for superadmin with username:', username);
-    const superadmin = await SuperAdmin.findOne({ username });
-    console.log('Superadmin found:', superadmin ? 'Yes' : 'No');
+    const { username, password } = req.body;
 
+    // Check if username and password are provided
+    if (!username || !password) {
+      return res.status(400).json({ 
+        message: 'Please provide both username and password' 
+      });
+    }
+
+    // Find superadmin by username
+    const superadmin = await SuperAdmin.findOne({ username }).select('+password');
     if (!superadmin) {
-      return res.status(400).json({ message: 'Superadmin not found' });
+      return res.status(401).json({ 
+        message: 'Invalid credentials' 
+      });
     }
 
-    console.log('Checking password...');
-    const isMatch = await bcrypt.compare(password, superadmin.password);
-    console.log('Password match:', isMatch);
-
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid password' });
+    // Check if account is active
+    if (!superadmin.isActive) {
+      return res.status(403).json({ 
+        message: 'Your account has been deactivated' 
+      });
     }
 
-    console.log('Generating token...');
-    console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
-    
+    // Verify password
+    const isPasswordValid = await superadmin.matchPassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ 
+        message: 'Invalid credentials' 
+      });
+    }
+
+    // Generate JWT token
     const token = jwt.sign(
       { superadminId: superadmin._id },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' } // Token expires in 1 day
     );
 
-    console.log('Token generated successfully');
-    res.status(200).json({ message: 'Login successful', token });
-  } catch (err) {
-    console.error('Login error:', {
-      name: err.name,
-      message: err.message,
-      stack: err.stack
+    // Send response
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      superadmin: {
+        id: superadmin._id,
+        username: superadmin.username
+      }
     });
-    res.status(500).json({ message: 'Server error', error: err.message });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      message: 'An error occurred during login' 
+    });
   }
 };
 

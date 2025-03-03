@@ -49,6 +49,7 @@ const SuperAdminPages = {
   Dashboard: lazy(() => import('./pages/superadmin/superadmindashboard')),
   Workers: lazy(() => import('./pages/superadmin/workers')),
   CustomerManager: lazy(() => import('./pages/superadmin/customermanager')),
+  AdminRegistration: lazy(() => import('./pages/superadmin/adminregistration')),
 };
 
 const CheckoutPages = {
@@ -128,6 +129,9 @@ const App = () => {
               <Route path="/superadmin/admins" element={<div>Admins Page</div>} />
               <Route path="/superadmin/products" element={<div>Products Page</div>} />
               <Route path="/superadmin/units" element={<div>Units Page</div>} />
+              <Route path="/superadmin/adminregistration" element={
+                <Suspense fallback={<LoadingFallback />}><SuperAdminPages.AdminRegistration /></Suspense>
+              } />
               
               {/* Admin Panel with props */}
               <Route path="/adminpanel" element={

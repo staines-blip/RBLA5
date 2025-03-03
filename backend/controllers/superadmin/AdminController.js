@@ -1,32 +1,36 @@
-const User = require('../../models/User');
+const Admin = require('../../models/admin'); // Updated to use the Admin model
 
 // Create Admin
 exports.createAdmin = async (req, res) => {
   try {
-    const { name, email, password, unitId } = req.body;
+    const { name, email, phoneNumber, username, password, storeName, aadharNumber } = req.body;
 
     // Check for required fields
-    if (!name || !email || !password || !unitId) {
+    if (!name || !email || !phoneNumber || !username || !password || !storeName || !aadharNumber) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+    // Check if admin already exists (by email, username, or aadharNumber)
+    const existingAdmin = await Admin.findOne({
+      $or: [{ email }, { username }, { aadharNumber }],
+    });
+    if (existingAdmin) {
+      return res.status(400).json({ message: 'Admin with this email, username, or Aadhar number already exists' });
     }
 
-    // Create admin user
-    const adminUser = new User({
+    // Create admin
+    const admin = new Admin({
       name,
       email,
-      password,
-      role: 'admin',
-      unitId,
+      phoneNumber,
+      username,
+      password, // Will be hashed automatically by the model
+      storeName,
+      aadharNumber,
     });
 
-    await adminUser.save();
-    res.status(201).json({ message: 'Admin created successfully', adminUser });
+    await admin.save();
+    res.status(201).json({ message: 'Admin created successfully', admin });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -36,12 +40,13 @@ exports.createAdmin = async (req, res) => {
 exports.updateAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, unitId } = req.body;
+    const { name, email, phoneNumber, username, storeName, aadharNumber } = req.body;
 
-    const updatedAdmin = await User.findByIdAndUpdate(
+    // Find and update admin
+    const updatedAdmin = await Admin.findByIdAndUpdate(
       id,
-      { name, email, unitId },
-      { new: true, runValidators: true }
+      { name, email, phoneNumber, username, storeName, aadharNumber },
+      { new: true, runValidators: true } // Returns the updated document and runs schema validators
     );
 
     if (!updatedAdmin) {
@@ -59,9 +64,12 @@ exports.deleteAdmin = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const adminUser = await User.findByIdAndUpdate(id, { isDeleted: true });
+    // Hard delete (or soft delete if you prefer)
+    const admin = await Admin.findByIdAndDelete(id); // Changed to hard delete
+    // For soft delete, uncomment below and add `isDeleted` to the Admin model
+    // const admin = await Admin.findByIdAndUpdate(id, { isDeleted: true });
 
-    if (!adminUser) {
+    if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });
     }
 

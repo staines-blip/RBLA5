@@ -7,6 +7,7 @@ import './superadmindashboard.css';
 const Workers = lazy(() => import('../../pages/superadmin/workers'));
 const Units = lazy(() => import('../../pages/superadmin/Units'));
 const CustomerManager = lazy(() => import('../../pages/superadmin/customermanager'));
+const AdminRegistration = lazy(() => import('../../pages/superadmin/adminregistration'));
 
 // Sample data for charts
 const monthlyData = [
@@ -157,7 +158,7 @@ const SuperAdminDashboard = () => {
           <li><button className={selectedSection === 'home' ? 'active' : ''} onClick={() => setSelectedSection('home')}>Dashboard</button></li>
           <li><button className={selectedSection === 'workers' ? 'active' : ''} onClick={() => setSelectedSection('workers')}>Workers</button></li>
           <li><button className={selectedSection === 'units' ? 'active' : ''} onClick={() => setSelectedSection('units')}>Units</button></li>
-          <li><button disabled>Admins</button></li>
+          <li><button className={selectedSection === 'admin' ? 'active' : ''} onClick={() => setSelectedSection('admin')}>Admins</button></li>
           <li><button disabled>Products</button></li>
           <li><button className={selectedSection === 'customers' ? 'active' : ''} onClick={() => setSelectedSection('customers')}>Customers</button></li>
           <li><button disabled>Vendors</button></li>
@@ -172,6 +173,7 @@ const SuperAdminDashboard = () => {
           {selectedSection === 'workers' && <Workers />}
           {selectedSection === 'units' && <Units />}
           {selectedSection === 'customers' && <CustomerManager />}
+          {selectedSection === 'admin' && <AdminRegistration />}
         </Suspense>
       </main>
     </div>

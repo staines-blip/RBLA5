@@ -9,6 +9,7 @@ const superadminRoutes = require('./routes/superadmin');
 const superadminAuthRoutes = require('./routes/superadminauthroutes');
 const unitRoutes = require('./routes/unitRoutes');
 const customerRoutes = require('./routes/superadmin/customerRoutes');
+const adminRoutes = require('./routes/superadmin/admins');
 
 // Load environment variables
 dotenv.config();
@@ -38,13 +39,14 @@ app.get('/', (req, res) => {
   res.send('Welcome to the NGO Products API!');
 });
 
-// API Routes
+// API Routes of all the files 
 app.use('/api/products', productRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/superadmin', superadminRoutes);
 app.use('/api/superadmin', superadminAuthRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/superadmin/customers', customerRoutes);
+app.use('/api/superadmin/admins', adminRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
