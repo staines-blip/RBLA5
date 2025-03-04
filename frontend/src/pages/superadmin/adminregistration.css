@@ -1,148 +1,142 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .header h1 {
-    color: #1a237e;
-    margin-bottom: 0.5rem;
-  }
-  
-  .header p {
-    color: #666;
-  }
-  
-  .error-message {
-    background-color: #ffebee;
-    color: #c62828;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #ffcdd2;
-  }
-  
-  .success-message {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-    border: 1px solid #c8e6c9;
-  }
-  
-  #adminForm {
-    display: flex;
+/* General Styles */
+body, html {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Full-Screen Background Container */
+.full-screen-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Centered Form Container */
+.container {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* Title & Description */
+h2 {
+  margin-bottom: 5px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #192a56;
+}
+
+p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Required Asterisk */
+label span {
+  color: red;
+}
+
+/* Input Fields */
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: 0.3s ease-in-out;
+  background: #fff;
+}
+
+/* Input Focus Effect */
+input:focus,
+select:focus {
+  border-color: #3279e2;
+  outline: none;
+  box-shadow: 0 0 5px rgba(50, 121, 226, 0.4);
+}
+
+/* Two Column Layout for Email & Phone */
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.input-group input {
+  width: 100%;
+}
+
+/* Make fields stack on small screens */
+@media (max-width: 500px) {
+  .input-group {
     flex-direction: column;
-    gap: 1.5rem;
   }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  
-  label {
-    font-weight: 500;
-    color: #333;
-  }
-  
-  label.required::after {
-    content: '*';
-    color: #f44336;
-    margin-left: 4px;
-  }
-  
-  input, select {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  
-  input:focus, select:focus {
-    outline: none;
-    border-color: #1a237e;
-  }
-  
-  select {
-    cursor: pointer;
-    background-color: white;
-  }
-  
-  .submit-btn {
-    background-color: #1a237e;
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-btn:hover {
-    background-color: #283593;
-  }
-  
-  /* Error state */
-  input:invalid {
-    border-color: #f44336;
-  }
-  
-  /* Placeholder styling */
-  input::placeholder {
-    color: #999;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 600px) {
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-    
-    .container {
-      padding: 1rem;
-    }
-  }
-  
-  /* Media query for mobile responsiveness */
-  @media (max-width: 576px) {
-    .form-row {
-      flex-direction: column;
-      gap: 0;
-    }
-    
-    .container {
-      padding: 1rem;
-      margin: 0 1rem;
-    }
-  }
+}
+
+/* Button */
+button {
+  width: 100%;
+  background: #3279e2;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #245bb2;
+}
+
+/* Error Styles */
+input.error,
+select.error {
+  border: 1px solid red;
+  background-color: #fff5f5;
+}
+
+.error-message {
+  font-size: 12px;
+  color: red;
+  text-align: left;
+  margin-top: 3px;
+}

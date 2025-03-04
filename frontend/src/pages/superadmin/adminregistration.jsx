@@ -1,195 +1,113 @@
-import React, { useState } from 'react';
-import { createAdmin } from '../../services/adminapi';
-import './adminregistration.css';
+import React, { useState } from "react";
+import "./adminregistration.css"; // Import CSS file
 
 const AdminRegistration = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-    storeName: '',
-    aadharNumber: ''
-  });
-
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+    const [formData, setFormData] = useState({
+        fullName: "",
+        email: "",
+        phone: "",
+        username: "",
+        aadhar: "",
+        store: "",
+        password: "",
+        confirmPassword: "",
     });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    
-    // Validate password match
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match!");
-      return;
-    }
+    const [errors, setErrors] = useState({});
 
-    // Validate Aadhar number
-    if (formData.aadharNumber.length !== 12 || !/^\d+$/.test(formData.aadharNumber)) {
-      setError("Please enter a valid 12-digit Aadhar number");
-      return;
-    }
-    
-    try {
-      // Remove confirmPassword before sending to API
-      const { confirmPassword, ...adminData } = formData;
-      const response = await createAdmin(adminData);
-      setSuccess('Admin registered successfully!');
-      
-      // Clear form
-      setFormData({
-        name: '',
-        email: '',
-        phoneNumber: '',
-        username: '',
-        password: '',
-        confirmPassword: '',
-        storeName: '',
-        aadharNumber: ''
-      });
-    } catch (err) {
-      setError(err.message || 'Failed to register admin');
-    }
-  };
+    // Handle input change
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  return (
-    <div className="container">
-      <div className="header">
-        <h1>Admin Registration</h1>
-        <p>Create your store admin account</p>
-      </div>
-      
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
-      
-      <form id="adminForm" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name" className="required">Full Name</label>
-          <input 
-            type="text" 
-            id="name" 
-            name="name" 
-            placeholder="Enter your full name" 
-            required
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="email" className="required">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              placeholder="Enter your email" 
-              required
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="phoneNumber" className="required">Phone Number</label>
-            <input 
-              type="tel" 
-              id="phoneNumber" 
-              name="phoneNumber" 
-              placeholder="Enter your phone number" 
-              required
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="username" className="required">Username</label>
-          <input 
-            type="text" 
-            id="username" 
-            name="username" 
-            placeholder="Choose a username" 
-            required
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </div>
+    // Validate the form
+    const validate = () => {
+        let newErrors = {};
+        if (!formData.fullName) newErrors.fullName = "Full Name is required";
+        if (!formData.email) newErrors.email = "Email is required";
+        if (!formData.phone) newErrors.phone = "Phone Number is required";
+        if (!formData.username) newErrors.username = "Username is required";
+        if (!formData.aadhar) newErrors.aadhar = "Aadhar Number is required";
+        if (!formData.store) newErrors.store = "Store selection is required";
+        if (!formData.password) newErrors.password = "Password is required";
+        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
 
-        <div className="form-group">
-          <label htmlFor="aadharNumber" className="required">Aadhar Card Number</label>
-          <input 
-            type="text" 
-            id="aadharNumber" 
-            name="aadharNumber" 
-            placeholder="Enter your 12-digit Aadhar number" 
-            required
-            pattern="[0-9]{12}"
-            value={formData.aadharNumber}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="storeName" className="required">Store Name</label>
-          <select
-            id="storeName"
-            name="storeName"
-            required
-            value={formData.storeName}
-            onChange={handleChange}
-          >
-            <option value="">Select a store</option>
-            <option value="varnam">Varnam</option>
-            <option value="siragugal">Siragugal</option>
-            <option value="vaagai">Vaagai</option>
-          </select>
-        </div>
-        
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="password" className="required">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password" 
-              placeholder="Enter your password" 
-              required
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="confirmPassword" className="required">Confirm Password</label>
-            <input 
-              type="password" 
-              id="confirmPassword" 
-              name="confirmPassword" 
-              placeholder="Confirm your password" 
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
-        <button type="submit" className="submit-btn">Register Admin</button>
-      </form>
-    </div>
-  );
+    // Handle form submit
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (validate()) {
+            console.log("Form Submitted", formData);
+            alert("Admin Registered Successfully!");
+        }
+    };
+
+    return (
+        <div className="container">
+            <h2>Admin Registration</h2>
+            <p>Create your store admin account</p>
+            <form onSubmit={handleSubmit}>
+                {/* Full Name */}
+                <label>Full Name <span>*</span></label>
+                <input type="text" name="fullName" placeholder="Enter your full name" onChange={handleChange} className={errors.fullName ? "error" : ""} />
+                {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+
+                {/* Email & Phone in Two Columns */}
+                <div className="input-group">
+                    <div>
+                        <label>Email <span>*</span></label>
+                        <input type="email" name="email" placeholder="Enter your email" onChange={handleChange} className={errors.email ? "error" : ""} />
+                        {errors.email && <p className="error-message">{errors.email}</p>}
+                    </div>
+                    <div>
+                        <label>Phone Number <span>*</span></label>
+                        <input type="text" name="phone" placeholder="Enter your phone number" onChange={handleChange} className={errors.phone ? "error" : ""} />
+                        {errors.phone && <p className="error-message">{errors.phone}</p>}
+                    </div>
+                </div>
+
+                {/* Username */}
+                <label>Username <span>*</span></label>
+                <input type="text" name="username" placeholder="Choose a username" onChange={handleChange} className={errors.username ? "error" : ""} />
+                {errors.username && <p className="error-message">{errors.username}</p>}
+
+                {/* Aadhar Card Number */}
+                <label>Aadhar Card Number <span>*</span></label>
+                <input type="text" name="aadhar" placeholder="Enter your 12-digit Aadhar number" onChange={handleChange} className={errors.aadhar ? "error" : ""} />
+                {errors.aadhar && <p className="error-message">{errors.aadhar}</p>}
+
+                {/* Store Name Dropdown */}
+                <label>Store Name <span>*</span></label>
+                <select name="store" onChange={handleChange} className={errors.store ? "error" : ""}>
+                    <option value="">Select a store</option>
+                    <option value="Store 1">Store 1</option>
+                    <option value="Store 2">Store 2</option>
+                    <option value="Store 3">Store 3</option>
+                </select>
+                {errors.store && <p className="error-message">{errors.store}</p>}
+
+                {/* Password & Confirm Password in Two Columns */}
+                <div className="input-group">
+                    <div>
+                        <label>Password <span>*</span></label>
+                        <input type="password" name="password" placeholder="Enter your password" onChange={handleChange} className={errors.password ? "error" : ""} />
+                        {errors.password && <p className="error-message">{errors.password}</p>}
+                    </div>
+                    <div>
+                        <label>Confirm Password <span>*</span></label>
+                        <input type="password" name="confirmPassword" placeholder="Confirm your password" onChange={handleChange} className={errors.confirmPassword ? "error" : ""} />
+                        {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
+                    </div>
+                </div>
+
+                {/* Submit Button */}
+                <button type="submit">Register Admin</button>
+            </form>
+        </div>
+    );
 };
 
 export default AdminRegistration;

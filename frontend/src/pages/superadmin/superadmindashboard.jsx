@@ -1,5 +1,7 @@
 import React, { useState, lazy, Suspense } from 'react';
 import { LineChart, Line, AreaChart, Area, PieChart, Pie, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { FaTachometerAlt, FaUsers, FaBuilding, FaUserShield, FaBox, FaUserFriends, FaStore, FaChartBar, FaSignOutAlt } from "react-icons/fa";
+
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './superadmindashboard.css';
@@ -155,15 +157,15 @@ const SuperAdminDashboard = () => {
           </button>
         </div>
         <ul className="sidebar-links">
-          <li><button className={selectedSection === 'home' ? 'active' : ''} onClick={() => setSelectedSection('home')}>Dashboard</button></li>
-          <li><button className={selectedSection === 'workers' ? 'active' : ''} onClick={() => setSelectedSection('workers')}>Workers</button></li>
-          <li><button className={selectedSection === 'units' ? 'active' : ''} onClick={() => setSelectedSection('units')}>Units</button></li>
-          <li><button className={selectedSection === 'admin' ? 'active' : ''} onClick={() => setSelectedSection('admin')}>Admins</button></li>
-          <li><button disabled>Products</button></li>
-          <li><button className={selectedSection === 'customers' ? 'active' : ''} onClick={() => setSelectedSection('customers')}>Customers</button></li>
-          <li><button disabled>Vendors</button></li>
-          <li><button disabled>Reports</button></li>
-          <li><button className="logout-button" onClick={handleLogout}>Log out</button></li>
+          <li><button className={selectedSection === 'home' ? 'active' : ''} onClick={() => setSelectedSection('home')}><FaTachometerAlt /> Dashboard</button></li>
+          <li><button className={selectedSection === 'workers' ? 'active' : ''} onClick={() => setSelectedSection('workers')}><FaUsers /> Workers</button></li>
+          <li><button className={selectedSection === 'units' ? 'active' : ''} onClick={() => setSelectedSection('units')}><FaBuilding /> Units</button></li>
+          <li><button className={selectedSection === 'admin' ? 'active' : ''} onClick={() => setSelectedSection('admin')}><FaUserShield /> Admins</button></li>
+          <li><button disabled><FaBox /> Products</button></li>
+          <li><button className={selectedSection === 'customers' ? 'active' : ''} onClick={() => setSelectedSection('customers')}><FaUserFriends /> Customers</button></li>
+          <li><button disabled><FaStore /> Vendors</button></li>
+          <li><button disabled><FaChartBar /> Reports</button></li>
+          <li><button className="logout-button" onClick={handleLogout}><FaSignOutAlt /> Log out</button></li>
         </ul>
       </nav>
 
