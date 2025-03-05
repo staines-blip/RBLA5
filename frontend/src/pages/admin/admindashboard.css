@@ -1,0 +1,161 @@
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f4f4;
+}
+
+.sidebar {
+  width: 250px;
+  background: #1a237e;
+  color: white;
+  transition: width 0.3s;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.toggle-sidebar {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-links button {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  background: none;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s;
+}
+
+.sidebar-links button:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-links button.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-links button.disabled-button {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sidebar-links svg {
+  font-size: 1.2rem;
+}
+
+.logout-button {
+  margin-top: 20px;
+  color: #ff5252 !important;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  transition: margin-left 0.3s;
+  padding: 20px;
+}
+
+.main-content.expanded {
+  margin-left: 60px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.chart-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .charts {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    width: 60px;
+  }
+  
+  .main-content {
+    margin-left: 60px;
+  }
+  
+  .sidebar-header h2,
+  .sidebar-links span {
+    display: none;
+  }
+}

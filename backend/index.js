@@ -10,6 +10,7 @@ const superadminAuthRoutes = require('./routes/superadminauthroutes');
 const unitRoutes = require('./routes/unitRoutes');
 const customerRoutes = require('./routes/superadmin/customerRoutes');
 const adminRoutes = require('./routes/superadmin/admins');
+const adminAuthRoutes = require('./routes/admin/adminAuthRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -47,6 +48,7 @@ app.use('/api/superadmin', superadminAuthRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);
+app.use('/api/admin', adminAuthRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

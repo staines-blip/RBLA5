@@ -11,6 +11,8 @@ axios.defaults.baseURL = 'http://localhost:5000';
 // Lazy load components
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
+const AdminLogin = lazy(() => import('./pages/admin/adminlogin'));
+const AdminDashboard = lazy(() => import('./pages/admin/admindashboard'));
 
 // Lazy load groups of related components
 const ProductPages = {
@@ -104,6 +106,14 @@ const App = () => {
               {/* UserLogin route */}
               <Route path="/UserLogin" element={
                 <Suspense fallback={<LoadingFallback />}><UserLogin /></Suspense>
+              } />
+
+              {/* Admin routes */}
+              <Route path="/admin/login" element={
+                <Suspense fallback={<LoadingFallback />}><AdminLogin /></Suspense>
+              } />
+              <Route path="/admin/dashboard" element={
+                <Suspense fallback={<LoadingFallback />}><AdminDashboard /></Suspense>
               } />
 
               {/* Generate routes from component groups */}

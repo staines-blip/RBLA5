@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginAdmin } from '../../services/adminAuthService';
 import './adminlogin.css';
-// admin login module and their parts
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
-// handling the inputchange in the admin module 
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -16,12 +19,23 @@ const AdminLogin = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement admin login logic
-    console.log('Admin login attempt:', formData);
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await loginAdmin(formData);
+      console.log('Login successful:', response);
+      navigate('/admin/dashboard');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.message || 'Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
-// from this is going to be the login container 
+
   return (
     <div className="admin-login-container">
       <div className="stars"></div>
@@ -39,7 +53,8 @@ const AdminLogin = () => {
         </div>
 
         <div className="login-section">
-          <h2>USER LOGIN</h2>
+          <h2>ADMIN LOGIN</h2>
+          {error && <p className="error-message">{error}</p>}
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
               <div className="input-with-icon">
@@ -51,6 +66,7 @@ const AdminLogin = () => {
                   value={formData.username}
                   onChange={handleInputChange}
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -64,6 +80,7 @@ const AdminLogin = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -75,8 +92,8 @@ const AdminLogin = () => {
                 </label>
                 <a href="#" className="forgot-password">Forgot Password?</a>
               </div>
-              <button type="submit" className="login-button">
-                LOGIN
+              <button type="submit" className="login-button" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'LOGIN'}
               </button>
             </div>
           </form>
