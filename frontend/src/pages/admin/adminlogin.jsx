@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginAdmin } from '../../services/adminAuthService';
+import { loginAdmin, isAdminLoggedIn } from '../../services/adminAuthService';
 import './adminlogin.css';
 
 const AdminLogin = () => {
@@ -11,6 +11,21 @@ const AdminLogin = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Check login status on mount
+    const checkLoginStatus = async () => {
+      try {
+        const isLoggedIn = await isAdminLoggedIn();
+        if (isLoggedIn) {
+          navigate('/admin/dashboard');
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+    checkLoginStatus();
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -25,12 +40,10 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await loginAdmin(formData);
-      console.log('Login successful:', response);
+      await loginAdmin(formData);
       navigate('/admin/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.message || 'Invalid credentials. Please try again.');
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

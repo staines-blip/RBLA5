@@ -2,47 +2,87 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/admin';
 
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
 // Login admin
 export const loginAdmin = async (credentials) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, credentials, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.data.token) {
-      // Clear any existing tokens
-      localStorage.clear();
-      
-      // Store the new token
-      localStorage.setItem('adminToken', response.data.token);
-      
-      // Store admin info
-      if (response.data.admin) {
-        localStorage.setItem('admin', JSON.stringify(response.data.admin));
-      }
+    const response = await api.post('/login', credentials);
+    
+    if (response.data.admin) {
+      // Store admin info (no sensitive data)
+      localStorage.setItem('admin', JSON.stringify({
+        id: response.data.admin.id,
+        username: response.data.admin.username,
+        storeName: response.data.admin.storeName
+      }));
     }
 
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || 'Failed to login';
+    if (error.response) {
+      throw new Error(error.response.data.message || 'Login failed');
+    }
+    throw new Error('Network error. Please check your connection.');
   }
 };
 
 // Get current admin
 export const getCurrentAdmin = () => {
-  const admin = localStorage.getItem('admin');
-  return admin ? JSON.parse(admin) : null;
+  try {
+    const admin = localStorage.getItem('admin');
+    return admin ? JSON.parse(admin) : null;
+  } catch (error) {
+    console.error('Error parsing admin data:', error);
+    localStorage.removeItem('admin');
+    return null;
+  }
 };
 
 // Check if admin is logged in
-export const isAdminLoggedIn = () => {
-  return !!localStorage.getItem('adminToken');
+export const isAdminLoggedIn = async () => {
+  const admin = getCurrentAdmin();
+  if (!admin) return false;
+
+  try {
+    // Verify session with backend
+    await api.get('/verify');
+    return true;
+  } catch (error) {
+    console.error('Session verification failed:', error);
+    localStorage.removeItem('admin');
+    return false;
+  }
 };
 
 // Logout admin
-export const logoutAdmin = () => {
-  localStorage.removeItem('adminToken');
-  localStorage.removeItem('admin');
+export const logoutAdmin = async () => {
+  try {
+    await api.post('/logout');
+    localStorage.removeItem('admin');
+  } catch (error) {
+    console.error('Logout error:', error);
+    // Still remove local data even if server request fails
+    localStorage.removeItem('admin');
+    throw new Error('Logout failed. Please try again.');
+  }
 };
+
+// Intercept 401 responses
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      // Clear local storage on authentication error
+      localStorage.removeItem('admin');
+    }
+    return Promise.reject(error);
+  }
+);

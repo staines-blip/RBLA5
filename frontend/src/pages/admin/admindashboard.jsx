@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./admindashboard.css";
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
 import { FaTachometerAlt, FaShoppingCart, FaBox, FaUsers, FaMoneyBillWave, FaChartLine, FaStar, FaUserFriends, FaSignOutAlt } from "react-icons/fa";
-import { logoutAdmin } from "../../services/adminAuthService";
+import { logoutAdmin, isAdminLoggedIn } from "../../services/adminAuthService";
+import Products from './products/Products';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
@@ -63,11 +64,45 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedSection, setSelectedSection] = useState('home');
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleLogout = () => {
-    logoutAdmin(); // Clear admin tokens
-    navigate('/admin/login'); // Navigate to login page
+  useEffect(() => {
+    // Check authentication on mount
+    const checkAuth = async () => {
+      try {
+        const isLoggedIn = await isAdminLoggedIn();
+        if (!isLoggedIn) {
+          navigate('/admin/login');
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        navigate('/admin/login');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    try {
+      await logoutAdmin();
+      navigate('/admin/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Still redirect to login on error
+      navigate('/admin/login');
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+        <p>Loading dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">
@@ -81,7 +116,7 @@ const AdminDashboard = () => {
         <ul className="sidebar-links">
           <li><button className={selectedSection === 'home' ? 'active' : ''} onClick={() => setSelectedSection('home')}><FaTachometerAlt /> Dashboard</button></li>
           <li><button disabled className="disabled-button"><FaShoppingCart /> Orders</button></li>
-          <li><button disabled className="disabled-button"><FaBox /> Products</button></li>
+          <li><button className={selectedSection === 'products' ? 'active' : ''} onClick={() => setSelectedSection('products')}><FaBox /> Products</button></li>
           <li><button disabled className="disabled-button"><FaUsers /> Customers</button></li>
           <li><button disabled className="disabled-button"><FaMoneyBillWave /> Payments</button></li>
           <li><button disabled className="disabled-button"><FaChartLine /> Sales</button></li>
@@ -92,7 +127,11 @@ const AdminDashboard = () => {
       </nav>
 
       <main className={`main-content ${sidebarOpen ? '' : 'expanded'}`}>
-        <DashboardHome />
+        {selectedSection === 'home' ? (
+          <DashboardHome />
+        ) : selectedSection === 'products' ? (
+          <Products />
+        ) : null}
       </main>
     </div>
   );

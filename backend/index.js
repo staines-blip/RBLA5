@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const productRoutes = require('./routes/productRoutes');
 const workerRoutes = require('./routes/workerRoutes');
@@ -11,6 +12,8 @@ const unitRoutes = require('./routes/unitRoutes');
 const customerRoutes = require('./routes/superadmin/customerRoutes');
 const adminRoutes = require('./routes/superadmin/admins');
 const adminAuthRoutes = require('./routes/admin/adminAuthRoutes');
+const adminProductRoutes = require('./routes/admin/productRoutes');
+const adminCategoryRoutes = require('./routes/admin/categoryRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -18,12 +21,18 @@ dotenv.config();
 // Create Express app
 const app = express();
 
+// CORS configuration
 app.use(cors({
   origin: 'http://localhost:3000',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Middleware
+// Cookie parser middleware
+app.use(cookieParser());
+
+// Body parser middleware
 app.use(express.json());
 
 // Connect to MongoDB
@@ -49,6 +58,8 @@ app.use('/api/units', unitRoutes);
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);
 app.use('/api/admin', adminAuthRoutes);
+app.use('/api/admin/products', adminProductRoutes);
+app.use('/api/admin/categories', adminCategoryRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
@@ -68,6 +79,22 @@ app.use((err, req, res, next) => {
     return res.status(400).json({
       status: 'error',
       message: 'Duplicate field value entered'
+    });
+  }
+
+  // JWT error
+  if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Invalid token. Please log in again.'
+    });
+  }
+
+  // Token expired error
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Your token has expired. Please log in again.'
     });
   }
 

@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
     },
     category: {  
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Category',  // Referencing the Category model
+        ref: 'Category',
         required: true,
     },
     size: {
@@ -57,7 +57,4 @@ const productSchema = new mongoose.Schema({
     },
 });
 
-// Create model using schema
-const Product = mongoose.model('Product', productSchema);
-
-module.exports = Product;
+module.exports = productSchema;

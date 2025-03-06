@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Product = require('../models/Product'); // Import the Product model
+const { Product } = require('../models');
 
 // --------------------------
 // CREATE: Add a new product

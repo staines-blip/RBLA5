@@ -1,10 +1,14 @@
+
+```
 RBLA4
 ├─ backend
 │  ├─ .env
 │  ├─ conection string.txt
 │  ├─ controllers
 │  │  ├─ admin
-│  │  │  └─ adminAuthController.js
+│  │  │  ├─ adminAuthController.js
+│  │  │  ├─ categoryController.js
+│  │  │  └─ productController.js
 │  │  └─ superadmin
 │  │     ├─ AdminController.js
 │  │     ├─ customersController.js
@@ -16,10 +20,11 @@ RBLA4
 │  │  └─ superadminmiddleware.js
 │  ├─ models
 │  │  ├─ admin.js
+│  │  ├─ category.js
 │  │  ├─ customer.js
 │  │  ├─ Order.js
 │  │  ├─ Payment.js
-│  │  ├─ Product.js
+│  │  ├─ product.js
 │  │  ├─ superadmin.js
 │  │  ├─ Unit.js
 │  │  ├─ User.js
@@ -30,7 +35,9 @@ RBLA4
 │  ├─ package.json
 │  ├─ routes
 │  │  ├─ admin
-│  │  │  └─ adminAuthRoutes.js
+│  │  │  ├─ adminAuthRoutes.js
+│  │  │  ├─ categoryRoutes.js
+│  │  │  └─ productRoutes.js
 │  │  ├─ productRoutes.js
 │  │  ├─ superadmin
 │  │  │  ├─ admins.js
@@ -69,6 +76,101 @@ RBLA4
 │     │  │  └─ AddProduct.jsx
 │     │  ├─ AdminDashboard.jsx
 │     │  ├─ Assets
+│     │  │  ├─ 1.png
+│     │  │  ├─ 2.png
+│     │  │  ├─ 3.png
+│     │  │  ├─ 4.png
+│     │  │  ├─ 5.png
+│     │  │  ├─ about1.png
+│     │  │  ├─ about2.png
+│     │  │  ├─ about3.png
+│     │  │  ├─ all_product.js
+│     │  │  ├─ at.png
+│     │  │  ├─ B1.png
+│     │  │  ├─ B2.png
+│     │  │  ├─ B3.png
+│     │  │  ├─ B4.png
+│     │  │  ├─ B5.png
+│     │  │  ├─ Ba1.png
+│     │  │  ├─ Ba2.png
+│     │  │  ├─ Ba3.png
+│     │  │  ├─ Ba4.png
+│     │  │  ├─ Ba5.png
+│     │  │  ├─ bheart.png
+│     │  │  ├─ C1.png
+│     │  │  ├─ C2.png
+│     │  │  ├─ C3.png
+│     │  │  ├─ C4.png
+│     │  │  ├─ C5.png
+│     │  │  ├─ cart.png
+│     │  │  ├─ cell.png
+│     │  │  ├─ chatbot.png
+│     │  │  ├─ close.png
+│     │  │  ├─ contactba.png
+│     │  │  ├─ data_product.js
+│     │  │  ├─ empty-cart.png
+│     │  │  ├─ heart.png
+│     │  │  ├─ home.png
+│     │  │  ├─ in.png
+│     │  │  ├─ list.png
+│     │  │  ├─ logo.png
+│     │  │  ├─ mail.png
+│     │  │  ├─ menu-icon.png
+│     │  │  ├─ N1.png
+│     │  │  ├─ N2.png
+│     │  │  ├─ N3.png
+│     │  │  ├─ N4.png
+│     │  │  ├─ N5.png
+│     │  │  ├─ O1.png
+│     │  │  ├─ O2.png
+│     │  │  ├─ O3.png
+│     │  │  ├─ O4.png
+│     │  │  ├─ O5.png
+│     │  │  ├─ P1.png
+│     │  │  ├─ P2.png
+│     │  │  ├─ P3.png
+│     │  │  ├─ P4.png
+│     │  │  ├─ P5.png
+│     │  │  ├─ PD1.png
+│     │  │  ├─ PD2.png
+│     │  │  ├─ PD3.png
+│     │  │  ├─ PD4.png
+│     │  │  ├─ PD5.png
+│     │  │  ├─ PD6.png
+│     │  │  ├─ PD7.png
+│     │  │  ├─ PD8.png
+│     │  │  ├─ phone.png
+│     │  │  ├─ rbla.png
+│     │  │  ├─ search-icon.png
+│     │  │  ├─ search.png
+│     │  │  ├─ sirlogo.png
+│     │  │  ├─ T1.png
+│     │  │  ├─ T2.png
+│     │  │  ├─ T3.png
+│     │  │  ├─ T4.png
+│     │  │  ├─ T5.png
+│     │  │  ├─ tt.png
+│     │  │  ├─ upload_area.png
+│     │  │  ├─ user.png
+│     │  │  ├─ v1.png
+│     │  │  ├─ v10.png
+│     │  │  ├─ v11.png
+│     │  │  ├─ v12.png
+│     │  │  ├─ v13.png
+│     │  │  ├─ v14.png
+│     │  │  ├─ v15.png
+│     │  │  ├─ v16.png
+│     │  │  ├─ v2.png
+│     │  │  ├─ v3.png
+│     │  │  ├─ v4.png
+│     │  │  ├─ v5.png
+│     │  │  ├─ v6.png
+│     │  │  ├─ v7.png
+│     │  │  ├─ v8.png
+│     │  │  ├─ v9.png
+│     │  │  ├─ vaalogo.png
+│     │  │  ├─ varlogo.png
+│     │  │  └─ wt.png
 │     │  ├─ Chatbot
 │     │  │  ├─ Chatbot.css
 │     │  │  └─ Chatbot.jsx
@@ -213,3 +315,5 @@ RBLA4
 ├─ package.json
 ├─ Project Integration Explanation
 └─ Project Tree Final (Refer for Understanding)
+
+```
