@@ -1,14 +1,63 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  price: { type: Number, required: true },
-  category: { type: String, required: true },
-  stock: { type: Number, required: true },
-  imageUrls: [{ type: String }],
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
+    productid: {  
+        type: Number,
+        required: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    new_price: {
+        type: Number,
+        required: true,
+    },
+    old_price: {
+        type: Number,
+        required: true,
+    },
+    stock: {
+        type: Number,
+        required: true,
+        min: [0, 'Stock quantity cannot be negative'],
+    },
+    category: {
+        type: String,
+        enum: ['towels', 'bedsheets', 'napkins', 'bags', 'cupcoaster', 'paperfiles', 'bamboo'],  
+        required: true,
+    },
+    size: {
+        breadth: { type: Number, required: true },
+        height: { type: Number, required: true },
+    },
+    images: [{
+        type: String,  
+    }],
+    image_url: { 
+        type: String,  
+        required: true  
+    },
+    ratings: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        rating: { type: Number, min: 1, max: 5 },
+        review: { type: String }
+    }],
+    isActive: {
+        type: Boolean,
+        default: true,  
+    },
+    date: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
-module.exports = mongoose.model('Product', productSchema);
+// Create model using schema
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;
