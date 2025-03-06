@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+// the product schena is finalised 
 const productSchema = new mongoose.Schema({
     productid: {  
         type: Number,
