@@ -14,3 +14,8 @@ export {
     updateCategory,
     deleteCategory
 } from './categoryAPI';
+
+export {
+    getAllProductUnits,
+    createProductUnit
+} from './productUnitAPI';

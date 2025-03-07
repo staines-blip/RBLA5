@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-    productid: {  
-        type: Number,
-        required: true,
-    },
     name: {
         type: String,
         required: true,
@@ -31,6 +27,11 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true,
     },
+    unit: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProductUnit',
+        required: true
+    },
     size: {
         breadth: { type: Number, required: true },
         height: { type: Number, required: true },
@@ -42,11 +43,6 @@ const productSchema = new mongoose.Schema({
         type: String,  
         required: true  
     },
-    ratings: [{
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        rating: { type: Number, min: 1, max: 5 },
-        review: { type: String }
-    }],
     isActive: {
         type: Boolean,
         default: true,  

@@ -13,6 +13,7 @@ exports.getAllProducts = async (req, res) => {
 
         const products = await Product.find(query)
             .populate('category', 'name')
+            .populate('unit', 'name')
             .sort({ date: -1 });
         res.status(200).json(products);
     } catch (error) {
@@ -24,7 +25,8 @@ exports.getAllProducts = async (req, res) => {
 exports.getProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
-            .populate('category', 'name');
+            .populate('category', 'name')
+            .populate('unit', 'name');
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -37,12 +39,7 @@ exports.getProduct = async (req, res) => {
 // Create new product
 exports.createProduct = async (req, res) => {
     try {
-        // Get the latest product to determine the next productid
-        const latestProduct = await Product.findOne().sort({ productid: -1 });
-        const nextProductId = latestProduct ? latestProduct.productid + 1 : 1;
-
         const product = new Product({
-            productid: nextProductId,
             name: req.body.name,
             description: req.body.description,
             new_price: req.body.new_price,
@@ -55,6 +52,7 @@ exports.createProduct = async (req, res) => {
             },
             images: req.body.images,
             image_url: req.body.image_url,
+            unit: req.body.unit,
             isActive: req.body.isActive !== undefined ? req.body.isActive : true
         });
 
@@ -79,6 +77,8 @@ exports.updateProduct = async (req, res) => {
             if (key === 'size' && updates.size) {
                 product.size.breadth = updates.size.breadth || product.size.breadth;
                 product.size.height = updates.size.height || product.size.height;
+            } else if (key === 'unit') {
+                product.unit = updates.unit;
             } else {
                 product[key] = updates[key];
             }

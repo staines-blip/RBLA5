@@ -4,7 +4,8 @@ import {
     getAllProducts, 
     toggleProductActive, 
     deleteProduct,
-    getAllCategories 
+    getAllCategories,
+    getAllProductUnits 
 } from '../../../services/adminapi/index';
 import { isAdminLoggedIn } from '../../../services/adminAuthService';
 import { FaEdit, FaTrash, FaToggleOn, FaToggleOff } from 'react-icons/fa';
@@ -13,7 +14,6 @@ import './ProductList.css';
 const ProductList = () => {
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [filter, setFilter] = useState({
@@ -29,7 +29,7 @@ const ProductList = () => {
                     navigate('/admin/login');
                     return;
                 }
-                await Promise.all([fetchProducts(), fetchCategories()]);
+                await Promise.all([fetchProducts()]);
             } catch (error) {
                 console.error('Authentication check failed:', error);
                 navigate('/admin/login');
@@ -64,22 +64,6 @@ const ProductList = () => {
             }
         } finally {
             setLoading(false);
-        }
-    };
-
-    const fetchCategories = async () => {
-        try {
-            const data = await getAllCategories();
-            const categoryMap = {};
-            data.forEach(category => {
-                categoryMap[category._id] = category.name;
-            });
-            setCategories(categoryMap);
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-            if (error.response?.status === 401) {
-                handleUnauthorized();
-            }
         }
     };
 
@@ -152,8 +136,8 @@ const ProductList = () => {
                         disabled={loading}
                     >
                         <option value="">All Categories</option>
-                        {Object.entries(categories).map(([id, name]) => (
-                            <option key={id} value={id}>{name}</option>
+                        {products.map(product => (
+                            <option key={product.category?._id} value={product.category?._id}>{product.category?.name}</option>
                         ))}
                     </select>
                     <select
@@ -181,6 +165,8 @@ const ProductList = () => {
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Category</th>
+                                <th>Unit</th>
+                                <th>Size</th>
                                 <th>Price</th>
                                 <th>Stock</th>
                                 <th>Status</th>
@@ -198,29 +184,32 @@ const ProductList = () => {
                                         />
                                     </td>
                                     <td>{product.name}</td>
-                                    <td>{categories[product.category]}</td>
+                                    <td>{product.category?.name || '-'}</td>
+                                    <td>{product.unit?.name || '-'}</td>
+                                    <td>{product.size ? `${product.size.breadth}x${product.size.height}` : '-'}</td>
                                     <td>₹{product.new_price}</td>
                                     <td>{product.stock}</td>
                                     <td>
                                         <button
                                             className={`status-toggle ${product.isActive ? 'active' : 'inactive'}`}
                                             onClick={() => handleToggleActive(product._id)}
-                                            disabled={loading}
+                                            title={product.isActive ? 'Active' : 'Inactive'}
                                         >
                                             {product.isActive ? <FaToggleOn /> : <FaToggleOff />}
                                         </button>
                                     </td>
                                     <td className="actions">
-                                        <button 
+                                        <button
+                                            onClick={() => navigate(`/admin/products/edit/${product._id}`)}
                                             className="edit-btn"
-                                            disabled={loading}
+                                            title="Edit"
                                         >
                                             <FaEdit />
                                         </button>
-                                        <button 
-                                            className="delete-btn"
+                                        <button
                                             onClick={() => handleDelete(product._id)}
-                                            disabled={loading}
+                                            className="delete-btn"
+                                            title="Delete"
                                         >
                                             <FaTrash />
                                         </button>

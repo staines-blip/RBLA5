@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
+const multer = require('multer');
 
 const productRoutes = require('./routes/productRoutes');
 const workerRoutes = require('./routes/workerRoutes');
@@ -14,6 +16,8 @@ const adminRoutes = require('./routes/superadmin/admins');
 const adminAuthRoutes = require('./routes/admin/adminAuthRoutes');
 const adminProductRoutes = require('./routes/admin/productRoutes');
 const adminCategoryRoutes = require('./routes/admin/categoryRoutes');
+const adminUploadRoutes = require('./routes/admin/uploadRoutes');
+const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -34,6 +38,9 @@ app.use(cookieParser());
 
 // Body parser middleware
 app.use(express.json());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
 mongoose
@@ -60,6 +67,8 @@ app.use('/api/superadmin/admins', adminRoutes);
 app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
+app.use('/api/admin/upload', adminUploadRoutes);
+app.use('/api/admin/product-units', adminProductUnitRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

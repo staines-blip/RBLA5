@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-// Import all schemas
-const productSchema = require('./schemas/productSchema');
+// Import schemas
+const productSchema = require('./Product').schema;
 const categorySchema = require('./schemas/categorySchema');
 
 // Create and export models
