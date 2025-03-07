@@ -18,6 +18,7 @@ const adminProductRoutes = require('./routes/admin/productRoutes');
 const adminCategoryRoutes = require('./routes/admin/categoryRoutes');
 const adminUploadRoutes = require('./routes/admin/uploadRoutes');
 const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes');
+const publicProductRoutes = require('./routes/public/productRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.use(express.json());
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/products', express.static(path.join(__dirname, 'uploads', 'products')));
 
 // Connect to MongoDB
 mongoose
@@ -69,6 +71,9 @@ app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/upload', adminUploadRoutes);
 app.use('/api/admin/product-units', adminProductUnitRoutes);
+
+// Public routes
+app.use('/api/public/products', publicProductRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
