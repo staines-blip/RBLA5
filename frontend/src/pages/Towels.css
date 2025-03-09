@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    min-height: 100vh;
 }
 
 h1 {
@@ -13,9 +14,17 @@ h1 {
 }
 
 .Towels-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .product-grid {
@@ -75,7 +84,7 @@ h1 {
     color: #666;
     margin: 5px 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

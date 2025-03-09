@@ -69,91 +69,93 @@ const Towels = () => {
     <div className="Towels-container">
       <Header />
       <Marquee />
+      
+      <div className="main-content">
+        <h1>Welcome to the Towels Collection!</h1>
 
-      <h1>Welcome to the Towels Collection!</h1>
+        {loading && <div className="loading">Loading towels...</div>}
+        {error && <div className="error-message">{error}</div>}
 
-      {loading && <div className="loading">Loading towels...</div>}
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="product-grid">
-        {towels.map((product) => (
-          <div className="product-card" key={product._id}>
-            <div
-              className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
-              onClick={() => {
-                if (isInWishlist(product)) {
-                  removeFromWishlist(product);
-                } else {
-                  addToWishlist(product);
-                }
-              }}
-            >
-              ♥
-            </div>
-
-            <Link to={`/product/${product._id}`}>
-              <img 
-                src={getImageUrl(product)} 
-                alt={product.name} 
-                className="product-image"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = '/placeholder.jpg';
-                }}
-              />
-            </Link>
-
-            <h3>{product.name}</h3>
-            <p className="product-description">{product.description}</p>
-            <p className="product-size">Size: {product.size.breadth}x{product.size.height} {product.unit?.name}</p>
-            <p className="product-price">₹{product.new_price}</p>
-            <p className="original-price">Original Price: ₹{product.old_price}</p>
-            {product.stock > 0 ? (
-              <button
-                className="add-to-cart-btn"
+        <div className="product-grid">
+          {towels.map((product) => (
+            <div className="product-card" key={product._id}>
+              <div
+                className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
                 onClick={() => {
-                  if (!isInCart(product)) {
-                    addToCart(product);
+                  if (isInWishlist(product)) {
+                    removeFromWishlist(product);
+                  } else {
+                    addToWishlist(product);
                   }
                 }}
               >
-                {isInCart(product) ? "In Cart" : "Add to Cart"}
-              </button>
-            ) : (
-              <button className="out-of-stock-btn" disabled>
-                Out of Stock
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+                ♥
+              </div>
 
-      <div className="design-steps">
-        <h3>Next Step for Design</h3>
-        <div className="design-options">
-          <div
-            className="design-option"
-            onClick={() => navigate("/browse-design")}
-            role="button"
-            aria-label="Browse Design"
-          >
-            Browse Design →
-          </div>
-          <div
-            className="design-option"
-            onClick={() => navigate("/CustomDesignPage")}
-            role="button"
-            aria-label="Custom Design"
-          >
-            Custom Design →
-          </div>
-          <div
-            className="design-option"
-            onClick={() => navigate("/upload-design")}
-            role="button"
-            aria-label="Upload Design and Checkout"
-          >
-            Upload Design and Checkout →
+              <Link to={`/product/${product._id}`}>
+                <img 
+                  src={getImageUrl(product)} 
+                  alt={product.name} 
+                  className="product-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/placeholder.jpg';
+                  }}
+                />
+              </Link>
+
+              <h3>{product.name}</h3>
+              <p className="product-description">{product.description}</p>
+              <p className="product-size">Size: {product.size.breadth}x{product.size.height} {product.unit?.name}</p>
+              <p className="product-price">₹{product.new_price}</p>
+              <p className="original-price">Original Price: ₹{product.old_price}</p>
+              {product.stock > 0 ? (
+                <button
+                  className="add-to-cart-btn"
+                  onClick={() => {
+                    if (!isInCart(product)) {
+                      addToCart(product);
+                    }
+                  }}
+                >
+                  {isInCart(product) ? "In Cart" : "Add to Cart"}
+                </button>
+              ) : (
+                <button className="out-of-stock-btn" disabled>
+                  Out of Stock
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="design-steps">
+          <h3>Next Step for Design</h3>
+          <div className="design-options">
+            <div
+              className="design-option"
+              onClick={() => navigate("/browse-design")}
+              role="button"
+              aria-label="Browse Design"
+            >
+              Browse Design →
+            </div>
+            <div
+              className="design-option"
+              onClick={() => navigate("/CustomDesignPage")}
+              role="button"
+              aria-label="Custom Design"
+            >
+              Custom Design →
+            </div>
+            <div
+              className="design-option"
+              onClick={() => navigate("/upload-design")}
+              role="button"
+              aria-label="Upload Design and Checkout"
+            >
+              Upload Design and Checkout →
+            </div>
           </div>
         </div>
       </div>

@@ -5,10 +5,13 @@ const Marquee = () => {
   const [message, setMessage] = useState("Welcome to Survivor Products!");
 
   useEffect(() => {
-    fetch("http://localhost:4000/marquee")
+    fetch("http://localhost:5000/api/public/marquee")
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
-      .catch((err) => console.error("Error fetching marquee:", err));
+      .catch((err) => {
+        console.error("Error fetching marquee:", err);
+        // Keep the default message on error
+      });
   }, []);
 
   return (
