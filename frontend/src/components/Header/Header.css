@@ -12,6 +12,8 @@ body {
   align-items: center;
   padding: 10px 20px;
   justify-content: space-between;
+  position: relative;
+  z-index: 1000;
 }
 
 /* Logo Section */
@@ -24,10 +26,12 @@ body {
   margin-right: 20px;
   font-size: 14px;
 }
+
 .header .location a {
   color: rgb(243, 5, 191);
   text-decoration: none;
 }
+
 .header .location a:hover {
   text-decoration: underline;
 }
@@ -37,7 +41,7 @@ body {
   flex-grow: 1;
   display: flex;
   align-items: center;
-
+  position: relative;
 }
 
 .header .search-bar select {
@@ -60,29 +64,29 @@ body {
   border: none;
   border-radius: 0 4px 4px 0;
   cursor: pointer;
-  display: flex;                /* Use flexbox for button */
-  justify-content: center;      /* Center the content horizontally */
-  align-items: center;          /* Center the content vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header .search-bar button i {
   color: black;
-  font-size: 18px;              /* You can adjust the size of the icon */
+  font-size: 18px;
 }
-
 
 /* Options Section */
 .header .options {
   display: flex;
   align-items: center;
   font-size: 14px;
-  
 }
+
 .header .options > div {
   margin-left: 20px;
   text-align: center;
   color: black;
 }
+
 .header .options .flag img {
   margin-right: 5px;
 }
@@ -94,20 +98,25 @@ body {
   display: flex;
   padding: 10px 20px;
   font-size: 14px;
+  position: relative;
+  z-index: 999;
 }
+
 .nav-links a {
   color: white;
   text-decoration: none;
   margin-right: 20px;
+  transition: color 0.2s ease;
 }
+
 .nav-links a:hover {
-  text-decoration: underline;
+  color: #FFB6C1;
 }
 
 /* Dropdown Menu */
 .nav-links .dropdown {
   position: relative;
-  display: inline-block; /* Make sure the dropdown is inline with other items */
+  display: inline-block;
 }
 
 .dropdown-menu {
@@ -120,24 +129,28 @@ body {
   padding: 10px 0;
   border-radius: 4px;
   z-index: 1000;
-  display: none; /* Initially hidden */
+  display: none;
+  min-width: 180px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .dropdown:hover .dropdown-menu {
-  display: block; /* Show dropdown on hover */
+  display: block;
 }
 
 .dropdown-menu li {
-  padding: 10px 20px;
+  padding: 8px 20px;
 }
 
 .dropdown-menu a {
+  color: #333 !important;
   text-decoration: none;
-  color: black;
+  display: block;
+  transition: color 0.2s ease;
 }
 
 .dropdown-menu a:hover {
-  color: #007BFF; /* Blue color on hover */
+  color: #FFB6C1 !important;
 }
 
 /* Mobile/Responsive Styles */
@@ -145,30 +158,67 @@ body {
   .header {
     flex-direction: column;
     align-items: flex-start;
+    padding: 10px;
   }
 
   .nav-links {
     flex-direction: column;
     width: 100%;
+    padding: 0;
   }
 
   .nav-links a,
   .nav-links li {
     width: 100%;
     padding: 12px;
-    text-align: center;
+    text-align: left;
+    margin: 0;
+  }
+
+  .nav-links li:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0;
+  }
+
+  .dropdown-menu li {
+    padding: 8px 30px;
+  }
+
+  .dropdown-menu a {
+    color: white !important;
   }
 
   .search-bar {
     flex-direction: column;
     width: 100%;
-    margin-top: 10px;
+    margin: 10px 0;
   }
 
   .search-bar select {
-    max-width: 100%;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+
+  .search-bar input[type="text"] {
+    border-radius: 4px;
     margin-bottom: 10px;
   }
+
+  .options {
+    width: 100%;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+
+  .options > div {
+    margin: 0;
+  }
 }
-
-
