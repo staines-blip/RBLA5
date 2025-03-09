@@ -21,16 +21,21 @@ const Bedsheets = () => {
     const fetchBedsheets = async () => {
       try {
         setLoading(true);
-        const response = await getProductsByCategory('Bedsheets');
-        if (response.success) {
-          setBedsheets(response.data);
+        console.log('Fetching bedsheets...');
+        const response = await getProductsByCategory('Bedsheet');
+        console.log('Bedsheets API response:', response);
+        if (response && response.success) {
+          console.log('Setting bedsheets data:', response.data);
+          setBedsheets(response.data || []);
         } else {
-          setError('Failed to fetch bedsheets');
-          console.error('API Error:', response);
+          const errorMsg = response?.message || 'Failed to fetch bedsheets';
+          console.error('API Error:', errorMsg);
+          setError(errorMsg);
         }
       } catch (error) {
-        setError('Error fetching bedsheets: ' + error.message);
+        const errorMsg = error?.response?.data?.message || error.message || 'Error fetching bedsheets';
         console.error('Fetch Error:', error);
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }

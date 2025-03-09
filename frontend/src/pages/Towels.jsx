@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Towels.css';
-import { WishlistContext } from '../WishlistContext';
-import { CartContext } from '../CartContext';
+import { WishlistContext } from '../Context/WishlistContext';
+import { CartContext } from '../Context/CartContext';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import Marquee from './Marquee';
