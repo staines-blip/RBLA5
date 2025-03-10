@@ -1,75 +1,170 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
-import N1_img from '../components/Assets/N1.png';
-import N2_img from '../components/Assets/N2.png';
-import N3_img from '../components/Assets/N3.png';
-import N4_img from '../components/Assets/N4.png';
-import N5_img from '../components/Assets/N5.png';
+import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './Napkins.css';
-import { WishlistContext } from '../WishlistContext'; // Wishlist context
-import { CartContext } from '../CartContext'; // Cart context
+import { WishlistContext } from '../WishlistContext';
+import { CartContext } from '../CartContext';
 import Header from '../components/Header/Header';
 import Marquee from './Marquee';
 import Footer from '../components/Footer/Footer';
-
-
-const napkins = [
-  { id: 1, name: 'Floral Napkin', image: N1_img, new_price: 50.0, old_price: 30.0 },
-  { id: 2, name: 'Patterned Napkin', image: N2_img, new_price: 60.0, old_price: 40.0 },
-  { id: 3, name: 'Linen Napkin', image: N3_img, new_price: 70.0, old_price: 50.0 },
-  { id: 4, name: 'Striped Napkin', image: N4_img, new_price: 55.0, old_price: 35.0 },
-  { id: 5, name: 'Cotton Napkin', image: N5_img, new_price: 65.0, old_price: 45.0 },
-];
+import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Napkins = () => {
-  // Access context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
-  const { addToCart } = useContext(CartContext);
+  const { cart, addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  const isInWishlist = (napkin) => wishlist.some((item) => item.id === napkin.id);
+  const [napkins, setNapkins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleAddToCart = (napkin) => {
-    addToCart(napkin);
-    navigate('/cart');
+  useEffect(() => {
+    const fetchNapkins = async () => {
+      try {
+        setLoading(true);
+        console.log('Fetching napkins...');
+        const response = await getProductsByCategory('Napkin');
+        console.log('Napkins API response:', response);
+        if (response && response.success) {
+          console.log('Setting napkins data:', response.data);
+          setNapkins(response.data || []);
+        } else {
+          const errorMsg = response?.message || 'Failed to fetch napkins';
+          console.error('API Error:', errorMsg);
+          setError(errorMsg);
+        }
+      } catch (error) {
+        const errorMsg = error?.response?.data?.message || error.message || 'Error fetching napkins';
+        console.error('Fetch Error:', error);
+        setError(errorMsg);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNapkins();
+  }, []);
+
+  const isInWishlist = (product) => wishlist.some((item) => item._id === product._id);
+  const isInCart = (product) => cart.some((item) => item._id === product._id);
+
+  // Helper function to get full image URL
+  const getImageUrl = (product) => {
+    if (!product) return null;
+    
+    // If image_url starts with http or https, use it as is
+    if (product.image_url?.startsWith('http')) {
+      return product.image_url;
+    }
+    
+    // If using images array
+    if (product.images?.[0]?.startsWith('http')) {
+      return product.images[0];
+    }
+    
+    // Otherwise, prepend the backend URL
+    const baseUrl = 'http://localhost:5000';
+    return product.image_url ? 
+      `${baseUrl}${product.image_url}` : 
+      product.images?.[0] ? 
+        `${baseUrl}${product.images[0]}` : 
+        '/placeholder.jpg';
   };
 
   return (
-    <div>
-     <Header/>
-     <Marquee/>
-      <h1>Welcome to the Napkins category page!</h1>
-      <div className="container">
-        {napkins.map((napkin) => (
-          <div key={napkin.id} className="napkin-card">
-            <div className="napkin-image-container">
+    <div className="napkins-container">
+      <Header />
+      <Marquee />
+      
+      <div className="main-content">
+        <h1>Welcome to the Napkins Collection!</h1>
+
+        {loading && <div className="loading">Loading napkins...</div>}
+        {error && <div className="error-message">{error}</div>}
+
+        <div className="product-grid">
+          {napkins.map((product) => (
+            <div className="product-card" key={product._id}>
               <div
-                className={`heart-icon ${isInWishlist(napkin) ? 'active' : ''}`}
+                className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
                 onClick={() => {
-                  if (isInWishlist(napkin)) {
-                    removeFromWishlist(napkin);
+                  if (isInWishlist(product)) {
+                    removeFromWishlist(product);
                   } else {
-                    addToWishlist(napkin);
+                    addToWishlist(product);
                   }
                 }}
-              ></div>
-              <img className="napkin-image" src={napkin.image} alt={napkin.name} />
+              >
+                ♥
+              </div>
+
+              <Link to={`/product/${product._id}`}>
+                <img 
+                  src={getImageUrl(product)} 
+                  alt={product.name} 
+                  className="product-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/placeholder.jpg';
+                  }}
+                />
+              </Link>
+
+              <h3>{product.name}</h3>
+              <p className="product-description">{product.description}</p>
+              <p className="product-size">Size: {product.size?.breadth}x{product.size?.height} {product.unit?.name}</p>
+              <p className="product-price">₹{product.new_price}</p>
+              <p className="original-price">Original Price: ₹{product.old_price}</p>
+              {product.stock > 0 ? (
+                <button
+                  className="add-to-cart-btn"
+                  onClick={() => {
+                    if (!isInCart(product)) {
+                      addToCart(product);
+                    }
+                  }}
+                >
+                  {isInCart(product) ? "In Cart" : "Add to Cart"}
+                </button>
+              ) : (
+                <button className="out-of-stock-btn" disabled>
+                  Out of Stock
+                </button>
+              )}
             </div>
-            <div className="napkin-name">{napkin.name}</div>
-            <div className="napkin-price">
-              <span className="new-price">${napkin.new_price}</span>{' '}
-              <span className="old-price">${napkin.old_price}</span>
-            </div>
-            <button
-              className="add-to-cart-btn"
-              onClick={() => handleAddToCart(napkin)}
+          ))}
+        </div>
+
+        <div className="design-steps">
+          <h3>Next Step for Design</h3>
+          <div className="design-options">
+            <div
+              className="design-option"
+              onClick={() => navigate("/browse-design")}
+              role="button"
+              aria-label="Browse Design"
             >
-              Add to Cart
-            </button>
+              Browse Design →
+            </div>
+            <div
+              className="design-option"
+              onClick={() => navigate("/CustomDesignPage")}
+              role="button"
+              aria-label="Custom Design"
+            >
+              Custom Design →
+            </div>
+            <div
+              className="design-option"
+              onClick={() => navigate("/upload-design")}
+              role="button"
+              aria-label="Upload Design and Checkout"
+            >
+              Upload Design and Checkout →
+            </div>
           </div>
-        ))}
+        </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

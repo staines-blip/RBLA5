@@ -1,141 +1,170 @@
-import React, { useContext,useEffect,useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // For navigation
+import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './Paperfiles.css';
-import { WishlistContext } from '../WishlistContext'; // Wishlist context
-import { CartContext } from '../CartContext'; // Cart context
-import Header from '../components/Header/Header'; // Corrected import path
-import Marquee from './Marquee';
+import { WishlistContext } from '../WishlistContext';
+import { CartContext } from '../CartContext';
+import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-
-/*const bedsheets = [
-  { id: 1, name: 'Floral Bedsheet', image: B1_img, new_price: 50.0, old_price: 65.0 },
-  { id: 2, name: 'Geometric Bedsheet', image: B2_img, new_price: 55.0, old_price: 70.0 },
-  { id: 3, name: 'Abstract Bedsheet', image: B3_img, new_price: 60.0, old_price: 80.0 },
-  { id: 4, name: 'Classic White Bedsheet', image: B4_img, new_price: 45.0, old_price: 60.0 },
-  { id: 5, name: 'Luxury Bedsheet', image: B5_img, new_price: 90.0, old_price: 110.0 },
-];*/
-
+import Marquee from './Marquee';
+import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Paperfiles = () => {
-  // Access context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const { cart, addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [paperfiles, setPaperfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch anklet data from the API
   useEffect(() => {
-    fetch("http://localhost:4000/paperfiles") 
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.success) {
-          setPaperfiles(data.data); 
+    const fetchPaperfiles = async () => {
+      try {
+        setLoading(true);
+        console.log('Fetching paperfiles products...');
+        const response = await getProductsByCategory('Paperfile');
+        console.log('Paperfiles API response:', response);
+        if (response && response.success) {
+          console.log('Setting paperfiles data:', response.data);
+          setPaperfiles(response.data || []);
         } else {
-          console.error("No Paperfiles found:", data.message);
+          const errorMsg = response?.message || 'Failed to fetch paperfiles';
+          console.error('API Error:', errorMsg);
+          setError(errorMsg);
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching Paperfiles:", error);
-      });
+      } catch (error) {
+        const errorMsg = error?.response?.data?.message || error.message || 'Error fetching paperfiles';
+        console.error('Fetch Error:', error);
+        setError(errorMsg);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPaperfiles();
   }, []);
 
-  const isInWishlist = (product) => wishlist.some((item) => item.id === product.id); // Check if in wishlist
-  const isInCart = (product) => cart.some((item) => item.id === product.id);
-  // Handle Add to Cart
- /* const handleAddToCart = (bedsheet) => {
-    addToCart(bedsheet); // Add item to cart
-    navigate('/cart'); // Navigate to Cart page
-  };*/
+  const isInWishlist = (product) => wishlist.some((item) => item._id === product._id);
+  const isInCart = (product) => cart.some((item) => item._id === product._id);
+
+  // Helper function to get full image URL
+  const getImageUrl = (product) => {
+    if (!product) return null;
+    
+    // If image_url starts with http or https, use it as is
+    if (product.image_url?.startsWith('http')) {
+      return product.image_url;
+    }
+    
+    // If using images array
+    if (product.images?.[0]?.startsWith('http')) {
+      return product.images[0];
+    }
+    
+    // Otherwise, prepend the backend URL
+    const baseUrl = 'http://localhost:5000';
+    return product.image_url ? 
+      `${baseUrl}${product.image_url}` : 
+      product.images?.[0] ? 
+        `${baseUrl}${product.images[0]}` : 
+        '/placeholder.jpg';
+  };
 
   return (
-    <div className="Paperfiles-container">
-     <Header/>
-     <Marquee/>
+    <div className="paperfiles-container">
+      <Header />
+      <Marquee />
+      
+      <div className="main-content">
+        <h1>Welcome to the Paperfiles Collection!</h1>
 
-      <h1>Welcome to the Paperfiles Collection!</h1>
+        {loading && <div className="loading">Loading paperfiles...</div>}
+        {error && <div className="error-message">{error}</div>}
 
-     
+        <div className="product-grid">
+          {paperfiles.map((product) => (
+            <div className="product-card" key={product._id}>
+              <div
+                className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
+                onClick={() => {
+                  if (isInWishlist(product)) {
+                    removeFromWishlist(product);
+                  } else {
+                    addToWishlist(product);
+                  }
+                }}
+              >
+                ♥
+              </div>
 
-      {/* Product Grid */}
-      <div className="product-grid">
-        {paperfiles.map((product) => (
-          <div className="product-card" key={product.id}>
-            {/* Wishlist Icon */}
-            <div
-              className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
-              onClick={() => {
-                if (isInWishlist(product)) {
-                  removeFromWishlist(product);
-                } else {
-                  addToWishlist(product);
-                }
-              }}
-            >
-              ♥
+              <Link to={`/product/${product._id}`}>
+                <img 
+                  src={getImageUrl(product)} 
+                  alt={product.name} 
+                  className="product-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/placeholder.jpg';
+                  }}
+                />
+              </Link>
+
+              <h3>{product.name}</h3>
+              <p className="product-description">{product.description}</p>
+              <p className="product-size">Size: {product.size?.breadth}x{product.size?.height} {product.unit?.name}</p>
+              <p className="product-price">₹{product.new_price}</p>
+              <p className="original-price">Original Price: ₹{product.old_price}</p>
+              {product.stock > 0 ? (
+                <button
+                  className="add-to-cart-btn"
+                  onClick={() => {
+                    if (!isInCart(product)) {
+                      addToCart(product);
+                    }
+                  }}
+                >
+                  {isInCart(product) ? "In Cart" : "Add to Cart"}
+                </button>
+              ) : (
+                <button className="out-of-stock-btn" disabled>
+                  Out of Stock
+                </button>
+              )}
             </div>
+          ))}
+        </div>
 
-            {/* Product Image */}
-            <Link to={`/product/${product.productid}`}>
-              <img src={product.images[0]} alt={product.name} className="product-image" />
-            </Link>
-
-            {/* Product Details */}
-            <h3>{product.name}</h3>
-            <p>Price: ₹{product.new_price}</p>
-            <p className="original-price">Original Price: ₹{product.old_price}</p>
-
-            {/* Add to Cart Button */}
-            <button
-              className="add-to-cart-btn"
-              onClick={() => {
-                if (!isInCart(product)) {
-                  addToCart(product);
-                }
-              }}
+        <div className="design-steps">
+          <h3>Next Step for Design</h3>
+          <div className="design-options">
+            <div
+              className="design-option"
+              onClick={() => navigate("/browse-design")}
+              role="button"
+              aria-label="Browse Design"
             >
-              {isInCart(product) ? "In Cart" : "Add to Cart"}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* New Design Steps Section */}
-      <div className="design-steps">
-        <h3>Next Step for Design</h3>
-        <div className="design-options">
-          <div
-            className="design-option"
-            onClick={() => navigate("/browse-design")}
-            role="button"
-            aria-label="Browse Design"
-          >
-            Browse Design →
-          </div>
-          <div
-            className="design-option"
-            onClick={() => navigate("/CustomDesignPage")}
-            role="button"
-            aria-label="Custom Design"
-          >
-            Custom Design →
-          </div>
-          <div
-            className="design-option"
-            onClick={() => navigate("/upload-design")}
-            role="button"
-            aria-label="Upload Design and Checkout"
-          >
-            Upload Design and Checkout →
+              Browse Design →
+            </div>
+            <div
+              className="design-option"
+              onClick={() => navigate("/CustomDesignPage")}
+              role="button"
+              aria-label="Custom Design"
+            >
+              Custom Design →
+            </div>
+            <div
+              className="design-option"
+              onClick={() => navigate("/upload-design")}
+              role="button"
+              aria-label="Upload Design and Checkout"
+            >
+              Upload Design and Checkout →
+            </div>
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
