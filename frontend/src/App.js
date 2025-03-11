@@ -1,6 +1,7 @@
 import React, { useState, lazy, Suspense } from 'react';
 import axios from 'axios';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { isLoggedIn } from './services/userapi/authservice';
 import Chatbot from './components/Chatbot/Chatbot';
 import { WishlistProvider } from "./Context/WishlistContext";
 import { CartProvider } from "./Context/CartContext";
@@ -34,7 +35,7 @@ const ProductPages = {
 const UserPages = {
   Cart: lazy(() => import('./pages/Cart')),
   Wishlist: lazy(() => import('./pages/Wishlist')),
-  LoginSignup: lazy(() => import('./pages/LoginSignup').then(module => ({ default: module.LoginSignup }))),
+  LoginSignup: lazy(() => import('./pages/User/Auth/LoginSignup')),
   UserProfile: lazy(() => import('./pages/UserProfile')),
   MyOrders: lazy(() => import('./pages/MyOrders')),
   ReturnsOrders: lazy(() => import('./pages/ReturnsOrders')),
@@ -77,8 +78,8 @@ const InfoPages = {
 // Loading component
 const LoadingFallback = () => <div className="loading">Loading...</div>;
 
-// Layout component to wrap routes with Header and Footer
-const Layout = ({ children }) => (
+// Wrapper for routes that should show header and footer
+const MainLayout = ({ children }) => (
   <div className="app-container">
     <Header />
     <main className="main-content">
@@ -90,12 +91,20 @@ const Layout = ({ children }) => (
   </div>
 );
 
-// Standalone component for pages without header/footer
+// Wrapper for standalone pages (no header/footer)
 const StandalonePage = ({ children }) => (
   <Suspense fallback={<LoadingFallback />}>
     {children}
   </Suspense>
 );
+
+// Protected route component
+const ProtectedRoute = ({ children }) => {
+  if (!isLoggedIn()) {
+    return <Navigate to="/loginsignup" />;
+  }
+  return children;
+};
 
 const App = () => {
   const [units, setUnits] = useState([]); 
@@ -110,7 +119,7 @@ const App = () => {
       <Route 
         key={`${pathPrefix}/${name.toLowerCase()}`}
         path={`${pathPrefix}/${name.toLowerCase()}`} 
-        element={<Layout><Component /></Layout>} 
+        element={<MainLayout><Component /></MainLayout>} 
       />
     ));
   };
@@ -118,12 +127,17 @@ const App = () => {
   return (
     <WishlistProvider>
       <CartProvider>
-        <BrowserRouter>
+        <Router>
           <Routes>
-            {/* Home route */}
-            <Route path="/" element={<Layout><Home /></Layout>} />
-              
-            {/* UserLogin route - without Layout */}
+            {/* Standalone Routes (no header/footer) */}
+            <Route 
+              path="/loginsignup" 
+              element={
+                <StandalonePage>
+                  <UserPages.LoginSignup />
+                </StandalonePage>
+              } 
+            />
             <Route path="/UserLogin" element={<StandalonePage><UserLogin /></StandalonePage>} />
             <Route path="/admin/login" element={<StandalonePage><AdminLogin /></StandalonePage>} />
             <Route path="/superadmin/login" element={<StandalonePage><SuperAdminPages.Login /></StandalonePage>} />
@@ -133,6 +147,16 @@ const App = () => {
 
             {/* Superadmin Dashboard route - without Layout */}
             <Route path="/superadmin/dashboard" element={<StandalonePage><SuperAdminPages.Dashboard /></StandalonePage>} />
+
+            {/* Routes with Header and Footer */}
+            <Route
+              path="/"
+              element={
+                <MainLayout>
+                  <Home />
+                </MainLayout>
+              }
+            />
 
             {/* Generate routes from component groups */}
             {createRoutes(UserPages, '')}
@@ -151,13 +175,13 @@ const App = () => {
               
             {/* Admin Panel with props */}
             <Route path="/adminpanel" element={
-              <Layout>
+              <MainLayout>
                 <AdminPages.AdminPanel addUnit={addUnit} />
-              </Layout>
+              </MainLayout>
             } />
           </Routes>
           <Chatbot />
-        </BrowserRouter>
+        </Router>
       </CartProvider>
     </WishlistProvider>
   );

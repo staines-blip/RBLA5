@@ -20,6 +20,7 @@ const adminUploadRoutes = require('./routes/admin/uploadRoutes');
 const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes');
 const publicProductRoutes = require('./routes/public/productRoutes');
 const publicGeneralRoutes = require('./routes/public/generalRoutes');
+const userAuthRoutes = require('./routes/user/auth');
 
 // Load environment variables
 dotenv.config();
@@ -72,6 +73,7 @@ app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/upload', adminUploadRoutes);
 app.use('/api/admin/product-units', adminProductUnitRoutes);
+app.use('/api/auth', userAuthRoutes);
 
 // Public routes
 app.use('/api/public/products', publicProductRoutes);

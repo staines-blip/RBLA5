@@ -1,21 +1,20 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faSearch, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronDown, faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { isLoggedIn, logout } from '../../services/userapi/authservice';
 
-const CartContext = React.createContext({ cartCount: 0 });
-
-export const Header = () => {
+const Header = () => {
+  const navigate = useNavigate();
+  const loggedIn = isLoggedIn();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
-  const { cartCount } = useContext(CartContext);
 
   const productCategories = [
-    { name: "Bamboo", path: "/bamboo" },
     { name: "Paper Files", path: "/paperfiles" },
     { name: "Towels", path: "/towels" },
     { name: "Bags", path: "/bags" },
@@ -27,14 +26,11 @@ export const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
       if (currentScrollY < lastScrollY || currentScrollY < 50) {
         setIsHeaderVisible(true);
-      } 
-      else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
+      } else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
         setIsHeaderVisible(false);
       }
-      
       setLastScrollY(currentScrollY);
     };
 
@@ -91,38 +87,64 @@ export const Header = () => {
     setIsProductsOpen(!isProductsOpen);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/loginsignup');
+  };
+
   return (
     <div className={`header-container ${isHeaderVisible ? "" : "header-hidden"}`}>
       <div className="announcement-bar">
-        Free shipping on orders above ₹999 | Easy Returns | COD Available
+        Free Shipping on Orders Above ₹499! | Easy Returns | COD Available
       </div>
 
       <div className="top-bar">
         <div className="logo">
-          <Link to="/">RBLA</Link>
+          <Link to="/">
+            <h1>RBLA</h1>
+          </Link>
         </div>
+
         <div className="top-right">
           <div className="search-container">
-            <input
-              type="text"
-              value={query}
-              onChange={handleInputChange}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch(e)}
-              placeholder="Search products..."
-            />
-            <FontAwesomeIcon icon={faSearch} className="search-icon" onClick={handleSearch} />
+            <div className="search-bar">
+              <input
+                type="text"
+                value={query}
+                onChange={handleInputChange}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch(e)}
+                placeholder="Search products..."
+              />
+              <button className="search-button" onClick={handleSearch}>
+                <FontAwesomeIcon icon={faSearch} />
+              </button>
+              {loggedIn && (
+                <div className="login-status">
+                  <FontAwesomeIcon icon={faUser} className="status-icon" />
+                  <span>Logged In</span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="account-links">
-            <Link to="/login">ACCOUNT</Link>
-            <Link to="/cart">
-              <FontAwesomeIcon icon={faShoppingCart} /> CART ({cartCount})
-            </Link>
+            {loggedIn ? (
+              <button onClick={handleLogout} className="account-link">
+                <FontAwesomeIcon icon={faSignOutAlt} />
+                <span>LOGOUT</span>
+              </button>
+            ) : (
+              <Link to="/loginsignup" className="account-link">
+                <FontAwesomeIcon icon={faUser} />
+                <span>SIGNUP/SIGNIN</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>
 
       <nav className="main-nav">
         <ul>
+          <li><Link to="/">HOME</Link></li>
           <li><Link to="/aboutpage">ABOUT US</Link></li>
           <li className={`products-dropdown ${isProductsOpen ? 'active' : ''}`}>
             <div className="nav-link" onClick={toggleProducts}>
