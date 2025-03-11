@@ -92,11 +92,9 @@ const Layout = ({ children }) => (
 
 // Standalone component for pages without header/footer
 const StandalonePage = ({ children }) => (
-  <div className="standalone-page">
-    <Suspense fallback={<LoadingFallback />}>
-      {children}
-    </Suspense>
-  </div>
+  <Suspense fallback={<LoadingFallback />}>
+    {children}
+  </Suspense>
 );
 
 const App = () => {
@@ -130,8 +128,11 @@ const App = () => {
             <Route path="/admin/login" element={<StandalonePage><AdminLogin /></StandalonePage>} />
             <Route path="/superadmin/login" element={<StandalonePage><SuperAdminPages.Login /></StandalonePage>} />
 
-            {/* Admin Dashboard route */}
-            <Route path="/admin/dashboard" element={<Layout><AdminDashboard /></Layout>} />
+            {/* Admin Dashboard route - without Layout */}
+            <Route path="/admin/dashboard" element={<StandalonePage><AdminDashboard /></StandalonePage>} />
+
+            {/* Superadmin Dashboard route - without Layout */}
+            <Route path="/superadmin/dashboard" element={<StandalonePage><SuperAdminPages.Dashboard /></StandalonePage>} />
 
             {/* Generate routes from component groups */}
             {createRoutes(UserPages, '')}
@@ -141,13 +142,12 @@ const App = () => {
             {createRoutes(InfoPages, '')}
               
             {/* Special paths and custom routes */}
-            <Route path="/superadmin/dashboard" element={<Layout><SuperAdminPages.Dashboard /></Layout>} />
-            <Route path="/superadmin/workers" element={<Layout><SuperAdminPages.Workers /></Layout>} />
-            <Route path="/superadmin/customers" element={<Layout><SuperAdminPages.CustomerManager /></Layout>} />
-            <Route path="/superadmin/admins" element={<Layout><div>Admins Page</div></Layout>} />
-            <Route path="/superadmin/products" element={<Layout><div>Products Page</div></Layout>} />
-            <Route path="/superadmin/units" element={<Layout><div>Units Page</div></Layout>} />
-            <Route path="/superadmin/adminregistration" element={<Layout><SuperAdminPages.AdminRegistration /></Layout>} />
+            <Route path="/superadmin/workers" element={<StandalonePage><SuperAdminPages.Workers /></StandalonePage>} />
+            <Route path="/superadmin/customers" element={<StandalonePage><SuperAdminPages.CustomerManager /></StandalonePage>} />
+            <Route path="/superadmin/admins" element={<StandalonePage><div>Admins Page</div></StandalonePage>} />
+            <Route path="/superadmin/products" element={<StandalonePage><div>Products Page</div></StandalonePage>} />
+            <Route path="/superadmin/units" element={<StandalonePage><div>Units Page</div></StandalonePage>} />
+            <Route path="/superadmin/adminregistration" element={<StandalonePage><SuperAdminPages.AdminRegistration /></StandalonePage>} />
               
             {/* Admin Panel with props */}
             <Route path="/adminpanel" element={

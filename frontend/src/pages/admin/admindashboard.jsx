@@ -39,7 +39,7 @@ const DashboardHome = () => {
   };
 
   return (
-    <div className="dashboard">
+    <div className="dashboard-content">
       <div className="stats">
         <div className="card">Revenue: ${revenue}</div>
         <div className="card">Monthly Sales: {monthlySales}</div>
@@ -67,7 +67,6 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication on mount
     const checkAuth = async () => {
       try {
         const isLoggedIn = await isAdminLoggedIn();
@@ -90,7 +89,6 @@ const AdminDashboard = () => {
       navigate('/admin/login');
     } catch (error) {
       console.error('Logout failed:', error);
-      // Still redirect to login on error
       navigate('/admin/login');
     }
   };
@@ -115,8 +113,8 @@ const AdminDashboard = () => {
         </div>
         <ul className="sidebar-links">
           <li><button className={selectedSection === 'home' ? 'active' : ''} onClick={() => setSelectedSection('home')}><FaTachometerAlt /> Dashboard</button></li>
-          <li><button disabled className="disabled-button"><FaShoppingCart /> Orders</button></li>
           <li><button className={selectedSection === 'products' ? 'active' : ''} onClick={() => setSelectedSection('products')}><FaBox /> Products</button></li>
+          <li><button disabled className="disabled-button"><FaShoppingCart /> Orders</button></li>
           <li><button disabled className="disabled-button"><FaUsers /> Customers</button></li>
           <li><button disabled className="disabled-button"><FaMoneyBillWave /> Payments</button></li>
           <li><button disabled className="disabled-button"><FaChartLine /> Sales</button></li>
