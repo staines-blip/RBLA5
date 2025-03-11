@@ -9,9 +9,6 @@ import homepage from "../components/Assets/homepage.jpg";
 import homepage2 from "../components/Assets/homepage2.jpg";
 import vaalogo from "../components/Assets/vaalogo.png";
 import sirlogo from "../components/Assets/sirlogo.png";
-import Header from "../components/Header/Header";
-import Marquee from "./Marquee";
-import Footer from "../components/Footer/Footer";
 
 const AboutPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -29,8 +26,6 @@ const AboutPage = () => {
 
   return (
     <div className="about-container">
-      <Header />
-      <Marquee />
       <div className="about-content">
         <aside className="about-sidebar">
           <div className="vertical-text">ABOUT US</div>
@@ -106,7 +101,6 @@ const AboutPage = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -13,7 +13,19 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Check login status on mount
+    // Add Material Icons font
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+    document.head.appendChild(link);
+
+    // Cleanup
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
+  useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const isLoggedIn = await isAdminLoggedIn();
@@ -24,6 +36,7 @@ const AdminLogin = () => {
         console.error('Error checking login status:', error);
       }
     };
+
     checkLoginStatus();
   }, [navigate]);
 
@@ -51,71 +64,63 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-container">
-      <div className="stars"></div>
-      <div className="mountains">
-        <div className="mountain mountain-1"></div>
-        <div className="mountain mountain-2"></div>
-        <div className="mountain mountain-3"></div>
-        <div className="mountain mountain-4"></div>
-      </div>
-    
-      <div className="login-card">
-        <div className="header-section">
-          <h1>HELLO & WELCOME</h1>
-          <p>Welcome to RBLA Admin Portal. Please enter your credentials to access the system.</p>
+      <div className="login-content">
+        <div className="left-section">
+          <div className="brand-section">
+            <img src="/logo.png" alt="RBLA Logo" className="logo" />
+            <h1>RBLA Admin Portal</h1>
+            <p className="brand-description">
+              Rescue Bonded Labour Association (RBLA) is dedicated to identifying, rescuing, and rehabilitating bonded laborers across India. Through our tireless efforts, we work to break the chains of modern slavery and restore dignity to vulnerable workers.
+            </p>
+          </div>
         </div>
 
-        <div className="login-section">
-          <h2>ADMIN LOGIN</h2>
-          {error && <p className="error-message">{error}</p>}
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <div className="input-with-icon">
-                <i className="user-icon">👤</i>
-                <input
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  required
-                  disabled={isLoading}
-                />
+        <div className="right-section">
+          <div className="login-section">
+            <h2>ADMIN LOGIN</h2>
+            {error && <p className="error-message">{error}</p>}
+            <form onSubmit={handleSubmit} className="login-form">
+              <div className="form-group">
+                <div className="input-with-icon">
+                  <span className="material-icons">person_outline</span>
+                  <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
               </div>
-            </div>
-            <div className="form-group">
-              <div className="input-with-icon">
-                <i className="password-icon">🔒</i>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                  disabled={isLoading}
-                />
+              <div className="form-group">
+                <div className="input-with-icon">
+                  <span className="material-icons">lock_outline</span>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
               </div>
-            </div>
-            <div className="form-actions">
-              <div className="remember-section">
-                <label className="remember-me">
-                  <input type="checkbox" />
-                  <span>Remember</span>
-                </label>
-                <a href="#" className="forgot-password">Forgot Password?</a>
-              </div>
-              <button type="submit" className="login-button" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'LOGIN'}
-              </button>
-            </div>
-          </form>
-        </div>
 
-        <div className="back-to-home">
-          <button onClick={() => navigate('/')} className="back-button">
-            Back to Home
-          </button>
+              <div className="form-actions">
+                <div className="remember-section">
+                  <label className="remember-me">
+                    <input type="checkbox" />
+                    <span>Remember</span>
+                  </label>
+                  <a href="#" className="forgot-password">Forgot Password?</a>
+                </div>
+                <button type="submit" className="login-button" disabled={isLoading}>
+                  {isLoading ? 'Logging in...' : 'LOGIN'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

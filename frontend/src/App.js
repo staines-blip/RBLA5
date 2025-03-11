@@ -4,12 +4,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Chatbot from './components/Chatbot/Chatbot';
 import { WishlistProvider } from "./Context/WishlistContext";
 import { CartProvider } from "./Context/CartContext";
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import Home from './pages/Home';
+import './App.css';
 
 // Set default Axios base URL
 axios.defaults.baseURL = 'http://localhost:5000';
 
 // Lazy load components
-const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const AdminLogin = lazy(() => import('./pages/admin/adminlogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/admindashboard'));
@@ -74,6 +77,28 @@ const InfoPages = {
 // Loading component
 const LoadingFallback = () => <div className="loading">Loading...</div>;
 
+// Layout component to wrap routes with Header and Footer
+const Layout = ({ children }) => (
+  <div className="app-container">
+    <Header />
+    <main className="main-content">
+      <Suspense fallback={<LoadingFallback />}>
+        {children}
+      </Suspense>
+    </main>
+    <Footer />
+  </div>
+);
+
+// Standalone component for pages without header/footer
+const StandalonePage = ({ children }) => (
+  <div className="standalone-page">
+    <Suspense fallback={<LoadingFallback />}>
+      {children}
+    </Suspense>
+  </div>
+);
+
 const App = () => {
   const [units, setUnits] = useState([]); 
 
@@ -87,7 +112,7 @@ const App = () => {
       <Route 
         key={`${pathPrefix}/${name.toLowerCase()}`}
         path={`${pathPrefix}/${name.toLowerCase()}`} 
-        element={<Suspense fallback={<LoadingFallback />}><Component /></Suspense>} 
+        element={<Layout><Component /></Layout>} 
       />
     ));
   };
@@ -96,62 +121,41 @@ const App = () => {
     <WishlistProvider>
       <CartProvider>
         <BrowserRouter>
-          <div className="App">
-            <Routes>
-              {/* Home route */}
-              <Route path="/" element={
-                <Suspense fallback={<LoadingFallback />}><Home /></Suspense>
-              } />
+          <Routes>
+            {/* Home route */}
+            <Route path="/" element={<Layout><Home /></Layout>} />
               
-              {/* UserLogin route */}
-              <Route path="/UserLogin" element={
-                <Suspense fallback={<LoadingFallback />}><UserLogin /></Suspense>
-              } />
+            {/* UserLogin route - without Layout */}
+            <Route path="/UserLogin" element={<StandalonePage><UserLogin /></StandalonePage>} />
+            <Route path="/admin/login" element={<StandalonePage><AdminLogin /></StandalonePage>} />
+            <Route path="/superadmin/login" element={<StandalonePage><SuperAdminPages.Login /></StandalonePage>} />
 
-              {/* Admin routes */}
-              <Route path="/admin/login" element={
-                <Suspense fallback={<LoadingFallback />}><AdminLogin /></Suspense>
-              } />
-              <Route path="/admin/dashboard" element={
-                <Suspense fallback={<LoadingFallback />}><AdminDashboard /></Suspense>
-              } />
+            {/* Admin Dashboard route */}
+            <Route path="/admin/dashboard" element={<Layout><AdminDashboard /></Layout>} />
 
-              {/* Generate routes from component groups */}
-              {createRoutes(UserPages, '')}
-              {createRoutes(ProductPages, '')}
-              {createRoutes(AdminPages, '')}
-              {createRoutes(CheckoutPages, '')}
-              {createRoutes(InfoPages, '')}
+            {/* Generate routes from component groups */}
+            {createRoutes(UserPages, '')}
+            {createRoutes(ProductPages, '')}
+            {createRoutes(AdminPages, '')}
+            {createRoutes(CheckoutPages, '')}
+            {createRoutes(InfoPages, '')}
               
-              {/* Special paths and custom routes */}
-              <Route path="/superadmin/login" element={
-                <Suspense fallback={<LoadingFallback />}><SuperAdminPages.Login /></Suspense>
-              } />
-              <Route path="/superadmin/dashboard" element={
-                <Suspense fallback={<LoadingFallback />}><SuperAdminPages.Dashboard /></Suspense>
-              } />
-              <Route path="/superadmin/workers" element={
-                <Suspense fallback={<LoadingFallback />}><SuperAdminPages.Workers /></Suspense>
-              } />
-              <Route path="/superadmin/customers" element={
-                <Suspense fallback={<LoadingFallback />}><SuperAdminPages.CustomerManager /></Suspense>
-              } />
-              <Route path="/superadmin/admins" element={<div>Admins Page</div>} />
-              <Route path="/superadmin/products" element={<div>Products Page</div>} />
-              <Route path="/superadmin/units" element={<div>Units Page</div>} />
-              <Route path="/superadmin/adminregistration" element={
-                <Suspense fallback={<LoadingFallback />}><SuperAdminPages.AdminRegistration /></Suspense>
-              } />
+            {/* Special paths and custom routes */}
+            <Route path="/superadmin/dashboard" element={<Layout><SuperAdminPages.Dashboard /></Layout>} />
+            <Route path="/superadmin/workers" element={<Layout><SuperAdminPages.Workers /></Layout>} />
+            <Route path="/superadmin/customers" element={<Layout><SuperAdminPages.CustomerManager /></Layout>} />
+            <Route path="/superadmin/admins" element={<Layout><div>Admins Page</div></Layout>} />
+            <Route path="/superadmin/products" element={<Layout><div>Products Page</div></Layout>} />
+            <Route path="/superadmin/units" element={<Layout><div>Units Page</div></Layout>} />
+            <Route path="/superadmin/adminregistration" element={<Layout><SuperAdminPages.AdminRegistration /></Layout>} />
               
-              {/* Admin Panel with props */}
-              <Route path="/adminpanel" element={
-                <Suspense fallback={<LoadingFallback />}>
-                  <AdminPages.AdminPanel addUnit={addUnit} />
-                </Suspense>
-              } />
-            </Routes>
-          </div>
-          
+            {/* Admin Panel with props */}
+            <Route path="/adminpanel" element={
+              <Layout>
+                <AdminPages.AdminPanel addUnit={addUnit} />
+              </Layout>
+            } />
+          </Routes>
           <Chatbot />
         </BrowserRouter>
       </CartProvider>

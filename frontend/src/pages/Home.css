@@ -1,0 +1,29 @@
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #fff;
+}
+
+/* Main content area */
+.home-container > * {
+  width: 100%;
+}
+
+/* Spacing between sections */
+.fashion-forward {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Ensure proper layout for seller stories */
+.seller-stories-container {
+  margin-top: 0;
+  margin-bottom: 4rem;
+}
+
+/* Hide any error messages */
+.error-message {
+  display: none;
+}

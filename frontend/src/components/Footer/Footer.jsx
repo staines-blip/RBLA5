@@ -1,53 +1,85 @@
 import React from "react";
 import "./Footer.css";
 import { Link } from "react-router-dom";
-
+import logo from "../Assets/logo.png";
+import about1 from "../Assets/about1.png";
+import about2 from "../Assets/about2.png";
 
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-top">
-        <a href="#top" className="back-to-top">Back to top</a>
+      <div className="footer-stories">
+        <div className="footer-stories-left">
+          <div className="seller-story">
+            <img src={about1} alt="Seller Stories" />
+            <div className="story-content">
+              <h3>Seller Stories</h3>
+              <p>Discover the artisans behind our handcrafted products</p>
+              <Link to="/AboutPage" className="story-link">Meet Our Kreators →</Link>
+            </div>
+          </div>
+        </div>
+        <div className="footer-stories-right">
+          <div className="crafting-story">
+            <img src={about2} alt="Crafting Stories" />
+            <div className="story-content">
+              <h3>Crafting Stories</h3>
+              <p>Shaping lives at each turn</p>
+              <Link to="/Gallery" className="story-link">View Gallery →</Link>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="footer-links">
-        <div className="footer-column">
-          <h4>Get to Know Us</h4>
+
+      <div className="footer-content">
+        <div className="footer-section">
+          <h3>Quick Links</h3>
           <ul>
-          <li><Link to="/AboutPAge">About RBLA</Link></li>
+            <li><Link to="/AboutPage">About RBLA</Link></li>
             <li><Link to="/ProductPage">Products</Link></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press Releases</a></li>
-          </ul>
-        </div>
-        <div className="footer-column">
-          <h4>Connect with Us</h4>
-          <ul>
-            <li><a href="#">Facebook</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">Instagram</a></li>
-          </ul>
-        </div>
-        <div className="footer-column">
-          <h4>Let Us Help You</h4>
-          <ul>
-          <li><Link to="/AccountPage">Your Account</Link></li>
-            <li><a href="#">Returns Centre</a></li>
-            <li><a href="#">Recalls and Product Safety Alerts</a></li>
-            <li><a href="#">100% Purchase Protection</a></li>
+            <li><Link to="/careers">Careers</Link></li>
+            <li><Link to="/press">Press Releases</Link></li>
+            <li><Link to="/ReturnOrder">Returns Centre</Link></li>
             <li><Link to="/ContactUs">Help</Link></li>
-            <li><Link to="/PaymentPage">pay</Link></li>
           </ul>
+        </div>
+
+        <div className="footer-section">
+          <h3>Categories</h3>
+          <ul>
+            <li><Link to="/towels">Towels</Link></li>
+            <li><Link to="/bedsheets">Bedsheets</Link></li>
+            <li><Link to="/napkins">Napkins</Link></li>
+            <li><Link to="/bags">Bags</Link></li>
+            <li><Link to="/cupcoaster">Cup Coasters</Link></li>
+            <li><Link to="/paperfiles">Paper Files</Link></li>
+            <li><Link to="/bamboo">Bamboo Products</Link></li>
+          </ul>
+        </div>
+
+        <div className="footer-section">
+          <h3>Connect with us</h3>
+          <div className="social-links">
+            <a href="#" aria-label="Facebook">Facebook</a>
+            <a href="#" aria-label="Twitter">Twitter</a>
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="YouTube">YouTube</a>
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+          </div>
         </div>
       </div>
+
       <div className="footer-bottom">
-        <div className="footer-logo">
-          <span>RBLA</span>
+        <div className="footer-bottom-left">
+          <div className="footer-logo">
+            <img src={logo} alt="RBLA Logo" />
+          </div>
+          <div className="footer-country">
+            <button>English</button>
+            <button>India</button>
+          </div>
         </div>
-        <div className="footer-country">
-          <button>English</button>
-          <button>India</button>
-          <Link to="/UserLogin" className="superadmin-link">super/admin login</Link>
-        </div>
+        <Link to="/UserLogin" className="superadmin-link">super/admin login</Link>
       </div>
     </footer>
   );

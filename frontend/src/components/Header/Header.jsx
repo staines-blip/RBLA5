@@ -1,26 +1,64 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./Header.css";
-import logo from "../Assets/logo.png";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
-import flag from "../Assets/in.png";
-import heart from "../Assets/heart.png";
+import { faShoppingCart, faSearch, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
-// Dummy CartContext (Replace with your actual context)
-const CartContext = React.createContext({ cartCount: 0 }); // Replace with actual CartContext provider if used
+const CartContext = React.createContext({ cartCount: 0 });
 
 export const Header = () => {
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [query, setQuery] = useState(""); // State for the search query
-  const [searchResults, setSearchResults] = useState([]); // State for search results
-  const { cartCount } = useContext(CartContext); // Use cartCount from CartContext
+  const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const { cartCount } = useContext(CartContext);
 
-  // Function to handle search
+  const productCategories = [
+    { name: "Bamboo", path: "/bamboo" },
+    { name: "Paper Files", path: "/paperfiles" },
+    { name: "Towels", path: "/towels" },
+    { name: "Bags", path: "/bags" },
+    { name: "Napkins", path: "/napkins" },
+    { name: "Bedsheets", path: "/bedsheets" },
+    { name: "Cup Coasters", path: "/cupcoaster" }
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY < lastScrollY || currentScrollY < 50) {
+        setIsHeaderVisible(true);
+      } 
+      else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
+        setIsHeaderVisible(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.products-dropdown')) {
+        setIsProductsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (query.trim() === "") {
-      setSearchResults([]); // Clear search results if query is empty
+      setSearchResults([]);
       return;
     }
 
@@ -35,162 +73,89 @@ export const Header = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setSearchResults(data); // Set search results if successful
+        setSearchResults(data);
       } else {
-        setSearchResults([]); // Clear search results if no products found
+        setSearchResults([]);
       }
     } catch (error) {
       console.error("Error searching products:", error);
     }
   };
 
-  // Update search query when user types
   const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
-  // Toggle dropdown visibility
-  const handleMouseEnter = () => {
-    setDropdownVisible(true);
+  const toggleProducts = (e) => {
+    e.stopPropagation();
+    setIsProductsOpen(!isProductsOpen);
   };
-
-  const handleMouseLeave = () => {
-    setDropdownVisible(false);
-  };
-
-  const toggleDropdown = (e) => {
-    e.preventDefault();
-    setDropdownVisible((prev) => !prev);
-  };
-
-  const handleOutsideClick = (e) => {
-    if (!e.target.closest(".dropdown")) {
-      setDropdownVisible(false);
-    }
-  };
-
-  // Attach and remove event listeners for clicks outside
-  useEffect(() => {
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
 
   return (
-    <div>
-      {/* Header Section */}
-      <div className="header">
-        <div className="logo">
-          <img src={logo} alt="logo" width="85" height="85" />
-        </div>
-        <div className="location">
-          <div>Delivering to Chennai 600009</div>
-          <div>
-            <ul>
-              <li>
-                <Link to="/UpdateLocation">Update Location</Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-          
-          <div className="input-container">
-  <input
-    type="text"
-    value={query}
-    onChange={handleInputChange}
-    placeholder="Search products..."
-  />
-  {/*<img src={} alt="Search Icon" className="search-icon" />
+    <div className={`header-container ${isHeaderVisible ? "" : "header-hidden"}`}>
+      <div className="announcement-bar">
+        Free shipping on orders above ₹999 | Easy Returns | COD Available
+      </div>
 
-      
-          {/* Optional: Display search results */}
-          {searchResults.length > 0 && (
-            <div className="search-results">
-              <ul>
-                {searchResults.map((product) => (
-                  <li key={product._id}>
-                    <Link to={`/product/${product._id}`}>{product.name}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      <div className="top-bar">
+        <div className="logo">
+          <Link to="/">RBLA</Link>
         </div>
-        <div className="options">
-          <div className="in">
-            <img src={flag} alt="India Flag" width="20" height="20" />
+        <div className="top-right">
+          <div className="search-container">
+            <input
+              type="text"
+              value={query}
+              onChange={handleInputChange}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch(e)}
+              placeholder="Search products..."
+            />
+            <FontAwesomeIcon icon={faSearch} className="search-icon" onClick={handleSearch} />
           </div>
-          <div>IND</div>
-          <div>
-            <Link to="/" style={{ color: "white" }}>
-              login
-              </Link>
-          </div>
-          <div>
-            <Link to="/login" style={{ color: "white" }}>
-              Hello, sign in
-              <br />
-              Account
-            </Link>
-          </div>
-          <div>
-            <Link to="/ReturnOrder" style={{ color: "white" }}>
-              Returns
-              <br />
-              & Orders
-            </Link>
-          </div>
-          <div className="heart">
-            <Link to="/Wishlist">
-              <img src={heart} alt="Wishlist" width="20" height="20" />
-            </Link>
-          </div>
-          <div>
-            <Link to="/cart" style={{ color: "white" }}>
-              <FontAwesomeIcon icon={faShoppingCart} /> Cart ({cartCount})
+          <div className="account-links">
+            <Link to="/login">ACCOUNT</Link>
+            <Link to="/cart">
+              <FontAwesomeIcon icon={faShoppingCart} /> CART ({cartCount})
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Navigation Links */}
-      <ul className="nav-links">
-        <li>
-          <Link to="#">
-            <FontAwesomeIcon icon={faBars} /> All
-          </Link>
-        </li>
-        <li>
-          <Link to="/AboutPage">About Us</Link>
-        </li>
-        <li
-          className="dropdown"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <Link to="/ProductPage" onClick={toggleDropdown}>
-            Product
-          </Link>
-          {isDropdownVisible && (
-            <ul className="dropdown-menu">
-              <li><Link to="/towels">Towels</Link></li>
-              <li><Link to="/bedsheets">Bedsheets</Link></li>
-              <li><Link to="/napkins">Napkins</Link></li>
-              <li><Link to="/bags">Bags</Link></li>
-              <li><Link to="/cupcoaster">Cupcoaster</Link></li>
-              <li><Link to="/paperfiles">Paperfiles</Link></li>
-              <li><Link to="/bamboo">Bamboo</Link></li>
-            </ul>
-          )}
-        </li>
-        <li><Link to="/admin">Admin</Link></li>
-        <li><Link to="/Gallery">Gallery</Link></li>
-        <li><Link to="/ContactUs">Contact Us</Link></li>
-        <li><Link to="/adminpanel">UnitPage</Link></li>
-      </ul>
+      <nav className="main-nav">
+        <ul>
+          <li><Link to="/aboutpage">ABOUT US</Link></li>
+          <li className={`products-dropdown ${isProductsOpen ? 'active' : ''}`}>
+            <div className="nav-link" onClick={toggleProducts}>
+              PRODUCTS <FontAwesomeIcon icon={faChevronDown} className={`dropdown-icon ${isProductsOpen ? 'open' : ''}`} />
+            </div>
+            <div className={`dropdown-menu ${isProductsOpen ? 'show' : ''}`}>
+              {productCategories.map((category) => (
+                <Link 
+                  key={category.path} 
+                  to={category.path}
+                  className="dropdown-item"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+          </li>
+          <li><Link to="/gallery">GALLERY</Link></li>
+          <li><Link to="/contact">CONTACT US</Link></li>
+        </ul>
+      </nav>
+
+      {searchResults.length > 0 && (
+        <div className="search-results">
+          <ul>
+            {searchResults.map((product) => (
+              <li key={product._id}>
+                <Link to={`/product/${product._id}`}>{product.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

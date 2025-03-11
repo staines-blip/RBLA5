@@ -1,13 +1,13 @@
 import React from 'react'
-import { Hero } from '../components/Hero/Hero'
-import { Popular } from '../components/Popular/Popular'
+import './Blockprinting.css'
 
-export const Blockprinting = () => {
+const Blockprinting = () => {
   return (
-    <div>
-        <Hero/>
-        <Popular/>
+    <div className="blockprinting">
+      <h1>Block Printing</h1>
+      {/* Add your block printing content here */}
     </div>
   )
 }
 
+export default Blockprinting

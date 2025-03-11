@@ -1,17 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Hero.css';
-import user from '../Assets/user.png'; // Ensure the image exists
-import home from '../Assets/home.png'; // Ensure the image exists
-import logo from '../Assets/logo.png'; // Ensure the image exists
-import Header from '../Header/Header';
-import Marquee from '../../pages/Marquee';
-import Footer from '../Footer/Footer';
+import user from '../Assets/user.png';
+import home from '../Assets/home.png';
+import logo from '../Assets/logo.png';
 
-export const Hero = () => {
+const Hero = () => {
   return (
-    <>
-    <Header/>
-    <Marquee/>
     <div className="hero">
       <div className="hero-left">
         <h2>NEW ARRIVALS ONLY</h2>
@@ -23,16 +18,16 @@ export const Hero = () => {
           <p>Collections</p>
           <p>For Everyone</p>
         </div>
-        <div className="hero-latest-btn">
-          <div>Latest Collection</div>
+        <Link to="/ProductPage" className="hero-latest-btn">
+          Latest Collection
           <img src={home} alt="Home Icon" />
-        </div>
+        </Link>
       </div>
       <div className="hero-right">
         <img src={logo} alt="Logo" className="hero-logo" />
       </div>
     </div>
-    <Footer/>
-</>
   );
 };
+
+export default Hero;

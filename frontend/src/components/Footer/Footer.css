@@ -1,112 +1,285 @@
 /* Footer Styles */
 .footer {
-  background-color: #232f3e; /* Light yellow background */
-  color: #f57f17;  /* Dark yellow text */
-  font-family: Arial, sans-serif;
+  padding: 3rem 2rem;
+  background: #fff;
+  color: #333;
+  border-top: 1px solid #eee;
 }
 
-/* Footer Top Section */
-.footer-top {
-  background-color: #068cf2; /* Dark yellow background */
-  text-align: center;
-  padding: 10px;
+/* Footer Main Content */
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-bottom: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid #eee;
 }
 
-.footer-top .back-to-top {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
+.footer-section {
+  flex: 1;
+  margin-right: 40px;
 }
 
-/* Footer Links Section */
-.footer-links {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 50px;
+.footer-section:last-child {
+  margin-right: 0;
 }
 
-.footer-column h4 {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: white; /* Dark yellow headings */
+.footer-section h3 {
+  color: #80002f;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-.footer-column ul {
+.footer-section ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
-.footer-column ul li {
-  margin-bottom: 5px;
+.footer-section ul li {
+  margin-bottom: 0.8rem;
 }
 
-.footer-column ul li a {
-  color: white; /* Dark yellow links */
+.footer-section ul li a {
+  color: #333;
   text-decoration: none;
-  font-size: 14px;
+  transition: color 0.3s ease;
+  font-size: 1.1rem;
 }
 
-.footer-column ul li a:hover {
-  color: rgb(216, 132, 241); /* Lighter yellow on hover */
-  text-decoration: underline;
+.footer-section ul li a:hover {
+  color: #80002f;
 }
 
-/* Superadmin Login Link Styles */
-.superadmin-link {
+/* Connect With Us */
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.social-links a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.social-links a:hover {
+  color: #80002f;
+}
+
+/* Footer Stories Section */
+.footer-stories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.seller-story,
+.crafting-story {
+  position: relative;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.seller-story img,
+.crafting-story img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.seller-story:hover img,
+.crafting-story:hover img {
+  transform: scale(1.05);
+}
+
+.story-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  color: white;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.seller-story:hover .story-content,
+.crafting-story:hover .story-content {
+  transform: translateY(-10px);
+}
+
+.story-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.story-content p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.story-link {
   color: white;
   text-decoration: none;
-  font-size: 14px;
-  padding: 5px 10px;
-  border: 1px solid black;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  font-size: 1.1rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s ease;
 }
 
-.superadmin-link:hover {
-  background-color: rgb(216, 132, 241);
-  color: white;
-  text-decoration: none;
+.story-link:hover {
+  transform: translateX(5px);
 }
 
-/* Footer Bottom Section */
+/* Footer Bottom */
 .footer-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 50px;
-  background-color: #068cf2; /* Dark yellow background */
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
 }
 
-.footer-logo span {
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
+.footer-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.footer-logo {
+  margin-right: 20px;
+}
+
+.footer-logo img {
+  height: 50px;
+  width: auto;
+}
+
+.footer-country {
+  display: flex;
+  gap: 1rem;
 }
 
 .footer-country button {
-  background: none;
-  color: white;
-  border: 1px solid black; /* Dark yellow border */
-  padding: 5px 10px;
-  margin-right: 35px;
+  padding: 0.8rem 1.5rem;
+  background: transparent;
+  border: 1px solid #80002f;
   border-radius: 4px;
-  font-size: 14px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  color: #80002f;
+  font-weight: 500;
 }
 
 .footer-country button:hover {
-  background-color:  rgb(216, 132, 241); /* Lighter yellow on hover */
-  border-color: black; /* Lighter yellow border */
+  background: #80002f;
+  color: white;
 }
 
-/* Mobile/Responsive Styles */
+.superadmin-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.superadmin-link:hover {
+  color: #80002f;
+  border-color: #80002f;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .footer {
+    padding: 2rem;
+  }
+
+  .footer-stories {
+    gap: 1.5rem;
+  }
+
+  .seller-story,
+  .crafting-story {
+    height: 250px;
+  }
+
+  .story-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .story-content p {
+    font-size: 1rem;
+  }
+
+  .footer-content {
+    gap: 2rem;
+  }
+
+  .footer-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .footer-section ul li a,
+  .social-links a {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .footer-links {
+  .footer-stories {
+    grid-template-columns: 1fr;
+  }
+
+  .seller-story,
+  .crafting-story {
+    height: 200px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .footer-section {
+    margin-bottom: 1rem;
+  }
+
+  .footer-bottom {
     flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .footer-bottom-left {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .social-links {
     align-items: center;
   }
-  .footer-column {
-    margin-bottom: 20px;
+
+  .footer-country {
+    justify-content: center;
   }
 }

@@ -1,25 +1,17 @@
 import React from 'react'
+import Hero from '../components/Hero/Hero'
+import FashionForward from '../components/FashionForward/FashionForward'
+import SellerStories from '../components/SellerStories/SellerStories'
+import './Home.css'
 
-import { Hero } from '../components/Hero/Hero'
-
-import { Popular } from '../components/Popular/Popular'
-
-
-
-export const Home = () => {
-
+const Home = () => {
   return (
-
-    <div>
-
-        <Hero/>
-
-        <Popular/>
-
-        
-
+    <div className="home-container">
+      <Hero/>
+      <FashionForward/>
+      <SellerStories/>
     </div>
-
   )
-
 }
+
+export default Home;
