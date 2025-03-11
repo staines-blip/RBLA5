@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import SPlogo from '../components/Assets/splogo.png';
 import './UserLogin.css';
 
 const UserLogin = () => {
@@ -18,7 +19,7 @@ const UserLogin = () => {
       <div className="main-content">
         {/* Left side - Organization Info */}
         <div className="business-logo">
-          <img src="/logo.png" alt="RBLA Logo" />
+          <img src={SPlogo} alt="Logo" className="sp-logo" />
           <h2>RBLA</h2>
           <p className="organization-desc">
             Rescue Bonded Labour Association (RBLA) is dedicated to identifying, rescuing, and rehabilitating bonded laborers across India. 
@@ -33,27 +34,7 @@ const UserLogin = () => {
             <p>Please select your login type to continue</p>
           </div>
 
-          <div className="login-form">
-            <div className="form-group">
-              <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                required
-              />
-            </div>
-            <div className="form-actions">
-              <a href="#" className="forgot-password">Forgot Password?</a>
-            </div>
-          </div>
+          
 
           <div className="login-type-buttons">
             <button 
