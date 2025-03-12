@@ -3,9 +3,12 @@
   display: flex;
   min-height: 80vh;
   background: linear-gradient(45deg, #80002f, #4a0019);
-  padding: 0 50px;
+  padding: 50px;
   box-sizing: border-box;
   color: white;
+  margin-top: 80px;
+  position: relative;
+  z-index: 0;
 }
 
 /* Left Section Styling */
