@@ -1,4 +1,34 @@
 /* workers.css */
+/* Table Styles */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.workers-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  background: var(--background-color);
+  color: var(--text-color);
+  border-radius: 20px; /* Rounded corners for the table */
+  overflow: hidden; /* Ensures the inner elements respect the border radius */
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+.workers-table th,
+.workers-table td {
+  padding: 8px; /* Decreased padding */
+  border: 1px solid var(--border-color);
+  text-align: center;
+  font-size: 14px; /* Decreased font size */
+}
+.worker-avatar {
+  width: 30px; /* Decreased size */
+  height: 30px; /* Decreased size */
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 
 .workers-container {
   max-width: 1200px;
@@ -165,25 +195,53 @@
   border-radius: 50%;
 }
 
+/* Action Buttons with Icons */
 .action-buttons {
   display: flex;
   justify-content: center;
   gap: 10px;
 }
 
-.modify-btn {
-  background-color: #ffc107;
-  color: #333;
+.action-buttons .btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, opacity 0.2s;
 }
 
-.delete-btn {
-  background-color: #ff4d4d;
-  color: white;
+.action-buttons .btn:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+  opacity: 0.8;
 }
 
-/* Responsive */
+/* Update and Delete Icons */
+.action-buttons .update-btn::before {
+  content: "✏️"; /* Pencil icon for update */
+  font-size: 18px;
+}
+
+.action-buttons .delete-btn::before {
+  content: "🗑️"; /* Trash icon for delete */
+  font-size: 18px;
+}
+
+/* Responsive Design */
 @media (max-width: 600px) {
-  .form-grid {
-    grid-template-columns: 1fr;
+  .workers-table th,
+  .workers-table td {
+    padding: 8px; /* Smaller padding for small screens */
+    font-size: 12px; /* Smaller font size for small screens */
+  }
+
+  .action-buttons {
+    gap: 5px; /* Smaller gap for small screens */
+  }
+
+  .action-buttons .btn::before {
+    font-size: 16px; /* Smaller icons for small screens */
   }
 }
