@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendOtp, verifyOtp, completeSignup, login } from '../../../services/userapi/authservice';
+import { sendOtp, verifyOtp, completeSignup } from '../../../services/userapi/authservice';
+import { useUser } from '../../../Context/UserContext';
 import './LoginSignup.css';
 
 const LoginSignup = () => {
   const navigate = useNavigate();
+  const { login: contextLogin, error: contextError, clearError } = useUser();
   const [isLogin, setIsLogin] = useState(true);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -61,6 +63,7 @@ const LoginSignup = () => {
     setLoading(true);
     setError('');
     setMessage('');
+    
     try {
       const response = await completeSignup(
         formData.email,
@@ -68,13 +71,22 @@ const LoginSignup = () => {
         formData.password,
         formData.confirmPassword
       );
+
       if (response.success) {
-        localStorage.setItem('token', response.token);
-        setMessage(response.message);
-        navigate('/');
+        const loginSuccess = await contextLogin({
+          email: formData.email,
+          password: formData.password
+        });
+
+        if (loginSuccess) {
+          setMessage('Signup successful!');
+          navigate('/');
+        } else {
+          setError('Signup completed but login failed. Please try logging in.');
+        }
       }
     } catch (error) {
-      setError(error.message);
+      setError(error.message || 'An error occurred during signup');
     }
     setLoading(false);
   };
@@ -84,15 +96,21 @@ const LoginSignup = () => {
     setLoading(true);
     setError('');
     setMessage('');
+    
     try {
-      const response = await login(formData.email, formData.password);
-      if (response.success) {
-        localStorage.setItem('token', response.token);
-        setMessage(response.message);
+      const success = await contextLogin({
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (success) {
+        setMessage('Login successful!');
         navigate('/');
+      } else {
+        setError(contextError || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
-      setError(error.message);
+      setError(error.message || 'An error occurred during login');
     }
     setLoading(false);
   };

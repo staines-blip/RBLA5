@@ -4,14 +4,14 @@
 body {
   margin: 0;
   font-family: Inter, sans-serif;
-  background: linear-gradient(135deg, #f0f4f8 0%, #e0e8f0 100%); /* Subtle gradient background */
+  background: linear-gradient(135deg, #f0f4f8 0%, #e0e8f0 100%);
   background-size: cover;
-  background-attachment: fixed; /* Keeps the background fixed while scrolling */
+  background-attachment: fixed;
 }
 
-/* Background Overlay (Optional subtle pattern) */
+/* Background Overlay */
 .auth-container {
-  position: relative; /* Ensures the pseudo-element positions correctly */
+  position: relative;
 }
 
 .auth-container::before {
@@ -21,12 +21,9 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('C:\Users\john percy\Downloads\depositphotos_36220949-stock-photo-beautiful-landscape.jpg') repeat; /* Update the path as needed */
-  background-size: cover; /* Ensures the image covers the whole area */
-  opacity: 0.3; /* Very light overlay */
+  background: linear-gradient(135deg, rgba(128, 0, 47, 0.05) 0%, rgba(128, 0, 47, 0.1) 100%);
   z-index: -1;
 }
-
 
 /* Main container with adjusted positioning */
 .auth-container {
@@ -35,7 +32,7 @@ body {
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  position: relative; /* Ensure the container respects the background overlay */
+  position: relative;
 }
 
 /* Main box for the login/signup form */
@@ -47,7 +44,7 @@ body {
   max-width: 450px;
   width: 100%;
   text-align: center;
-  border: 1px solid #e0e8f0; /* Light border for subtle elegance */
+  border: 1px solid #e0e8f0;
 }
 
 /* Header section with title and toggle buttons */
@@ -58,7 +55,7 @@ body {
 .auth-header h2 {
   font-size: 28px;
   font-weight: 700;
-  color: #2E7D7D; /* New teal color for title */
+  color: #2E7D7D;
   margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -69,7 +66,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 15px;
-  background: #e0e8f0; /* Light background for toggle container */
+  background: #e0e8f0;
   padding: 5px;
   border-radius: 25px;
   width: fit-content;
@@ -90,7 +87,7 @@ body {
 }
 
 .auth-toggle button.active {
-  background: #2E7D7D; /* Teal for active button */
+  background: #2E7D7D;
   color: white;
   box-shadow: 0 2px 5px rgba(46, 125, 125, 0.3);
 }
@@ -107,7 +104,7 @@ body {
 
 /* Error and success messages */
 .error-message {
-  background: #80002f; /* Maroon for error messages */
+  background: #80002f;
   color: white;
   padding: 12px;
   border-radius: 6px;
@@ -117,7 +114,7 @@ body {
 }
 
 .success-message {
-  background: #2E7D7D; /* Teal for success messages */
+  background: #2E7D7D;
   color: white;
   padding: 12px;
   border-radius: 6px;
@@ -152,7 +149,7 @@ body {
   border: 1px solid #ddd;
   border-radius: 6px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background: #fafafa; /* Light gray background for inputs */
+  background: #fafafa;
 }
 
 .form-group input:focus {
@@ -168,7 +165,7 @@ body {
 
 /* Submit button */
 .auth-button {
-  background: #2E7D7D; /* Teal primary button color */
+  background: #2E7D7D;
   color: white;
   border: none;
   padding: 12px 25px;
@@ -181,7 +178,7 @@ body {
 }
 
 .auth-button:hover:not(:disabled) {
-  background: #266666; /* Darker teal on hover */
+  background: #266666;
   transform: translateY(-2px);
 }
 

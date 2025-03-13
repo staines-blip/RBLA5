@@ -9,6 +9,16 @@ const userSchema = new mongoose.Schema({
     lowercase: true, // Normalize email to lowercase
     trim: true 
   },
+  name: {
+    type: String,
+    trim: true,
+    default: '' // Optional, can be added later in profile
+  },
+  phoneNumber: {
+    type: String,
+    trim: true,
+    default: '' // Optional, can be added later in profile
+  },
   password: { 
     type: String, 
     required: false // Only required after signup completes
@@ -25,10 +35,24 @@ const userSchema = new mongoose.Schema({
     type: Boolean, 
     default: false // Tracks if email is verified and signup is complete
   },
+  profileCompleted: {
+    type: Boolean,
+    default: false // Tracks if user has completed their profile
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
+});
+
+// Update the updatedAt timestamp before saving
+userSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 // Hash password before saving (only if password is provided)
@@ -42,6 +66,17 @@ userSchema.pre('save', async function (next) {
 // Method to compare passwords
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Method to get public profile (excludes sensitive data)
+userSchema.methods.getPublicProfile = function() {
+  const userObject = this.toObject();
+  
+  delete userObject.password;
+  delete userObject.otp;
+  delete userObject.otpExpires;
+  
+  return userObject;
 };
 
 module.exports = mongoose.model('User', userSchema);

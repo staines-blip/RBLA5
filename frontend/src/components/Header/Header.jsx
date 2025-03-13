@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faChevronDown, faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { isLoggedIn, logout } from '../../services/userapi/authservice';
+import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { useUser } from '../../Context/UserContext';
 
 const Header = () => {
   const navigate = useNavigate();
-  const loggedIn = isLoggedIn();
+  const { isAuthenticated, logout: contextLogout, user } = useUser();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -88,7 +88,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    logout();
+    contextLogout();
     navigate('/loginsignup');
   };
 
@@ -118,7 +118,7 @@ const Header = () => {
               <button className="search-button" onClick={handleSearch}>
                 <FontAwesomeIcon icon={faSearch} />
               </button>
-              {loggedIn && (
+              {isAuthenticated && (
                 <div className="login-status">
                   <FontAwesomeIcon icon={faUser} className="status-icon" />
                   <span>Logged In</span>
@@ -127,11 +127,17 @@ const Header = () => {
             </div>
           </div>
           <div className="account-links">
-            {loggedIn ? (
-              <button onClick={handleLogout} className="account-link">
-                <FontAwesomeIcon icon={faSignOutAlt} />
-                <span>LOGOUT</span>
-              </button>
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile" className="account-link">
+                  <FontAwesomeIcon icon={faUserCircle} />
+                  <span>PROFILE</span>
+                </Link>
+                <button onClick={handleLogout} className="account-link">
+                  <FontAwesomeIcon icon={faSignOutAlt} />
+                  <span>LOGOUT</span>
+                </button>
+              </>
             ) : (
               <Link to="/loginsignup" className="account-link">
                 <FontAwesomeIcon icon={faUser} />
