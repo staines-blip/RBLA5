@@ -20,6 +20,7 @@ const adminUploadRoutes = require('./routes/admin/uploadRoutes');
 const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes');
 const publicProductRoutes = require('./routes/public/productRoutes');
 const publicGeneralRoutes = require('./routes/public/generalRoutes');
+const publicRoutes = require('./routes/public/index');
 const userAuthRoutes = require('./routes/user/auth');
 const userProfileRoutes = require('./routes/user/profileRoutes');
 
@@ -78,6 +79,7 @@ app.use('/api/auth', userAuthRoutes);
 app.use('/api/user', userProfileRoutes);
 
 // Public routes
+app.use('/api/public', publicRoutes);
 app.use('/api/public/products', publicProductRoutes);
 app.use('/api/public', publicGeneralRoutes);
 

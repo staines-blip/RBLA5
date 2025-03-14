@@ -59,22 +59,18 @@ const Header = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-      });
-
+      const response = await fetch(`http://localhost:5000/api/public/search?query=${encodeURIComponent(query)}`);
       const data = await response.json();
-      if (response.ok) {
-        setSearchResults(data);
+      
+      if (data.success) {
+        setSearchResults(data.products);
       } else {
+        console.error("Search failed:", data.message);
         setSearchResults([]);
       }
     } catch (error) {
       console.error("Error searching products:", error);
+      setSearchResults([]);
     }
   };
 
@@ -178,7 +174,18 @@ const Header = () => {
           <ul>
             {searchResults.map((product) => (
               <li key={product._id}>
-                <Link to={`/product/${product._id}`}>{product.name}</Link>
+                <Link to={`/product/${product._id}`}>
+                  <div className="search-result-item">
+                    <img src={product.image_url} alt={product.name} className="search-result-image" />
+                    <div className="search-result-details">
+                      <span className="product-name">{product.name}</span>
+                      <span className="product-price">₹{product.new_price}</span>
+                      {product.old_price > product.new_price && (
+                        <span className="product-old-price">₹{product.old_price}</span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>

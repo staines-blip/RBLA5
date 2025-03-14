@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { isLoggedIn } from './services/userapi/authservice';
@@ -42,14 +42,6 @@ const UserPages = {
   MyOrders: lazy(() => import('./pages/MyOrders')),
   ReturnsOrders: lazy(() => import('./pages/ReturnsOrders')),
   UpdateLocation: lazy(() => import('./pages/Location')),
-};
-
-const AdminPages = {
-  Admin: lazy(() => import('./pages/Admin')),
-  AdminPanel: lazy(() => import('./pages/AdminPanel')),
-  ListProduct: lazy(() => import('./components/ListProduct/ListProduct')),
-  AddProduct: lazy(() => import('./components/AddProduct/AddProduct')),
-  Sidebar: lazy(() => import('./components/Sidebar/Sidebar')),
 };
 
 const SuperAdminPages = {
@@ -109,12 +101,6 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const App = () => {
-  const [units, setUnits] = useState([]); 
-
-  const addUnit = (newUnit) => {
-    setUnits((prevUnits) => [...prevUnits, newUnit]);
-  };
-
   // Function to create routes from a group of components
   const createRoutes = (components, pathPrefix = '') => {
     return Object.entries(components).map(([name, Component]) => (
@@ -164,7 +150,6 @@ const App = () => {
               {/* Generate routes from component groups */}
               {createRoutes(UserPages, '')}
               {createRoutes(ProductPages, '')}
-              {createRoutes(AdminPages, '')}
               {createRoutes(CheckoutPages, '')}
               {createRoutes(InfoPages, '')}
                 
@@ -175,13 +160,6 @@ const App = () => {
               <Route path="/superadmin/products" element={<StandalonePage><div>Products Page</div></StandalonePage>} />
               <Route path="/superadmin/units" element={<StandalonePage><div>Units Page</div></StandalonePage>} />
               <Route path="/superadmin/adminregistration" element={<StandalonePage><SuperAdminPages.AdminRegistration /></StandalonePage>} />
-                
-              {/* Admin Panel with props */}
-              <Route path="/adminpanel" element={
-                <MainLayout>
-                  <AdminPages.AdminPanel addUnit={addUnit} />
-                </MainLayout>
-              } />
             </Routes>
             <Chatbot />
           </Router>
