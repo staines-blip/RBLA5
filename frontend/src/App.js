@@ -18,6 +18,7 @@ axios.defaults.baseURL = 'http://localhost:5000';
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const AdminLogin = lazy(() => import('./pages/admin/adminlogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/admindashboard'));
+const ProductDetails = lazy(() => import('./pages/Product/ProductDetails/ProductDetails'));
 
 // Lazy load groups of related components
 const ProductPages = {
@@ -29,8 +30,6 @@ const ProductPages = {
   Bamboo: lazy(() => import('./pages/Bamboo')),
   Paperfiles: lazy(() => import('./pages/Paperfiles')),
   CustProduct: lazy(() => import('./pages/custproduct')),
-  ProductPage: lazy(() => import('./pages/ProductPage')),
-  ProductDetails: lazy(() => import('./pages/ProductDetails')),
 };
 
 const UserPages = {
@@ -143,6 +142,16 @@ const App = () => {
                 element={
                   <MainLayout>
                     <Home />
+                  </MainLayout>
+                }
+              />
+
+              {/* Product Details Route */}
+              <Route
+                path="/product/:id"
+                element={
+                  <MainLayout>
+                    <ProductDetails />
                   </MainLayout>
                 }
               />
