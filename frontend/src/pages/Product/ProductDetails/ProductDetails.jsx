@@ -19,10 +19,17 @@ const ProductDetails = () => {
       try {
         setLoading(true);
         const data = await getProduct(id);
-        setProduct(data.product);
-        if (data.product?.images?.length > 0) {
-          setSelectedImage(0);
+        const productData = data.product;
+        
+        // Handle images array or fallback to image_url
+        if (productData) {
+          productData.images = productData.images?.length > 0 
+            ? productData.images 
+            : [productData.image_url];
         }
+        
+        setProduct(productData);
+        setSelectedImage(0);
       } catch (err) {
         setError('Failed to load product details');
         console.error('Error fetching product:', err);
@@ -83,19 +90,27 @@ const ProductDetails = () => {
       <div className="product-images-section">
         <div className="main-image">
           <img 
-            src={product.images[selectedImage]} 
-            alt={product.name}
-            className="product-main-image" 
+            src={product?.images?.[selectedImage]} 
+            alt={product?.name}
+            className="product-main-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = product?.image_url;
+            }}
           />
         </div>
         <div className="image-thumbnails">
-          {product.images.map((image, index) => (
+          {product?.images?.map((image, index) => (
             <img
               key={index}
               src={image}
               alt={`${product.name} view ${index + 1}`}
               className={`thumbnail ${selectedImage === index ? 'selected' : ''}`}
               onClick={() => setSelectedImage(index)}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = product.image_url;
+              }}
             />
           ))}
         </div>

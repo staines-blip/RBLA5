@@ -88,6 +88,11 @@ const Header = () => {
     navigate('/loginsignup');
   };
 
+  const handleProductClick = () => {
+    setSearchResults([]);  // Clear search results
+    setQuery("");         // Clear search query
+  };
+
   return (
     <div className={`header-container ${isHeaderVisible ? "" : "header-hidden"}`}>
       <div className="announcement-bar">
@@ -174,7 +179,7 @@ const Header = () => {
           <ul>
             {searchResults.map((product) => (
               <li key={product._id}>
-                <Link to={`/product/${product._id}`}>
+                <Link to={`/product/${product._id}`} onClick={handleProductClick}>
                   <div className="search-result-item">
                     <img src={product.image_url} alt={product.name} className="search-result-image" />
                     <div className="search-result-details">

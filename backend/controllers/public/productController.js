@@ -1,4 +1,5 @@
-const Product = require('../../models/schemas/productSchema');
+const Product = require('../../models/Product');
+const mongoose = require('mongoose'); // mongoose is required for ObjectId validation
 
 // Get all products with pagination
 exports.getAllProducts = async (req, res) => {
@@ -33,8 +34,19 @@ exports.getAllProducts = async (req, res) => {
 // Get single product details
 exports.getProductDetails = async (req, res) => {
     try {
+        // Validate MongoDB ID format
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid product ID format'
+            });
+        }
+
         const product = await Product.findById(req.params.id)
-            .populate('reviews.user', 'name avatar');
+            .populate('category', 'name')
+            .populate('unit', 'name')
+            .select('-__v')
+            .lean();
 
         if (!product) {
             return res.status(404).json({
@@ -43,15 +55,23 @@ exports.getProductDetails = async (req, res) => {
             });
         }
 
+        // Transform data to match frontend expectations
+        const transformedProduct = {
+            ...product,
+            images: product.images || [product.image_url], // Fallback to image_url if images empty
+        };
+
         res.status(200).json({
             success: true,
-            product
+            product: transformedProduct
         });
     } catch (error) {
+        console.error('Product details error:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching product details',
-            error: error.message
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };
