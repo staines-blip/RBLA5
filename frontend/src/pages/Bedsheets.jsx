@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Bedsheets.css';
-import { WishlistContext } from "../Context/WishlistContext";
-import { CartContext } from "../Context/CartContext";
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import Marquee from './Marquee';
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Bedsheets = () => {
-  const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
-  const { cart, addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [bedsheets, setBedsheets] = useState([]);
@@ -43,9 +39,6 @@ const Bedsheets = () => {
 
     fetchBedsheets();
   }, []);
-
-  const isInWishlist = (product) => wishlist.some((item) => item._id === product._id);
-  const isInCart = (product) => cart.some((item) => item._id === product._id);
 
   // Helper function to get full image URL
   const getImageUrl = (product) => {
@@ -84,19 +77,6 @@ const Bedsheets = () => {
         <div className="product-grid">
           {bedsheets.map((product) => (
             <div className="product-card" key={product._id}>
-              <div
-                className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
-                onClick={() => {
-                  if (isInWishlist(product)) {
-                    removeFromWishlist(product);
-                  } else {
-                    addToWishlist(product);
-                  }
-                }}
-              >
-                ♥
-              </div>
-
               <Link to={`/product/${product._id}`}>
                 <img 
                   src={getImageUrl(product)} 
@@ -114,22 +94,9 @@ const Bedsheets = () => {
               <p className="product-size">Size: {product.size.breadth}x{product.size.height} {product.unit?.name}</p>
               <p className="product-price">₹{product.new_price}</p>
               <p className="original-price">Original Price: ₹{product.old_price}</p>
-              {product.stock > 0 ? (
-                <button
-                  className="add-to-cart-btn"
-                  onClick={() => {
-                    if (!isInCart(product)) {
-                      addToCart(product);
-                    }
-                  }}
-                >
-                  {isInCart(product) ? "In Cart" : "Add to Cart"}
-                </button>
-              ) : (
-                <button className="out-of-stock-btn" disabled>
-                  Out of Stock
-                </button>
-              )}
+              <Link to={`/product/${product._id}`} className="view-details-btn">
+                View Details
+              </Link>
             </div>
           ))}
         </div>
