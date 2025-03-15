@@ -5,7 +5,7 @@
   gap: 2rem;
   max-width: 1200px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 150px 1rem 2rem; /* Added padding-top to avoid overlap with the header */
 }
 
 /* Loading state */
@@ -297,6 +297,7 @@
 @media (max-width: 768px) {
   .product-details-container {
     grid-template-columns: 1fr;
+    padding-top: 130px; /* Adjusted padding-top for smaller screens */
   }
 
   .action-buttons {
@@ -305,5 +306,11 @@
 
   .design-buttons {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-details-container {
+    padding-top: 110px; /* Adjusted padding-top for mobile screens */
   }
 }
