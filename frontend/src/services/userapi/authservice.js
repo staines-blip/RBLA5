@@ -32,6 +32,9 @@ export const completeSignup = async (email, otp, password, confirmPassword) => {
       password,
       confirmPassword,
     });
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+    }
     return response.data; // { success: true, message: 'Signup completed successfully', token: '...' }
   } catch (error) {
     throw error.response?.data || { success: false, message: 'Error completing signup' };
@@ -42,10 +45,18 @@ export const completeSignup = async (email, otp, password, confirmPassword) => {
 export const login = async (email, password) => {
   try {
     const response = await axios.post(`${API_URL}/login`, { email, password });
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+    }
     return response.data; // { success: true, message: 'Login successful', token: '...' }
   } catch (error) {
     throw error.response?.data || { success: false, message: 'Error logging in' };
   }
+};
+
+// Get auth token
+export const getAuthToken = () => {
+  return localStorage.getItem('token');
 };
 
 // Check if user is logged in

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProduct } from '../../../services/publicapi/productAPI';
 import { useCart } from '../../../Context/CartContext';
+import WishlistButton from '../../../components/Wishlist/WishlistButton';
 import { toast } from 'react-toastify';
 import './ProductDetails.css';
 
@@ -133,7 +134,10 @@ const ProductDetails = () => {
 
       {/* Product Info Section */}
       <div className="product-info-section">
-        <h1 className="product-title">{product.name}</h1>
+        <div className="product-header">
+          <h1 className="product-title">{product.name}</h1>
+          <WishlistButton productId={id} />
+        </div>
         <p className="product-description">{product.description}</p>
 
         <div className="price-section">

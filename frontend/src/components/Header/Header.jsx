@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle, faShoppingCart, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useUser } from '../../Context/UserContext';
 import { useCart } from '../../Context/CartContext';
+import { useWishlist } from '../../Context/WishlistContext';
 
 const Header = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logout: contextLogout, user } = useUser();
   const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -132,6 +134,11 @@ const Header = () => {
           <div className="account-links">
             {isAuthenticated ? (
               <>
+                <Link to="/wishlist" className="account-link wishlist-link">
+                  <FontAwesomeIcon icon={faHeart} />
+                  {wishlistCount > 0 && <span className="wishlist-count">{wishlistCount}</span>}
+                  <span>WISHLIST</span>
+                </Link>
                 <Link to="/cart" className="account-link cart-link">
                   <FontAwesomeIcon icon={faShoppingCart} />
                   {cartCount > 0 && <span className="cart-count">{cartCount}</span>}

@@ -5,6 +5,7 @@ import { isLoggedIn } from './services/userapi/authservice';
 import Chatbot from './components/Chatbot/Chatbot';
 import { UserProvider } from "./Context/UserContext";
 import { CartProvider } from "./Context/CartContext";
+import { WishlistProvider } from "./Context/WishlistContext";
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home';
@@ -19,6 +20,7 @@ const UserLogin = lazy(() => import('./pages/UserLogin'));
 const AdminLogin = lazy(() => import('./pages/admin/adminlogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/admindashboard'));
 const ProductDetails = lazy(() => import('./pages/Product/ProductDetails/ProductDetails'));
+const WishlistPage = lazy(() => import('./pages/User/Wishlist/WishlistPage'));
 
 // Lazy load groups of related components
 const ProductPages = {
@@ -109,73 +111,89 @@ const App = () => {
     <UserProvider>
       <Router>
         <CartProvider>
-          <Routes>
-            {/* Standalone Routes (no header/footer) */}
-            <Route 
-              path="/loginsignup" 
-              element={
-                <StandalonePage>
-                  <UserPages.LoginSignup />
-                </StandalonePage>
-              } 
-            />
-            <Route path="/UserLogin" element={<StandalonePage><UserLogin /></StandalonePage>} />
-            <Route path="/admin/login" element={<StandalonePage><AdminLogin /></StandalonePage>} />
-            <Route path="/superadmin/login" element={<StandalonePage><SuperAdminPages.Login /></StandalonePage>} />
+          <WishlistProvider>
+            <Routes>
+              {/* Standalone Routes (no header/footer) */}
+              <Route 
+                path="/loginsignup" 
+                element={
+                  <StandalonePage>
+                    <UserPages.LoginSignup />
+                  </StandalonePage>
+                } 
+              />
+              <Route path="/UserLogin" element={<StandalonePage><UserLogin /></StandalonePage>} />
+              <Route path="/admin/login" element={<StandalonePage><AdminLogin /></StandalonePage>} />
+              <Route path="/superadmin/login" element={<StandalonePage><SuperAdminPages.Login /></StandalonePage>} />
 
-            {/* Admin Dashboard route - without Layout */}
-            <Route path="/admin/dashboard" element={<StandalonePage><AdminDashboard /></StandalonePage>} />
+              {/* Admin Dashboard route - without Layout */}
+              <Route path="/admin/dashboard" element={<StandalonePage><AdminDashboard /></StandalonePage>} />
 
-            {/* Superadmin Dashboard route - without Layout */}
-            <Route path="/superadmin/dashboard" element={<StandalonePage><SuperAdminPages.Dashboard /></StandalonePage>} />
+              {/* Superadmin Dashboard route - without Layout */}
+              <Route path="/superadmin/dashboard" element={<StandalonePage><SuperAdminPages.Dashboard /></StandalonePage>} />
 
-            {/* Routes with Header and Footer */}
-            <Route
-              path="/"
-              element={
-                <MainLayout>
-                  <Home />
-                </MainLayout>
-              }
-            />
-
-            {/* Protected Cart Route */}
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
+              {/* Routes with Header and Footer */}
+              <Route
+                path="/"
+                element={
                   <MainLayout>
-                    <UserPages.Cart />
+                    <Home />
                   </MainLayout>
-                </ProtectedRoute>
-              }
-            />
+                }
+              />
 
-            {/* Product Details Route */}
-            <Route
-              path="/product/:id"
-              element={
-                <MainLayout>
-                  <ProductDetails />
-                </MainLayout>
-              }
-            />
+              {/* Protected Cart Route */}
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <UserPages.Cart />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Generate routes from component groups */}
-            {createRoutes(UserPages, '')}
-            {createRoutes(ProductPages, '')}
-            {createRoutes(CheckoutPages, '')}
-            {createRoutes(InfoPages, '')}
-            
-            {/* Special paths and custom routes */}
-            <Route path="/superadmin/workers" element={<StandalonePage><SuperAdminPages.Workers /></StandalonePage>} />
-            <Route path="/superadmin/customers" element={<StandalonePage><SuperAdminPages.CustomerManager /></StandalonePage>} />
-            <Route path="/superadmin/admins" element={<StandalonePage><div>Admins Page</div></StandalonePage>} />
-            <Route path="/superadmin/products" element={<StandalonePage><div>Products Page</div></StandalonePage>} />
-            <Route path="/superadmin/units" element={<StandalonePage><div>Units Page</div></StandalonePage>} />
-            <Route path="/superadmin/adminregistration" element={<StandalonePage><SuperAdminPages.AdminRegistration /></StandalonePage>} />
-          </Routes>
-          <Chatbot />
+              {/* Protected Wishlist Route */}
+              <Route
+                path="/wishlist"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Suspense fallback={<LoadingFallback />}>
+                        <WishlistPage />
+                      </Suspense>
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Product Details Route */}
+              <Route
+                path="/product/:id"
+                element={
+                  <MainLayout>
+                    <ProductDetails />
+                  </MainLayout>
+                }
+              />
+
+              {/* Generate routes from component groups */}
+              {createRoutes(UserPages, '')}
+              {createRoutes(ProductPages, '')}
+              {createRoutes(CheckoutPages, '')}
+              {createRoutes(InfoPages, '')}
+              
+              {/* Special paths and custom routes */}
+              <Route path="/superadmin/workers" element={<StandalonePage><SuperAdminPages.Workers /></StandalonePage>} />
+              <Route path="/superadmin/customers" element={<StandalonePage><SuperAdminPages.CustomerManager /></StandalonePage>} />
+              <Route path="/superadmin/admins" element={<StandalonePage><div>Admins Page</div></StandalonePage>} />
+              <Route path="/superadmin/products" element={<StandalonePage><div>Products Page</div></StandalonePage>} />
+              <Route path="/superadmin/units" element={<StandalonePage><div>Units Page</div></StandalonePage>} />
+              <Route path="/superadmin/adminregistration" element={<StandalonePage><SuperAdminPages.AdminRegistration /></StandalonePage>} />
+            </Routes>
+            <Chatbot />
+          </WishlistProvider>
         </CartProvider>
       </Router>
     </UserProvider>

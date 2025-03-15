@@ -24,6 +24,7 @@ const publicRoutes = require('./routes/public/index');
 const userAuthRoutes = require('./routes/user/auth');
 const userProfileRoutes = require('./routes/user/profileRoutes');
 const userCartRoutes = require('./routes/user/cartRoutes');
+const userWishlistRoutes = require('./routes/user/wishlistRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -79,6 +80,7 @@ app.use('/api/admin/product-units', adminProductUnitRoutes);
 app.use('/api/auth', userAuthRoutes);
 app.use('/api/user', userProfileRoutes);
 app.use('/api/user/cart', userCartRoutes);
+app.use('/api/user/wishlist', userWishlistRoutes);
 
 // Public routes
 app.use('/api/public', publicRoutes);

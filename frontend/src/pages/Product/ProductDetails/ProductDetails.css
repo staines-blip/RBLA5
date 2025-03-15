@@ -116,10 +116,18 @@
   gap: 1.5rem;
 }
 
+.product-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
 .product-title {
+  margin: 0;
+  flex: 1;
   font-size: 2rem;
   color: #333;
-  margin: 0;
 }
 
 .product-description {
