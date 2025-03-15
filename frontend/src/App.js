@@ -39,6 +39,9 @@ const UserPages = {
   LoginSignup: lazy(() => import('./pages/User/Auth/LoginSignup')),
   Profile: lazy(() => import('./pages/User/Profile/Profile')),
   Cart: lazy(() => import('./pages/User/Cart/Cart')),
+  Checkout: lazy(() => import('./pages/User/Checkout/Checkout')),
+  Payment: lazy(() => import('./pages/User/Checkout/PaymentPage')),
+  PlaceOrder: lazy(() => import('./pages/User/Checkout/PlaceOrder'))
 };
 // superadmin module 
 const SuperAdminPages = {
@@ -52,7 +55,6 @@ const SuperAdminPages = {
 const CheckoutPages = {
   CustomDesignPage: lazy(() => import('./pages/CustomDesignPage')),
   UploadDesignAndCheckout: lazy(() => import('./pages/UploadDesignAndCheckout')),
-  Checkout: lazy(() => import('./pages/Checkout')),
 };
 // common webpages 
 const InfoPages = {
@@ -142,13 +144,43 @@ const App = () => {
                 }
               />
 
-              {/* Protected Cart Route */}
+              {/* Protected Cart and Checkout Routes */}
               <Route
                 path="/cart"
                 element={
                   <ProtectedRoute>
                     <MainLayout>
                       <UserPages.Cart />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <UserPages.Checkout />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checkout/payment"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <UserPages.Payment />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checkout/placeorder"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <UserPages.PlaceOrder />
                     </MainLayout>
                   </ProtectedRoute>
                 }

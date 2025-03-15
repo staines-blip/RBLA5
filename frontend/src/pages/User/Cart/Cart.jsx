@@ -120,7 +120,10 @@ const Cart = () => {
             <span>₹{(cartTotal + (cartTotal >= 499 ? 0 : 50)).toFixed(2)}</span>
           </div>
           
-          <button className="checkout-btn">
+          <button 
+            onClick={() => navigate('/checkout')} 
+            className="checkout-btn"
+          >
             Proceed to Checkout
           </button>
           
