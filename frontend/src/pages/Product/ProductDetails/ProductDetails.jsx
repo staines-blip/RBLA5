@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProduct } from '../../../services/publicapi/productAPI';
+import { useCart } from '../../../Context/CartContext';
+import { toast } from 'react-toastify';
 import './ProductDetails.css';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart, loading: cartLoading } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,6 +16,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState('default');
   const [printedSide, setPrintedSide] = useState('single');
+  const [addingToCart, setAddingToCart] = useState(false);
 
   const getFullImageUrl = (imagePath) => {
     if (!imagePath) return '';
@@ -200,8 +204,35 @@ const ProductDetails = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button className="add-to-cart-btn">
-            Add to Cart
+          <button 
+            className={`add-to-cart-btn ${addingToCart ? 'loading' : ''}`}
+            onClick={async () => {
+              try {
+                setAddingToCart(true);
+                const productToAdd = {
+                  _id: product._id,
+                  name: product.name,
+                  price: parseFloat(calculatePrice()),
+                  image: product.images[0] || product.image_url,
+                  size,
+                  printedSide,
+                };
+                
+                const success = await addToCart(productToAdd, quantity);
+                if (success) {
+                  toast.success('Added to cart successfully!');
+                } else {
+                  toast.error('Failed to add to cart. Please try again.');
+                }
+              } catch (err) {
+                toast.error('Error adding to cart. Please try again.');
+              } finally {
+                setAddingToCart(false);
+              }
+            }}
+            disabled={addingToCart || cartLoading}
+          >
+            {addingToCart ? 'Adding...' : 'Add to Cart'}
           </button>
           <button className="buy-now-btn">
             Buy Now

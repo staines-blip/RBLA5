@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useUser } from '../../Context/UserContext';
+import { useCart } from '../../Context/CartContext';
 
 const Header = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logout: contextLogout, user } = useUser();
+  const { cartCount } = useCart();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -130,6 +132,11 @@ const Header = () => {
           <div className="account-links">
             {isAuthenticated ? (
               <>
+                <Link to="/cart" className="account-link cart-link">
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                  {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+                  <span>CART</span>
+                </Link>
                 <Link to="/profile" className="account-link">
                   <FontAwesomeIcon icon={faUserCircle} />
                   <span>PROFILE</span>

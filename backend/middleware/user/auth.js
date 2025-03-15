@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../../models/user/User');
 require('dotenv').config();
 
 // JWT secret key - should be in environment variables in production
@@ -18,9 +19,20 @@ const authMiddleware = async (req, res, next) => {
             // Verify token using JWT_SECRET from env
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
-            // Add user data to request - using email as primary identifier
+            // Find user by email to get their ID
+            const user = await User.findOne({ email: decoded.email });
+            
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
+
+            // Add user data to request
             req.user = {
-                email: decoded.email // Primary identifier
+                _id: user._id,
+                email: decoded.email
             };
             
             next();
