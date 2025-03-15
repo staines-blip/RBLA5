@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Checkout.css"; // Import the CSS file
 
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,10 +28,25 @@ const Checkout = () => {
     return cart.reduce((total, item) => total + item.quantity * item.price, 0);
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
-    console.log("Order Placed:", formData, cart);
-    alert("Order placed successfully!");
+    try {
+      // Here you would typically make an API call to your backend
+      // to process the order and handle payment
+      const orderData = {
+        ...formData,
+        items: cart,
+        total: calculateTotal(),
+      };
+      
+      // For now, we'll just simulate a successful order
+      console.log("Order data:", orderData);
+      alert("Order placed successfully!");
+      navigate('/'); // Redirect to home page after successful order
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("There was an error processing your order. Please try again.");
+    }
   };
 
   return (
@@ -100,7 +117,7 @@ const Checkout = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit" className="checkout-btn" onClick={'/PlaceOrder'}>
+          <button type="submit" className="checkout-btn">
             Place Order
           </button>
         </form>

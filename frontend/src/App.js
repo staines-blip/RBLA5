@@ -13,6 +13,7 @@ import './App.css';
 axios.defaults.baseURL = 'http://localhost:5000';
 
 // Lazy load components
+//admin module (the admin module has not modularized yet )
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const AdminLogin = lazy(() => import('./pages/admin/adminlogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/admindashboard'));
@@ -29,17 +30,14 @@ const ProductPages = {
   Paperfiles: lazy(() => import('./pages/Paperfiles')),
   CustProduct: lazy(() => import('./pages/custproduct')),
 };
-
+// the userpages are loaded here with the lazy load 
 const UserPages = {
   Wishlist: lazy(() => import('./pages/Wishlist')),
   LoginSignup: lazy(() => import('./pages/User/Auth/LoginSignup')),
   Profile: lazy(() => import('./pages/User/Profile/Profile')),
-  UserProfile: lazy(() => import('./pages/UserProfile')),
-  MyOrders: lazy(() => import('./pages/MyOrders')),
-  ReturnsOrders: lazy(() => import('./pages/ReturnsOrders')),
-  UpdateLocation: lazy(() => import('./pages/Location')),
-};
 
+};
+// superadmin module 
 const SuperAdminPages = {
   Login: lazy(() => import('./components/superadmin/superadminlogin')),
   Dashboard: lazy(() => import('./pages/superadmin/superadmindashboard')),
@@ -47,15 +45,13 @@ const SuperAdminPages = {
   CustomerManager: lazy(() => import('./pages/superadmin/customermanager')),
   AdminRegistration: lazy(() => import('./pages/superadmin/adminregistration')),
 };
-
+// maybe removed later 
 const CheckoutPages = {
   CustomDesignPage: lazy(() => import('./pages/CustomDesignPage')),
   UploadDesignAndCheckout: lazy(() => import('./pages/UploadDesignAndCheckout')),
   Checkout: lazy(() => import('./pages/Checkout')),
-  PlaceOrder: lazy(() => import('./pages/PlaceOrder')),
-  PaymentPage: lazy(() => import('./pages/PaymentPage')),
 };
-
+// common webpages 
 const InfoPages = {
   AboutPage: lazy(() => import('./pages/AboutPage')),
   ContactUs: lazy(() => import('./pages/ContactUs')),
