@@ -1,6 +1,6 @@
 
 ```
-RBLA4
+RBLA5
 ├─ backend
 │  ├─ .env
 │  ├─ conection string.txt
@@ -8,25 +8,46 @@ RBLA4
 │  │  ├─ admin
 │  │  │  ├─ adminAuthController.js
 │  │  │  ├─ categoryController.js
-│  │  │  └─ productController.js
-│  │  └─ superadmin
-│  │     ├─ AdminController.js
-│  │     ├─ customersController.js
-│  │     ├─ superadmincontroller.js
-│  │     ├─ unitController.js
-│  │     └─ workercontroller.js
+│  │  │  ├─ productController.js
+│  │  │  └─ productUnitController.js
+│  │  ├─ public
+│  │  │  ├─ productController.js
+│  │  │  └─ searchController.js
+│  │  ├─ superadmin
+│  │  │  ├─ AdminController.js
+│  │  │  ├─ customersController.js
+│  │  │  ├─ superadmincontroller.js
+│  │  │  ├─ unitController.js
+│  │  │  └─ workercontroller.js
+│  │  └─ user
+│  │     ├─ cartController.js
+│  │     └─ profileController.js
 │  ├─ index.js
 │  ├─ middleware
-│  │  └─ superadminmiddleware.js
+│  │  ├─ admin
+│  │  │  └─ adminMiddleware.js
+│  │  ├─ superadminmiddleware.js
+│  │  ├─ uploadMiddleware.js
+│  │  └─ user
+│  │     └─ auth.js
 │  ├─ models
 │  │  ├─ admin.js
 │  │  ├─ category.js
 │  │  ├─ customer.js
+│  │  ├─ index.js
 │  │  ├─ Order.js
 │  │  ├─ Payment.js
-│  │  ├─ product.js
+│  │  ├─ Product.js
+│  │  ├─ schemas
+│  │  │  ├─ categorySchema.js
+│  │  │  ├─ productSchema.js
+│  │  │  └─ productUnit.js
 │  │  ├─ superadmin.js
 │  │  ├─ Unit.js
+│  │  ├─ user
+│  │  │  ├─ Cart.js
+│  │  │  ├─ CartItem.js
+│  │  │  └─ User.js
 │  │  ├─ User.js
 │  │  ├─ ViewReviews.js
 │  │  ├─ ViewSales.js
@@ -37,21 +58,61 @@ RBLA4
 │  │  ├─ admin
 │  │  │  ├─ adminAuthRoutes.js
 │  │  │  ├─ categoryRoutes.js
-│  │  │  └─ productRoutes.js
+│  │  │  ├─ productRoutes.js
+│  │  │  ├─ productUnitRoutes.js
+│  │  │  └─ uploadRoutes.js
 │  │  ├─ productRoutes.js
+│  │  ├─ public
+│  │  │  ├─ generalRoutes.js
+│  │  │  ├─ index.js
+│  │  │  └─ productRoutes.js
 │  │  ├─ superadmin
 │  │  │  ├─ admins.js
 │  │  │  ├─ customerRoutes.js
 │  │  │  └─ index.js
 │  │  ├─ superadminauthroutes.js
 │  │  ├─ unitRoutes.js
+│  │  ├─ user
+│  │  │  ├─ auth.js
+│  │  │  ├─ cartRoutes.js
+│  │  │  └─ profileRoutes.js
 │  │  └─ workerRoutes.js
 │  ├─ scripts
-│  │  └─ createsuperadmin.js
+│  │  ├─ checkProducts.js
+│  │  ├─ createsuperadmin.js
+│  │  └─ testemail.js
 │  ├─ server.js
+│  ├─ uploads
+│  │  └─ products
+│  │     ├─ 1741330411482-898750931.jpg
+│  │     ├─ 1741330793946-709047882.jpg
+│  │     ├─ 1741330899320-695701943.jpg
+│  │     ├─ 1741330977554-309728895.jpg
+│  │     ├─ 1741331112519-126273020.jpg
+│  │     ├─ 1741331999628-270145785.jpg
+│  │     ├─ 1741332026558-208772240.png
+│  │     ├─ 1741332360489-202305468.jpeg
+│  │     ├─ 1741332863286-509572341.jpg
+│  │     ├─ 1741333152469-244274107.jpeg
+│  │     ├─ 1741535460725-886563918.jpg
+│  │     ├─ 1741536032637-750524601.png
+│  │     ├─ 1741590213768-542173040.png
+│  │     ├─ 1741590283307-606784364.png
+│  │     ├─ 1741590320187-941376791.png
+│  │     ├─ 1741591340725-889225785.png
+│  │     ├─ 1741591403556-577070654.png
+│  │     ├─ 1741591494488-753256046.png
+│  │     ├─ 1741591775689-931945532.png
+│  │     ├─ 1741591815068-667649689.png
+│  │     ├─ 1741592142415-761024180.jpg
+│  │     ├─ 1741592380028-497122776.png
+│  │     ├─ 1741592519725-412427643.jpg
+│  │     ├─ 1741592570029-76833728.jpg
+│  │     └─ 1741592719863-303455975.jpg
 │  └─ utils
 │     ├─ appError.js
-│     └─ catchAsync.js
+│     ├─ catchAsync.js
+│     └─ email.js
 ├─ frontend
 │  ├─ .env
 │  ├─ package-lock.json
@@ -71,10 +132,6 @@ RBLA4
 │     ├─ App.test.js
 │     ├─ CartContext.js
 │     ├─ components
-│     │  ├─ AddProduct
-│     │  │  ├─ AddProduct.css
-│     │  │  └─ AddProduct.jsx
-│     │  ├─ AdminDashboard.jsx
 │     │  ├─ Assets
 │     │  │  ├─ 1.png
 │     │  │  ├─ 2.png
@@ -91,36 +148,24 @@ RBLA4
 │     │  │  ├─ B3.png
 │     │  │  ├─ B4.png
 │     │  │  ├─ B5.png
-│     │  │  ├─ Ba1.png
-│     │  │  ├─ Ba2.png
-│     │  │  ├─ Ba3.png
-│     │  │  ├─ Ba4.png
-│     │  │  ├─ Ba5.png
 │     │  │  ├─ bheart.png
-│     │  │  ├─ C1.png
-│     │  │  ├─ C2.png
-│     │  │  ├─ C3.png
-│     │  │  ├─ C4.png
-│     │  │  ├─ C5.png
 │     │  │  ├─ cart.png
 │     │  │  ├─ cell.png
 │     │  │  ├─ chatbot.png
 │     │  │  ├─ close.png
+│     │  │  ├─ conta.png
 │     │  │  ├─ contactba.png
 │     │  │  ├─ data_product.js
 │     │  │  ├─ empty-cart.png
 │     │  │  ├─ heart.png
 │     │  │  ├─ home.png
+│     │  │  ├─ homepage.jpg
+│     │  │  ├─ homepage2.jpg
 │     │  │  ├─ in.png
 │     │  │  ├─ list.png
 │     │  │  ├─ logo.png
 │     │  │  ├─ mail.png
 │     │  │  ├─ menu-icon.png
-│     │  │  ├─ N1.png
-│     │  │  ├─ N2.png
-│     │  │  ├─ N3.png
-│     │  │  ├─ N4.png
-│     │  │  ├─ N5.png
 │     │  │  ├─ O1.png
 │     │  │  ├─ O2.png
 │     │  │  ├─ O3.png
@@ -144,6 +189,7 @@ RBLA4
 │     │  │  ├─ search-icon.png
 │     │  │  ├─ search.png
 │     │  │  ├─ sirlogo.png
+│     │  │  ├─ splogo.png
 │     │  │  ├─ T1.png
 │     │  │  ├─ T2.png
 │     │  │  ├─ T3.png
@@ -179,6 +225,9 @@ RBLA4
 │     │  │  ├─ DarkMode.jsx
 │     │  │  ├─ Moon.svg
 │     │  │  └─ Sun.svg
+│     │  ├─ FashionForward
+│     │  │  ├─ FashionForward.css
+│     │  │  └─ FashionForward.jsx
 │     │  ├─ Footer
 │     │  │  ├─ Footer.css
 │     │  │  └─ Footer.jsx
@@ -188,29 +237,20 @@ RBLA4
 │     │  ├─ Hero
 │     │  │  ├─ Hero.css
 │     │  │  └─ Hero.jsx
-│     │  ├─ ListProduct
-│     │  │  ├─ ListProduct.css
-│     │  │  └─ ListProduct.jsx
 │     │  ├─ Navbar
 │     │  │  ├─ Navbar.css
 │     │  │  └─ Navbar.jsx
-│     │  ├─ Popular
-│     │  │  ├─ Item.css
-│     │  │  ├─ Item.jsx
-│     │  │  ├─ Popular.css
-│     │  │  └─ Popular.jsx
-│     │  ├─ Sidebar
-│     │  │  ├─ Sidebar.css
-│     │  │  └─ Sidebar.jsx
+│     │  ├─ SellerStories
+│     │  │  ├─ SellerStories.css
+│     │  │  └─ SellerStories.jsx
 │     │  ├─ superadmin
 │     │  │  ├─ superadminlogin.css
 │     │  │  └─ superadminlogin.jsx
 │     │  ├─ ThemeToggle.css
 │     │  └─ ThemeToggle.jsx
 │     ├─ Context
-│     │  ├─ CartContext.js
-│     │  ├─ ThemeContext.js
-│     │  └─ WishlistContext.js
+│     │  ├─ CartContext.jsx
+│     │  └─ UserContext.js
 │     ├─ index.css
 │     ├─ index.js
 │     ├─ logo.svg
@@ -221,11 +261,14 @@ RBLA4
 │     │  │  ├─ admindashboard.css
 │     │  │  ├─ admindashboard.jsx
 │     │  │  ├─ adminlogin.css
-│     │  │  └─ adminlogin.jsx
-│     │  ├─ Admin.css
-│     │  ├─ Admin.jsx
-│     │  ├─ AdminPanel.css
-│     │  ├─ AdminPanel.jsx
+│     │  │  ├─ adminlogin.jsx
+│     │  │  └─ products
+│     │  │     ├─ ProductForm.css
+│     │  │     ├─ ProductForm.jsx
+│     │  │     ├─ ProductList.css
+│     │  │     ├─ ProductList.jsx
+│     │  │     ├─ Products.css
+│     │  │     └─ Products.jsx
 │     │  ├─ Bags.css
 │     │  ├─ Bags.jsx
 │     │  ├─ Bamboo.css
@@ -233,8 +276,6 @@ RBLA4
 │     │  ├─ Bedsheets.css
 │     │  ├─ Bedsheets.jsx
 │     │  ├─ Blockprinting.jsx
-│     │  ├─ Cart.css
-│     │  ├─ Cart.jsx
 │     │  ├─ Checkout.css
 │     │  ├─ Checkout.jsx
 │     │  ├─ ContactUs.css
@@ -247,29 +288,19 @@ RBLA4
 │     │  ├─ custproduct.jsx
 │     │  ├─ Gallery.css
 │     │  ├─ Gallery.jsx
+│     │  ├─ Home.css
 │     │  ├─ Home.jsx
-│     │  ├─ Location.jsx
-│     │  ├─ LoginSignup.css
-│     │  ├─ LoginSignup.jsx
 │     │  ├─ Marquee.css
 │     │  ├─ Marquee.js
-│     │  ├─ MyOrders.css
-│     │  ├─ MyOrders.jsx
+│     │  ├─ Marquee.jsx
 │     │  ├─ Napkins.css
 │     │  ├─ Napkins.jsx
 │     │  ├─ Paperfiles.css
 │     │  ├─ Paperfiles.jsx
-│     │  ├─ PaymentPage.css
-│     │  ├─ PaymentPage.jsx
-│     │  ├─ PlaceOrder.css
-│     │  ├─ PlaceOrder.jsx
-│     │  ├─ ProductDetails.css
-│     │  ├─ ProductDetails.js
-│     │  ├─ ProductPage.css
-│     │  ├─ ProductPage.jsx
-│     │  ├─ ReturnsOrders.css
-│     │  ├─ ReturnsOrders.jsx
-│     │  ├─ ShopCategory.jsx
+│     │  ├─ Product
+│     │  │  └─ ProductDetails
+│     │  │     ├─ ProductDetails.css
+│     │  │     └─ ProductDetails.jsx
 │     │  ├─ siragugal.css
 │     │  ├─ siragugal.jsx
 │     │  ├─ superadmin
@@ -289,11 +320,18 @@ RBLA4
 │     │  ├─ UpdateLocation.css
 │     │  ├─ UploadDesignAndCheckout.css
 │     │  ├─ UploadDesignAndCheckout.jsx
-│     │  ├─ UserAccount.css
+│     │  ├─ User
+│     │  │  ├─ Auth
+│     │  │  │  ├─ LoginSignup.css
+│     │  │  │  └─ LoginSignup.jsx
+│     │  │  ├─ Cart
+│     │  │  │  ├─ Cart.css
+│     │  │  │  └─ Cart.jsx
+│     │  │  └─ Profile
+│     │  │     ├─ Profile.css
+│     │  │     └─ Profile.jsx
 │     │  ├─ UserLogin.css
 │     │  ├─ UserLogin.jsx
-│     │  ├─ UserProfile.css
-│     │  ├─ UserProfile.jsx
 │     │  ├─ Vaagai.css
 │     │  ├─ vaagai.jsx
 │     │  ├─ varnam.css
@@ -303,16 +341,29 @@ RBLA4
 │     ├─ PaintApp.js
 │     ├─ reportWebVitals.js
 │     ├─ services
+│     │  ├─ adminapi
+│     │  │  ├─ categoryAPI.js
+│     │  │  ├─ index.js
+│     │  │  ├─ productAPI.js
+│     │  │  ├─ productUnitAPI.js
+│     │  │  └─ uploadAPI.js
 │     │  ├─ adminapi.js
 │     │  ├─ adminAuthService.js
 │     │  ├─ customersApi.js
+│     │  ├─ publicapi
+│     │  │  ├─ generalAPI.js
+│     │  │  └─ productAPI.js
 │     │  ├─ unitsApi.js
+│     │  ├─ userapi
+│     │  │  ├─ authservice.js
+│     │  │  ├─ cartAPI.js
+│     │  │  └─ profileService.js
 │     │  └─ workersapi.js
 │     ├─ setupTests.js
 │     └─ WishlistContext.js
-├─ Overall Project Progress .txt
 ├─ package-lock.json
 ├─ package.json
+├─ Password
 ├─ Project Integration Explanation
 └─ Project Tree Final (Refer for Understanding)
 
