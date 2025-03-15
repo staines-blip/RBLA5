@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getCart, addToCart as addToCartAPI, updateCartItem, removeFromCart as removeFromCartAPI, clearCart as clearCartAPI } from '../services/userapi/cartAPI';
 import { useNavigate } from 'react-router-dom';
+import { authEvents, AUTH_EVENTS } from '../services/userapi/authEvents';
 
 const CartContext = createContext();
 
@@ -38,11 +39,31 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+    // Clear cart data
+    const clearCartData = () => {
+        setCartItems([]);
+        setError(null);
+        setLoading(false);
+    };
+
     useEffect(() => {
+        // Subscribe to auth events
+        const unsubscribe = authEvents.subscribe((event) => {
+            if (event === AUTH_EVENTS.LOGIN) {
+                fetchCart(); // Fetch cart on login
+            } else if (event === AUTH_EVENTS.LOGOUT) {
+                clearCartData(); // Clear data on logout
+            }
+        });
+
+        // Initial fetch if user is logged in
         const token = localStorage.getItem('token');
         if (token) {
             fetchCart();
         }
+
+        // Cleanup subscription
+        return () => unsubscribe();
     }, []);
 
     // Add item to cart
@@ -92,6 +113,9 @@ export const CartProvider = ({ children }) => {
             }
         } catch (err) {
             setError(err.message);
+            if (err.message === 'No authentication token, access denied') {
+                navigate('/login');
+            }
             return false;
         } finally {
             setLoading(false);
@@ -111,6 +135,9 @@ export const CartProvider = ({ children }) => {
             }
         } catch (err) {
             setError(err.message);
+            if (err.message === 'No authentication token, access denied') {
+                navigate('/login');
+            }
             return false;
         } finally {
             setLoading(false);
@@ -130,6 +157,9 @@ export const CartProvider = ({ children }) => {
             }
         } catch (err) {
             setError(err.message);
+            if (err.message === 'No authentication token, access denied') {
+                navigate('/login');
+            }
             return false;
         } finally {
             setLoading(false);

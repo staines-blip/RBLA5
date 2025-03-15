@@ -9,6 +9,7 @@ const authMiddleware = async (req, res, next) => {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         
         if (!token) {
+            console.log('Auth Middleware: No token provided');
             return res.status(401).json({
                 success: false,
                 message: 'No authentication token, access denied'
@@ -18,11 +19,14 @@ const authMiddleware = async (req, res, next) => {
         try {
             // Verify token using JWT_SECRET from env
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            console.log('Auth Middleware: Token decoded:', { email: decoded.email });
             
             // Find user by email to get their ID
             const user = await User.findOne({ email: decoded.email });
+            console.log('Auth Middleware: User found:', { userId: user?._id });
             
             if (!user) {
+                console.log('Auth Middleware: User not found for email:', decoded.email);
                 return res.status(401).json({
                     success: false,
                     message: 'User not found'
@@ -34,15 +38,18 @@ const authMiddleware = async (req, res, next) => {
                 _id: user._id,
                 email: decoded.email
             };
+            console.log('Auth Middleware: User set on request:', req.user);
             
             next();
         } catch (error) {
+            console.error('Auth Middleware: Token verification error:', error);
             return res.status(401).json({
                 success: false,
                 message: 'Token is not valid'
             });
         }
     } catch (error) {
+        console.error('Auth Middleware: Server error:', error);
         return res.status(500).json({
             success: false,
             message: 'Server Error'

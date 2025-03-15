@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
+import { authEvents, AUTH_EVENTS } from '../services/userapi/authEvents';
 
 // API URL
 const API_URL = 'http://localhost:5000/api/auth';
@@ -31,6 +32,7 @@ const userReducer = (state, action) => {
     switch (action.type) {
         case USER_ACTIONS.LOGIN_SUCCESS:
             localStorage.setItem('token', action.payload.token);
+            authEvents.notify(AUTH_EVENTS.LOGIN);
             return {
                 ...state,
                 user: action.payload.user,
@@ -41,6 +43,7 @@ const userReducer = (state, action) => {
             };
         case USER_ACTIONS.LOGOUT:
             localStorage.removeItem('token');
+            authEvents.notify(AUTH_EVENTS.LOGOUT);
             return {
                 ...state,
                 user: null,
@@ -62,6 +65,7 @@ const userReducer = (state, action) => {
             };
         case USER_ACTIONS.AUTH_ERROR:
             localStorage.removeItem('token');
+            authEvents.notify(AUTH_EVENTS.LOGOUT);
             return {
                 ...state,
                 user: null,
@@ -88,7 +92,10 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         const loadUser = async () => {
             const token = localStorage.getItem('token');
-            if (!token) return;
+            if (!token) {
+                dispatch({ type: USER_ACTIONS.LOGOUT });
+                return;
+            }
 
             try {
                 dispatch({ type: USER_ACTIONS.SET_LOADING, payload: true });

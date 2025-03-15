@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const wishlistSchema = new Schema({
-    user: {
+    user: {  // Keep using 'user' to match existing database
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
-        unique: true
+        required: true
     },
     items: [{
         product: {
@@ -24,6 +23,9 @@ const wishlistSchema = new Schema({
         default: 0
     }
 }, { timestamps: true });
+
+// Define the index explicitly
+wishlistSchema.index({ user: 1 }, { unique: true, background: true });
 
 // Pre-save middleware to update totalItems
 wishlistSchema.pre('save', function(next) {

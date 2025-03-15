@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { authEvents, AUTH_EVENTS } from './authEvents';
 
 // Base URL for the backend API (adjust if your backend runs on a different port)
 const API_URL = 'http://localhost:5000/api/auth';
@@ -34,6 +35,7 @@ export const completeSignup = async (email, otp, password, confirmPassword) => {
     });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
+      authEvents.notify(AUTH_EVENTS.LOGIN);
     }
     return response.data; // { success: true, message: 'Signup completed successfully', token: '...' }
   } catch (error) {
@@ -47,6 +49,7 @@ export const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/login`, { email, password });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
+      authEvents.notify(AUTH_EVENTS.LOGIN);
     }
     return response.data; // { success: true, message: 'Login successful', token: '...' }
   } catch (error) {
@@ -67,4 +70,5 @@ export const isLoggedIn = () => {
 // Logout
 export const logout = () => {
   localStorage.removeItem('token');
+  authEvents.notify(AUTH_EVENTS.LOGOUT);
 };
