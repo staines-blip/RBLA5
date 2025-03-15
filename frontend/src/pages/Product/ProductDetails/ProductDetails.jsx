@@ -14,22 +14,30 @@ const ProductDetails = () => {
   const [size, setSize] = useState('default');
   const [printedSide, setPrintedSide] = useState('single');
 
+  const getFullImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://localhost:5000${imagePath}`;
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
         const data = await getProduct(id);
-        const productData = data.product;
-        
-        // Handle images array or fallback to image_url
-        if (productData) {
-          productData.images = productData.images?.length > 0 
-            ? productData.images 
-            : [productData.image_url];
+
+        if (data.success && data.product) {
+          const productData = {
+            ...data.product,
+            images: data.product.images?.map(img => getFullImageUrl(img)) || [],
+            image_url: getFullImageUrl(data.product.image_url)
+          };
+          
+          setProduct(productData);
+          setSelectedImage(0);
+        } else {
+          setError('Product data is invalid');
         }
-        
-        setProduct(productData);
-        setSelectedImage(0);
       } catch (err) {
         setError('Failed to load product details');
         console.error('Error fetching product:', err);
@@ -45,11 +53,12 @@ const ProductDetails = () => {
 
   const calculatePrice = () => {
     if (!product) return 0;
-    let basePrice = product.new_price;
+    let basePrice = product.new_price || product.price;
     
     // Size multiplier
     const sizeMultipliers = {
       'default': 1,
+      'small': 0.8,
       'medium': 1.2,
       'large': 1.5
     };
@@ -89,18 +98,20 @@ const ProductDetails = () => {
       {/* Product Images Section */}
       <div className="product-images-section">
         <div className="main-image">
-          <img 
-            src={product?.images?.[selectedImage]} 
-            alt={product?.name}
-            className="product-main-image"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = product?.image_url;
-            }}
-          />
+          {product.images?.[selectedImage] && (
+            <img 
+              src={product.images[selectedImage]}
+              alt={product.name}
+              className="product-main-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = product.image_url;
+              }}
+            />
+          )}
         </div>
         <div className="image-thumbnails">
-          {product?.images?.map((image, index) => (
+          {product.images?.map((image, index) => (
             <img
               key={index}
               src={image}
@@ -122,8 +133,10 @@ const ProductDetails = () => {
         <p className="product-description">{product.description}</p>
 
         <div className="price-section">
-          <div className="original-price">₹{product.old_price}</div>
-          <div className="current-price">₹{product.new_price}</div>
+          {product.old_price && (
+            <div className="original-price">₹{product.old_price}</div>
+          )}
+          <div className="current-price">₹{product.new_price || product.price}</div>
         </div>
 
         {/* Product Options */}
@@ -136,6 +149,7 @@ const ProductDetails = () => {
               className="size-select"
             >
               <option value="default">Default</option>
+              <option value="small">Small</option>
               <option value="medium">Medium</option>
               <option value="large">Large</option>
             </select>

@@ -1,5 +1,7 @@
 const Product = require('../../models/Product');
 const mongoose = require('mongoose'); // mongoose is required for ObjectId validation
+const path = require('path');
+const fs = require('fs');
 
 // Get all products with pagination
 exports.getAllProducts = async (req, res) => {
@@ -34,7 +36,8 @@ exports.getAllProducts = async (req, res) => {
 // Get single product details
 exports.getProductDetails = async (req, res) => {
     try {
-        // Validate MongoDB ID format
+        console.log('Fetching product details for ID:', req.params.id);
+
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({
                 success: false,
@@ -45,7 +48,6 @@ exports.getProductDetails = async (req, res) => {
         const product = await Product.findById(req.params.id)
             .populate('category', 'name')
             .populate('unit', 'name')
-            .select('-__v')
             .lean();
 
         if (!product) {
@@ -55,15 +57,25 @@ exports.getProductDetails = async (req, res) => {
             });
         }
 
-        // Transform data to match frontend expectations
-        const transformedProduct = {
+        // Format image paths to be relative to the uploads directory
+        const processedProduct = {
             ...product,
-            images: product.images || [product.image_url], // Fallback to image_url if images empty
+            image_url: `/uploads/products/${path.basename(product.image_url)}`,
+            images: Array.isArray(product.images) && product.images.length > 0
+                ? product.images.map(img => `/uploads/products/${path.basename(img)}`)
+                : [`/uploads/products/${path.basename(product.image_url)}`]
         };
+
+        console.log('Final processed product data:', {
+            id: processedProduct._id,
+            name: processedProduct.name,
+            image_url: processedProduct.image_url,
+            images: processedProduct.images
+        });
 
         res.status(200).json({
             success: true,
-            product: transformedProduct
+            product: processedProduct
         });
     } catch (error) {
         console.error('Product details error:', error);
