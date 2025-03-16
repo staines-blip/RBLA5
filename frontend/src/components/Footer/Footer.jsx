@@ -60,11 +60,11 @@ const Footer = () => {
         <div className="footer-section">
           <h3>Connect with us</h3>
           <div className="social-links">
-            <a href="#" aria-label="Facebook">Facebook</a>
-            <a href="#" aria-label="Twitter">Twitter</a>
-            <a href="#" aria-label="Instagram">Instagram</a>
-            <a href="#" aria-label="YouTube">YouTube</a>
-            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">Twitter</a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YouTube</a>
+            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
           </div>
         </div>
       </div>
