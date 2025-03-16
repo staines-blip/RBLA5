@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
+// superadmin schema for the craetion of the superadmin which is alraedy 
+// crated thru code and static 
 const superAdminSchema = new mongoose.Schema({
   username: {
     type: String,

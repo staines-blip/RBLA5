@@ -16,3 +16,4 @@ const categorySchema = new mongoose.Schema({
 const Category = mongoose.model('Category', categorySchema);
 
 module.exports = Category;
+// category for the creatiion of the products in the admin module 

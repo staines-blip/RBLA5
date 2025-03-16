@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+// unit creation in the superadmin module where its managed yet to be moved to 
+// to a new location 
 const unitSchema = new mongoose.Schema({
     unitName: {
         type: String,

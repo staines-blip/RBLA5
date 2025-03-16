@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs'); // For password hashing
-
+// not sure what this is now wait we will verfiy later 
 // User Schema
 const userSchema = new Schema({
   name: { 
