@@ -12,6 +12,13 @@ body {
 /* Background Overlay */
 .auth-container {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e0e8f0 100%);
 }
 
 .auth-container::before {
@@ -25,16 +32,6 @@ body {
   z-index: -1;
 }
 
-/* Main container with adjusted positioning */
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  position: relative;
-}
-
 /* Main box for the login/signup form */
 .auth-box {
   background: white;
@@ -45,6 +42,7 @@ body {
   width: 100%;
   text-align: center;
   border: 1px solid #e0e8f0;
+  position: relative;
 }
 
 /* Header section with title and toggle buttons */
@@ -53,9 +51,9 @@ body {
 }
 
 .auth-header h2 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  color: #2E7D7D;
+  color: #333;
   margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -71,25 +69,29 @@ body {
   border-radius: 25px;
   width: fit-content;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .auth-toggle button {
   background: transparent;
   border: none;
-  padding: 10px 25px;
+  padding: 8px 20px;
   font-size: 14px;
   font-weight: 500;
-  color: #2E7D7D;
+  color: #666;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
   outline: none;
+  border-bottom: 2px solid transparent;
 }
 
 .auth-toggle button.active {
   background: #2E7D7D;
   color: white;
   box-shadow: 0 2px 5px rgba(46, 125, 125, 0.3);
+  color: #80002f;
+  border-bottom-color: #80002f;
 }
 
 .auth-toggle button:hover:not(:disabled) {
@@ -111,6 +113,11 @@ body {
   margin-bottom: 20px;
   font-size: 14px;
   font-weight: 500;
+  color: #dc3545;
+  margin: 10px 0;
+  padding: 10px;
+  background: #ffe6e6;
+  border-radius: 4px;
 }
 
 .success-message {
@@ -121,6 +128,11 @@ body {
   margin-bottom: 20px;
   font-size: 14px;
   font-weight: 500;
+  color: #28a745;
+  margin: 10px 0;
+  padding: 10px;
+  background: #e6ffe6;
+  border-radius: 4px;
 }
 
 /* Form styling */
@@ -128,6 +140,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  gap: 20px;
 }
 
 .form-group {
@@ -135,6 +148,7 @@ body {
   flex-direction: column;
   gap: 8px;
   text-align: left;
+  position: relative;
 }
 
 .form-group label {
@@ -150,12 +164,19 @@ body {
   border-radius: 6px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   background: #fafafa;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 }
 
 .form-group input:focus {
   border-color: #2E7D7D;
   box-shadow: 0 0 5px rgba(46, 125, 125, 0.3);
   outline: none;
+  border-color: #80002f;
 }
 
 .form-group input:disabled {
@@ -175,16 +196,54 @@ body {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   text-transform: uppercase;
+  background: #80002f;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .auth-button:hover:not(:disabled) {
   background: #266666;
   transform: translateY(-2px);
+  background: #660026;
 }
 
 .auth-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Home button styles */
+.home-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.home-button:hover {
+  background: #e9ecef;
+  color: #80002f;
+  border-color: #80002f;
+}
+
+.home-button svg {
+  font-size: 18px;
 }
 
 /* Responsive Design */

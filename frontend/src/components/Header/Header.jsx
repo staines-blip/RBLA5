@@ -87,9 +87,9 @@ const Header = () => {
     setIsProductsOpen(!isProductsOpen);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     contextLogout();
-    navigate('/');  
+    navigate('/loginsignup', { replace: true });  // Use replace to prevent back navigation
   };
 
   const handleProductClick = () => {

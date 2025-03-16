@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { sendOtp, verifyOtp, completeSignup } from '../../../services/userapi/authservice';
 import { useUser } from '../../../Context/UserContext';
 import './LoginSignup.css';
@@ -240,12 +242,17 @@ const LoginSignup = () => {
                   />
                 </div>
                 <button onClick={handleSignup} className="auth-button" disabled={loading}>
-                  {loading ? 'Submitting...' : 'Complete Signup'}
+                  {loading ? 'Signing up...' : 'Complete Signup'}
                 </button>
               </>
             )}
           </form>
         )}
+
+        <Link to="/" className="home-button">
+          <FontAwesomeIcon icon={faHome} />
+          <span>Back to Home</span>
+        </Link>
       </div>
     </div>
   );

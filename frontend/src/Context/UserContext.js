@@ -145,6 +145,8 @@ export const UserProvider = ({ children }) => {
 
     // Logout user
     const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');  
         dispatch({ type: USER_ACTIONS.LOGOUT });
     };
 
