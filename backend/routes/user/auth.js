@@ -85,7 +85,7 @@ router.post('/complete-signup', async (req, res) => {
     user.isVerified = true;
     await user.save();
 
-    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ email: user.email, userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -115,7 +115,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ email: user.email, userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 

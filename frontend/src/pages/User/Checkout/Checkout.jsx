@@ -34,19 +34,21 @@ const Checkout = () => {
   return (
     <div className="checkout-container">
       <div className="checkout-steps">
-        <div className={`step ${step >= 1 ? 'active' : ''}`}>Cart Review</div>
-        <div className={`step ${step >= 2 ? 'active' : ''}`}>Shipping</div>
-        <div className={`step ${step >= 3 ? 'active' : ''}`}>Payment</div>
+        {['Cart Review', 'Shipping', 'Payment'].map((stepName, index) => (
+          <div key={stepName} className={`step ${step >= index + 1 ? 'active' : ''}`}>
+            {stepName}
+          </div>
+        ))}
       </div>
 
       <div className="checkout-content">
         <div className="order-summary">
           <h2>Order Summary</h2>
           {cart.map((item) => (
-            <div key={item.id} className="cart-item">
-              <img src={item.image} alt={item.name} />
+            <div key={item.productId} className="cart-item">
+              <img src={item.productDetails.image} alt={item.productDetails.name} />
               <div className="item-details">
-                <h3>{item.name}</h3>
+                <h3>{item.productDetails.name}</h3>
                 <p>Quantity: {item.quantity}</p>
                 <p>₹{item.price * item.quantity}</p>
               </div>

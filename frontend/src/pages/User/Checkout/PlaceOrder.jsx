@@ -1,27 +1,112 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../Context/CartContext';
+import { useUser } from '../../../Context/UserContext';
+import { createOrder } from '../../../services/userapi/orderAPI';
 import './PlaceOrder.css';
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
   const { cartItems: cart, cartTotal: total, clearCart } = useCart();
+  const { user } = useUser();
   const [orderId, setOrderId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Generate a random order ID (in real app, this would come from backend)
-    setOrderId(`ORD${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Please login to place an order');
+      navigate('/login');
+      return;
+    }
+
+    // Check if cart is empty
+    if (!cart.length) {
+      navigate('/cart');
+      return;
+    }
+
+    // Check if user data is available
+    if (!user || !user._id) {
+      setError('User data not available');
+      navigate('/login');
+      return;
+    }
+
+    createNewOrder();
   }, []);
 
+  const createNewOrder = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Format cart items for order according to schema
+      const orderData = {
+        user: user._id, // Reference to User model
+        products: cart.map(item => ({
+          product: item.productId,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        orderStatus: 'Pending',
+        paymentStatus: 'Unpaid',
+        totalAmount: total,
+        shippingAddress: {
+          fullName: user.name,
+          address: user.address,
+          city: user.city,
+          state: user.state,
+          pincode: user.pincode,
+          phone: user.phone
+        },
+        orderDate: new Date()
+      };
+
+      const response = await createOrder(orderData);
+      if (response.success) {
+        setOrderId(response.data._id);
+        clearCart(); // Clear cart only after successful order creation
+      } else {
+        throw new Error(response.message || 'Failed to create order');
+      }
+    } catch (err) {
+      if (err.message.includes('login')) {
+        navigate('/login');
+      }
+      setError(err.message || 'Failed to create order');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleContinueShopping = () => {
-    clearCart(); // Clear the cart after successful order
     navigate('/');
   };
 
   const handleViewOrders = () => {
-    clearCart(); // Clear the cart after successful order
     navigate('/orders');
   };
+
+  if (loading) {
+    return <div className="place-order-container">
+      <div className="order-success">
+        <h2>Creating your order...</h2>
+      </div>
+    </div>;
+  }
+
+  if (error) {
+    return <div className="place-order-container">
+      <div className="order-error">
+        <h2>Failed to create order</h2>
+        <p>{error}</p>
+        <button onClick={() => navigate('/cart')}>Return to Cart</button>
+      </div>
+    </div>;
+  }
 
   return (
     <div className="place-order-container">
@@ -35,10 +120,10 @@ const PlaceOrder = () => {
         <h3>Order Details</h3>
         <div className="items-list">
           {cart.map((item) => (
-            <div key={item.id} className="order-item">
-              <img src={item.image} alt={item.name} />
+            <div key={item.productId} className="order-item">
+              <img src={item.productDetails.image} alt={item.productDetails.name} />
               <div className="item-info">
-                <h4>{item.name}</h4>
+                <h4>{item.productDetails.name}</h4>
                 <p>Quantity: {item.quantity}</p>
                 <p>₹{item.price * item.quantity}</p>
               </div>
@@ -48,35 +133,17 @@ const PlaceOrder = () => {
 
         <div className="order-summary">
           <div className="summary-row">
-            <span>Subtotal:</span>
+            <span>Total Amount:</span>
             <span>₹{total}</span>
           </div>
-          <div className="summary-row">
-            <span>Shipping:</span>
-            <span>₹{total > 1000 ? 0 : 50}</span>
-          </div>
-          <div className="summary-row total">
-            <span>Total:</span>
-            <span>₹{total > 1000 ? total : total + 50}</span>
-          </div>
         </div>
 
-        <div className="delivery-info">
-          <h3>Estimated Delivery</h3>
-          <p>{new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}</p>
-        </div>
-
-        <div className="action-buttons">
-          <button onClick={handleViewOrders} className="view-orders-btn">
-            View Orders
-          </button>
-          <button onClick={handleContinueShopping} className="continue-shopping-btn">
+        <div className="order-actions">
+          <button onClick={handleContinueShopping} className="continue-shopping">
             Continue Shopping
+          </button>
+          <button onClick={handleViewOrders} className="view-orders">
+            View Orders
           </button>
         </div>
       </div>

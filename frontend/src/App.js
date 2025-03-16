@@ -9,6 +9,9 @@ import { WishlistProvider } from "./Context/WishlistContext";
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home';
+import MyOrders from './pages/User/Orders/MyOrders/MyOrders';
+import OrderDetails from './pages/User/Orders/OrderDetails/OrderDetails';
+import OrderTracking from './pages/User/Orders/OrderTracking/OrderTracking';
 import './App.css';
 
 // Set default Axios base URL
@@ -207,6 +210,38 @@ const App = () => {
                   <MainLayout>
                     <ProductDetails />
                   </MainLayout>
+                }
+              />
+
+              {/* Order Routes */}
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <MyOrders />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders/:orderId"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <OrderDetails />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders/:orderId/track"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <OrderTracking />
+                    </MainLayout>
+                  </ProtectedRoute>
                 }
               />
 
