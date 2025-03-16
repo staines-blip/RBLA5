@@ -233,30 +233,31 @@
 /* Action Buttons */
 .action-buttons {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .add-to-cart-btn,
 .buy-now-btn {
   flex: 1;
-  padding: 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  border: none;
 }
 
 .add-to-cart-btn {
-  background-color: white;
+  background-color: #f8f9fa;
   color: #80002f;
   border: 2px solid #80002f;
 }
 
-.add-to-cart-btn:hover {
-  background-color: #fff5f7;
+.add-to-cart-btn:hover:not(:disabled) {
+  background-color: #80002f;
+  color: white;
 }
 
 .buy-now-btn {
@@ -264,8 +265,45 @@
   color: white;
 }
 
-.buy-now-btn:hover {
+.buy-now-btn:hover:not(:disabled) {
   background-color: #660026;
+}
+
+.add-to-cart-btn:disabled,
+.buy-now-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.add-to-cart-btn.loading,
+.buy-now-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.add-to-cart-btn.loading::after,
+.buy-now-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-top: -8px;
+  margin-left: -8px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: button-loading-spinner 1.2s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Design Options */

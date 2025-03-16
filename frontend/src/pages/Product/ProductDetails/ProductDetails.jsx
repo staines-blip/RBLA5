@@ -77,6 +77,43 @@ const ProductDetails = () => {
     return (basePrice * sizeMultipliers[size] * sideMultipliers[printedSide] * quantity).toFixed(2);
   };
 
+  const handleAddToCart = async () => {
+    try {
+      setAddingToCart(true);
+      const productToAdd = {
+        _id: product._id,
+        name: product.name,
+        price: parseFloat(calculatePrice()),
+        image: product.images[0] || product.image_url,
+        size,
+        printedSide,
+      };
+      
+      const success = await addToCart(productToAdd, quantity);
+      if (success) {
+        toast.success('Added to cart successfully!');
+        return true;
+      } else {
+        toast.error('Failed to add to cart. Please try again.');
+        return false;
+      }
+    } catch (err) {
+      toast.error('Error adding to cart. Please try again.');
+      return false;
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    // First add to cart
+    const success = await handleAddToCart();
+    if (success) {
+      // Then navigate to checkout
+      navigate('/checkout');
+    }
+  };
+
   if (loading) {
     return (
       <div className="product-details-loading">
@@ -210,36 +247,17 @@ const ProductDetails = () => {
         <div className="action-buttons">
           <button 
             className={`add-to-cart-btn ${addingToCart ? 'loading' : ''}`}
-            onClick={async () => {
-              try {
-                setAddingToCart(true);
-                const productToAdd = {
-                  _id: product._id,
-                  name: product.name,
-                  price: parseFloat(calculatePrice()),
-                  image: product.images[0] || product.image_url,
-                  size,
-                  printedSide,
-                };
-                
-                const success = await addToCart(productToAdd, quantity);
-                if (success) {
-                  toast.success('Added to cart successfully!');
-                } else {
-                  toast.error('Failed to add to cart. Please try again.');
-                }
-              } catch (err) {
-                toast.error('Error adding to cart. Please try again.');
-              } finally {
-                setAddingToCart(false);
-              }
-            }}
+            onClick={handleAddToCart}
             disabled={addingToCart || cartLoading}
           >
             {addingToCart ? 'Adding...' : 'Add to Cart'}
           </button>
-          <button className="buy-now-btn">
-            Buy Now
+          <button 
+            className="buy-now-btn"
+            onClick={handleBuyNow}
+            disabled={addingToCart || cartLoading}
+          >
+            {addingToCart ? 'Processing...' : 'Buy Now'}
           </button>
         </div>
 
