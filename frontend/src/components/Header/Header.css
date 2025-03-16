@@ -124,37 +124,43 @@ body {
 /* Account Links */
 .account-links {
   display: flex;
-  gap: 20px;
   align-items: center;
+  gap: 20px;
 }
 
 .account-link {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  color: #333;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 4px;
+  color: #333;
+  font-size: 0.9rem;
+  position: relative;
+  padding: 5px;
   border: none;
   background: none;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .account-link:hover {
-  color: #80002f;
-  background-color: rgba(128, 0, 47, 0.1);
+  color: #e94560;
 }
 
 .account-link svg {
-  font-size: 16px;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
 }
 
-.account-link span {
-  font-weight: 600;
+.orders-link {
+  position: relative;
+}
+
+.orders-link:hover {
+  color: #e94560;
+}
+
+.orders-link svg {
+  font-size: 1.2rem;
 }
 
 .cart-link {

@@ -14,24 +14,9 @@ const PlaceOrder = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('Please login to place an order');
-      navigate('/login');
-      return;
-    }
-
-    // Check if cart is empty
+    // Only check cart since auth is handled by ProtectedRoute
     if (!cart.length) {
       navigate('/cart');
-      return;
-    }
-
-    // Check if user data is available
-    if (!user || !user._id) {
-      setError('User data not available');
-      navigate('/login');
       return;
     }
 
@@ -43,7 +28,7 @@ const PlaceOrder = () => {
       setLoading(true);
       setError(null);
 
-      // Format cart items for order according to schema
+      // Format cart items for order
       const orderData = {
         user: user._id, // Reference to User model
         products: cart.map(item => ({
@@ -68,13 +53,14 @@ const PlaceOrder = () => {
       const response = await createOrder(orderData);
       if (response.success) {
         setOrderId(response.data._id);
-        clearCart(); // Clear cart only after successful order creation
+        clearCart(); // Clear cart after successful order
+        navigate('/orders'); // Navigate to orders page after success
       } else {
         throw new Error(response.message || 'Failed to create order');
       }
     } catch (err) {
       if (err.message.includes('login')) {
-        navigate('/login');
+        navigate('/loginsignup');
       }
       setError(err.message || 'Failed to create order');
     } finally {
@@ -82,30 +68,26 @@ const PlaceOrder = () => {
     }
   };
 
-  const handleContinueShopping = () => {
-    navigate('/');
-  };
-
-  const handleViewOrders = () => {
-    navigate('/orders');
-  };
-
   if (loading) {
-    return <div className="place-order-container">
-      <div className="order-success">
-        <h2>Creating your order...</h2>
+    return (
+      <div className="place-order-container">
+        <div className="order-success">
+          <h2>Creating your order...</h2>
+        </div>
       </div>
-    </div>;
+    );
   }
 
   if (error) {
-    return <div className="place-order-container">
-      <div className="order-error">
-        <h2>Failed to create order</h2>
-        <p>{error}</p>
-        <button onClick={() => navigate('/cart')}>Return to Cart</button>
+    return (
+      <div className="place-order-container">
+        <div className="order-error">
+          <h2>Failed to create order</h2>
+          <p>{error}</p>
+          <button onClick={() => navigate('/cart')}>Return to Cart</button>
+        </div>
       </div>
-    </div>;
+    );
   }
 
   return (
@@ -139,10 +121,10 @@ const PlaceOrder = () => {
         </div>
 
         <div className="order-actions">
-          <button onClick={handleContinueShopping} className="continue-shopping">
+          <button onClick={() => navigate('/')} className="continue-shopping">
             Continue Shopping
           </button>
-          <button onClick={handleViewOrders} className="view-orders">
+          <button onClick={() => navigate('/orders')} className="view-orders">
             View Orders
           </button>
         </div>

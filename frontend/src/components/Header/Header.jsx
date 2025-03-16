@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle, faShoppingCart, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle, faShoppingCart, faHeart, faBoxOpen } from "@fortawesome/free-solid-svg-icons";
 import { useUser } from '../../Context/UserContext';
 import { useCart } from '../../Context/CartContext';
 import { useWishlist } from '../../Context/WishlistContext';
@@ -89,7 +89,7 @@ const Header = () => {
 
   const handleLogout = () => {
     contextLogout();
-    navigate('/loginsignup');
+    navigate('/');  
   };
 
   const handleProductClick = () => {
@@ -138,6 +138,10 @@ const Header = () => {
                   <FontAwesomeIcon icon={faHeart} />
                   {wishlistCount > 0 && <span className="wishlist-count">{wishlistCount}</span>}
                   <span>WISHLIST</span>
+                </Link>
+                <Link to="/orders" className="account-link orders-link">
+                  <FontAwesomeIcon icon={faBoxOpen} />
+                  <span>MY ORDERS</span>
                 </Link>
                 <Link to="/cart" className="account-link cart-link">
                   <FontAwesomeIcon icon={faShoppingCart} />

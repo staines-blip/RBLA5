@@ -24,19 +24,25 @@ const createOrder = async (req, res) => {
                     message: `Insufficient stock for product ${product.name}`
                 });
             }
+
+            // Use new_price from product model
+            const itemPrice = product.new_price;
+            totalAmount += itemPrice * item.quantity;
+
             orderProducts.push({
                 product: item.product,
                 quantity: item.quantity,
-                price: product.new_price
+                price: itemPrice
             });
-            totalAmount += product.new_price * item.quantity;
         }
 
         const order = new Order({
             user: req.user._id,
             products: orderProducts,
             totalAmount,
-            shippingAddress
+            shippingAddress,
+            orderStatus: 'Pending',
+            paymentStatus: 'Unpaid'
         });
 
         await order.save();
@@ -54,9 +60,17 @@ const createOrder = async (req, res) => {
             data: order
         });
     } catch (error) {
+        console.error('Order creation error:', error);
+        if (error.code === 11000) {
+            // Handle duplicate key error gracefully
+            return res.status(500).json({
+                success: false,
+                message: 'Error generating order number, please try again'
+            });
+        }
         res.status(500).json({
             success: false,
-            message: error.message
+            message: error.message || 'Failed to create order'
         });
     }
 };
@@ -84,7 +98,7 @@ const getUserOrders = async (req, res) => {
 const getOrderDetails = async (req, res) => {
     try {
         const order = await Order.findOne({
-            _id: req.params.id,
+            _id: req.params.orderId,
             user: req.user._id
         }).populate('products.product');
 
@@ -111,7 +125,7 @@ const getOrderDetails = async (req, res) => {
 const trackOrder = async (req, res) => {
     try {
         const order = await Order.findOne({
-            _id: req.params.id,
+            _id: req.params.orderId,
             user: req.user._id
         }).select('orderStatus orderDate deliveryDate');
 

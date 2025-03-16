@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
+    orderNumber: {
+        type: String,
+        unique: true
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -53,6 +57,24 @@ const orderSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
+});
+
+// Generate order number before saving
+orderSchema.pre('save', async function(next) {
+    if (!this.orderNumber) {
+        // Get the latest order to generate next order number
+        const latestOrder = await this.constructor.findOne({}, {}, { sort: { 'createdAt': -1 } });
+        
+        // Generate order number: RBLA followed by 6-digit number
+        let nextNumber = '000001';
+        if (latestOrder && latestOrder.orderNumber) {
+            const lastNumber = parseInt(latestOrder.orderNumber.slice(-6));
+            nextNumber = String(lastNumber + 1).padStart(6, '0');
+        }
+        
+        this.orderNumber = `RBLA${nextNumber}`;
+    }
+    next();
 });
 
 const Order = mongoose.model('Order', orderSchema);
