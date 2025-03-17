@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const orderAuth = require('../../middleware/user/orderAuth');
+const auth = require('../../middleware/user/auth');
 const {
     createOrder,
     getUserOrders,
@@ -8,8 +8,8 @@ const {
     trackOrder
 } = require('../../controllers/user/orderController');
 
-// All routes are protected with orderAuth middleware
-router.use(orderAuth);
+// All routes are protected with auth middleware
+router.use(auth);
 
 // Create new order
 router.post('/', createOrder);
@@ -18,9 +18,9 @@ router.post('/', createOrder);
 router.get('/', getUserOrders);
 
 // Get single order details
-router.get('/:id', getOrderDetails);
+router.get('/:orderId', getOrderDetails);
 
 // Track order status
-router.get('/:id/track', trackOrder);
+router.get('/:orderId/track', trackOrder);
 
 module.exports = router;
