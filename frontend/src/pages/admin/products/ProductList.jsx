@@ -168,7 +168,7 @@ const ProductList = () => {
                                 <th>Unit</th>
                                 <th>Size</th>
                                 <th>Price</th>
-                                <th>Stock</th>
+                                <th>Stock Status</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -188,7 +188,18 @@ const ProductList = () => {
                                     <td>{product.unit?.name || '-'}</td>
                                     <td>{product.size ? `${product.size.breadth}x${product.size.height}` : '-'}</td>
                                     <td>₹{product.new_price}</td>
-                                    <td>{product.stock}</td>
+                                    <td className={`stock-status ${
+                                        product.stock === 0 ? 'out-of-stock' : 
+                                        product.stock <= 5 ? 'low-stock' : 
+                                        'in-stock'
+                                    }`}>
+                                        <span className="stock-count">{product.stock}</span>
+                                        <span className="stock-label">
+                                            {product.stock === 0 ? 'Out of Stock' :
+                                             product.stock <= 5 ? 'Low Stock' :
+                                             'In Stock'}
+                                        </span>
+                                    </td>
                                     <td>
                                         <button
                                             className={`status-toggle ${product.isActive ? 'active' : 'inactive'}`}
