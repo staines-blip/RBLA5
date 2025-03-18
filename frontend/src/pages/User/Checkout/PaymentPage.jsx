@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../../Context/CartContext';
 import { useUser } from '../../../Context/UserContext';
-import { createOrder } from '../../../services/userapi/orderAPI';
+import { createOrder, cancelOrder } from '../../../services/userapi/orderAPI';
 import { 
   getClientToken, 
   processPayment, 
@@ -65,21 +65,16 @@ const PaymentPage = () => {
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    console.log('Payment initiated');
-    console.log('Cart Items:', cartItems); // Log cart items to see structure
     setLoading(true);
     setError(null);
 
     try {
       // Create order first
       const orderData = {
-        products: cartItems.map(item => {
-          console.log('Processing item:', item); // Log each item
-          return {
-            product: item.productId, // Changed from item.product._id
-            quantity: item.quantity
-          };
-        }),
+        products: cartItems.map(item => ({
+          product: item.productId,
+          quantity: item.quantity
+        })),
         shippingAddress: {
           fullName: user?.name || '',
           address: user?.address || '',
@@ -90,31 +85,24 @@ const PaymentPage = () => {
         }
       };
 
-      console.log('Final order data:', orderData);
-
       const orderResponse = await createOrder(orderData);
-      console.log('Order response:', orderResponse);
       
       if (!orderResponse.success) {
         throw new Error(orderResponse.message || 'Failed to create order');
       }
 
       // Get Braintree token
-      console.log('Getting Braintree token');
       const tokenResponse = await getClientToken();
-      console.log('Token response:', tokenResponse);
       
       if (!tokenResponse.success || !tokenResponse.clientToken) {
         throw new Error('Failed to initialize payment');
       }
 
       // Process payment
-      console.log('Processing payment');
       const paymentResponse = await processPayment(
         orderResponse.data._id,
         cardInfo
       );
-      console.log('Payment response:', paymentResponse);
 
       if (paymentResponse.success) {
         clearCart();
@@ -124,7 +112,6 @@ const PaymentPage = () => {
       }
 
     } catch (err) {
-      console.error('Payment error:', err);
       setError(err.message || 'Payment processing failed');
     } finally {
       setLoading(false);

@@ -1,5 +1,6 @@
-const Order = require('../../models/user/Order');
-const Product = require('../../models/Product');
+const { Order, Product } = require('../../models');
+const orderService = require('../../services/orderService');
+const productService = require('../../services/productService');
 
 // Create new order
 const createOrder = async (req, res) => {
@@ -10,6 +11,17 @@ const createOrder = async (req, res) => {
         let totalAmount = 0;
         const orderProducts = [];
 
+        // First validate stock for all products
+        try {
+            await productService.validateStockForOrder(products);
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        // Calculate total and prepare order products
         for (const item of products) {
             const product = await Product.findById(item.product);
             if (!product) {
@@ -18,14 +30,7 @@ const createOrder = async (req, res) => {
                     message: `Product ${item.product} not found`
                 });
             }
-            if (product.stock < item.quantity) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Insufficient stock for product ${product.name}`
-                });
-            }
 
-            // Use new_price from product model
             const itemPrice = product.new_price;
             totalAmount += itemPrice * item.quantity;
 
@@ -36,18 +41,24 @@ const createOrder = async (req, res) => {
             });
         }
 
+        // Generate a unique order number
+        const orderNumber = 'ORD' + Date.now().toString().slice(-8);
+
         const order = new Order({
+            orderNumber,
             user: req.user._id,
             products: orderProducts,
             totalAmount,
             shippingAddress,
-            orderStatus: 'Pending',
-            paymentStatus: 'Unpaid'
+            orderStatus: 'Processing',
+            paymentStatus: 'Unpaid',
+            orderDate: new Date()
         });
 
+        // Save the order first
         await order.save();
 
-        // Update product stock
+        // Update stock for each product
         for (const item of products) {
             await Product.findByIdAndUpdate(
                 item.product,
@@ -59,18 +70,12 @@ const createOrder = async (req, res) => {
             success: true,
             data: order
         });
+
     } catch (error) {
         console.error('Order creation error:', error);
-        if (error.code === 11000) {
-            // Handle duplicate key error gracefully
-            return res.status(500).json({
-                success: false,
-                message: 'Error generating order number, please try again'
-            });
-        }
         res.status(500).json({
             success: false,
-            message: error.message || 'Failed to create order'
+            message: error.message || 'Error creating order'
         });
     }
 };
@@ -148,9 +153,26 @@ const trackOrder = async (req, res) => {
     }
 };
 
+// Cancel order
+const cancelOrder = async (req, res) => {
+    try {
+        const order = await orderService.cancelOrder(req.params.id);
+        res.status(200).json({
+            success: true,
+            data: order
+        });
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     createOrder,
     getUserOrders,
     getOrderDetails,
-    trackOrder
+    trackOrder,
+    cancelOrder
 };

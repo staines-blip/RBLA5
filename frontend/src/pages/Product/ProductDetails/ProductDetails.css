@@ -135,6 +135,27 @@
   line-height: 1.6;
 }
 
+/* Stock Information */
+.stock-info {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.in-stock {
+  color: #2ecc71;
+  font-weight: 500;
+}
+
+.out-of-stock {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* Add warning color when stock is low */
+.in-stock.low {
+  color: #f39c12;
+}
+
 /* Price Section */
 .price-section {
   display: flex;

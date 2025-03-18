@@ -64,3 +64,20 @@ export const trackOrder = async (orderId) => {
         throw error.response?.data || { success: false, message: 'Failed to track order' };
     }
 };
+
+// Cancel order
+export const cancelOrder = async (orderId) => {
+    try {
+        const response = await axios.post(
+            `${BASE_URL}/${orderId}/cancel`,
+            {},
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        if (error.response?.status === 401) {
+            throw { success: false, message: 'Please login to cancel order' };
+        }
+        throw error.response?.data || { success: false, message: 'Failed to cancel order' };
+    }
+};

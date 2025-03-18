@@ -182,6 +182,15 @@ const ProductDetails = () => {
             <div className="original-price">₹{product.old_price}</div>
           )}
           <div className="current-price">₹{product.new_price || product.price}</div>
+          <div className="stock-info">
+            {product.stock > 0 ? (
+              <span className={`in-stock ${product.stock <= 5 ? 'low' : ''}`}>
+                {product.stock <= 5 ? 'Low Stock' : 'In Stock'} ({product.stock} {product.stock === 1 ? 'item' : 'items'} left)
+              </span>
+            ) : (
+              <span className="out-of-stock">Out of Stock</span>
+            )}
+          </div>
         </div>
 
         {/* Product Options */}
@@ -192,6 +201,7 @@ const ProductDetails = () => {
               value={size} 
               onChange={(e) => setSize(e.target.value)}
               className="size-select"
+              disabled={product.stock === 0}
             >
               <option value="default">Default</option>
               <option value="small">Small</option>
@@ -217,19 +227,26 @@ const ProductDetails = () => {
             <div className="quantity-controls">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="quantity-btn"
+                disabled={quantity <= 1 || product.stock === 0}
               >
                 -
               </button>
               <input 
                 type="number" 
-                value={quantity}
-                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                className="quantity-input"
+                value={quantity} 
+                onChange={(e) => {
+                  const newQuantity = parseInt(e.target.value);
+                  if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= product.stock) {
+                    setQuantity(newQuantity);
+                  }
+                }}
+                min="1"
+                max={product.stock}
+                disabled={product.stock === 0}
               />
               <button 
-                onClick={() => setQuantity(quantity + 1)}
-                className="quantity-btn"
+                onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                disabled={quantity >= product.stock}
               >
                 +
               </button>
@@ -245,19 +262,19 @@ const ProductDetails = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button 
-            className={`add-to-cart-btn ${addingToCart ? 'loading' : ''}`}
+          <button
+            className="add-to-cart-btn"
             onClick={handleAddToCart}
-            disabled={addingToCart || cartLoading}
+            disabled={addingToCart || cartLoading || product.stock === 0}
           >
-            {addingToCart ? 'Adding...' : 'Add to Cart'}
+            {addingToCart ? 'Adding...' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </button>
-          <button 
+          <button
             className="buy-now-btn"
             onClick={handleBuyNow}
-            disabled={addingToCart || cartLoading}
+            disabled={addingToCart || cartLoading || product.stock === 0}
           >
-            {addingToCart ? 'Processing...' : 'Buy Now'}
+            {product.stock === 0 ? 'Out of Stock' : 'Buy Now'}
           </button>
         </div>
 
