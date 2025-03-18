@@ -28,6 +28,7 @@ const userCartRoutes = require('./routes/user/cartRoutes');
 const userWishlistRoutes = require('./routes/user/wishlistRoutes');
 const userOrderRoutes = require('./routes/user/orderRoutes');
 const userBraintreeRoutes = require('./routes/user/braintreeRoutes');
+const userReviewRoutes = require('./routes/user/reviewRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -65,21 +66,25 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/superadmin', superadminRoutes);
-app.use('/api/superadmin', superadminAuthRoutes);
+app.use('/api/superadmin/auth', superadminAuthRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);
-app.use('/api/admin', adminAuthRoutes);
+app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/upload', adminUploadRoutes);
 app.use('/api/admin/product-units', adminProductUnitRoutes);
-app.use('/api/auth', userAuthRoutes);
-app.use('/api/user', userProfileRoutes);
+app.use('/api/public/products', publicProductRoutes);
+app.use('/api/public/general', publicGeneralRoutes);
+app.use('/api/public', publicRoutes);
+app.use('/api/user/auth', userAuthRoutes);
+app.use('/api/user/profile', userProfileRoutes);
 app.use('/api/user/cart', userCartRoutes);
 app.use('/api/user/wishlist', userWishlistRoutes);
 app.use('/api/user/orders', userOrderRoutes);
 app.use('/api/user/braintree', userBraintreeRoutes);
+app.use('/api/user/reviews', userReviewRoutes);
 
 // Public routes
 app.use('/api/public', publicRoutes);

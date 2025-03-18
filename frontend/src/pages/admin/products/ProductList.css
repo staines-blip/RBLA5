@@ -188,6 +188,41 @@
     color: #e03131;
 }
 
+.bulk-stock-update {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.bulk-stock-update input[type="number"] {
+    width: 120px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.update-stock-btn {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.update-stock-btn:hover {
+    background-color: #45a049;
+}
+
+.update-stock-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
     .product-list-container {

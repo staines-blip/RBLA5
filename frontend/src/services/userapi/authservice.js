@@ -2,7 +2,7 @@ import axios from 'axios';
 import { authEvents, AUTH_EVENTS } from './authEvents';
 
 // Base URL for the backend API (adjust if your backend runs on a different port)
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = 'http://localhost:5000/api/user/auth';
 
 // Send OTP to email
 export const sendOtp = async (email) => {

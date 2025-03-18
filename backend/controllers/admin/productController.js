@@ -136,3 +136,24 @@ exports.toggleActive = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+// Update all product stocks
+exports.updateAllStocks = async (req, res) => {
+    try {
+        const { stock } = req.body;
+        
+        if (stock === undefined || stock < 0) {
+            return res.status(400).json({ message: 'Invalid stock value' });
+        }
+
+        // Update all products' stock
+        await Product.updateMany({}, { stock });
+
+        res.status(200).json({ 
+            success: true,
+            message: `Updated stock to ${stock} for all products` 
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

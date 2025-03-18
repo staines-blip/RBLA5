@@ -169,10 +169,36 @@ const cancelOrder = async (req, res) => {
     }
 };
 
+// Check if user has purchased a product
+const checkProductPurchase = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { productId } = req.params;
+
+        const order = await Order.findOne({
+            user: userId,
+            'products.product': productId,
+            orderStatus: { $in: ['Processing', 'Shipped', 'Delivered'] }, 
+            paymentStatus: { $in: ['Paid', 'COD'] }  
+        });
+
+        res.json({
+            success: true,
+            hasPurchased: !!order
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     createOrder,
     getUserOrders,
     getOrderDetails,
     trackOrder,
-    cancelOrder
+    cancelOrder,
+    checkProductPurchase
 };

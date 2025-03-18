@@ -81,3 +81,19 @@ export const cancelOrder = async (orderId) => {
         throw error.response?.data || { success: false, message: 'Failed to cancel order' };
     }
 };
+
+// Check if user has purchased a product
+export const checkProductPurchase = async (productId) => {
+    try {
+        const response = await axios.get(
+            `${BASE_URL}/check-purchase/${productId}`,
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        if (error.response?.status === 401) {
+            throw { success: false, message: 'Please login to check purchase status' };
+        }
+        throw error.response?.data || { success: false, message: 'Failed to check purchase status' };
+    }
+};

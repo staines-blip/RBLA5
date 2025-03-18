@@ -5,6 +5,7 @@ export {
     updateProduct,
     deleteProduct,
     updateProductStock,
+    updateAllProductStocks,
     toggleProductActive
 } from './productAPI';
 

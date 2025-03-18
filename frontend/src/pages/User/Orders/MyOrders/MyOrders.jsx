@@ -11,6 +11,13 @@ const MyOrders = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useUser();
 
+    const getFullImageUrl = (imagePath) => {
+        if (!imagePath) return '';
+        if (imagePath.startsWith('http')) return imagePath;
+        const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+        return `http://localhost:5000${path}`;
+    };
+
     useEffect(() => {
         if (!isAuthenticated) {
             navigate('/login');
@@ -85,29 +92,38 @@ const MyOrders = () => {
                         </div>
                         
                         <div className="order-products">
-                            {order.products.map((item) => (
-                                <div key={item._id} className="order-product">
-                                    <img 
-                                        src={`http://localhost:5000/${item.product.image}`} 
-                                        alt={item.product.name}
-                                        onError={(e) => {
-                                            e.target.src = '/images/placeholder.png';
-                                            e.target.onerror = null; // Prevent infinite loop
-                                        }}
-                                    />
-                                    <div className="product-details">
-                                        <h4>{item.product.name}</h4>
-                                        <p>Quantity: {item.quantity}</p>
-                                        <p>₹{item.product.price}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                            {order.products.map((item) => {
+                                // Get the image URL from either images array or image_url
+                                let imageUrl = '';
+                                if (item.product.images && item.product.images.length > 0) {
+                                    imageUrl = getFullImageUrl(item.product.images[0]);
+                                } else if (item.product.image_url) {
+                                    imageUrl = getFullImageUrl(item.product.image_url);
+                                }
 
+                                return (
+                                    <div key={item._id} className="order-product">
+                                        <img 
+                                            src={imageUrl || '/images/placeholder.png'} 
+                                            alt={item.product.name}
+                                            onError={(e) => {
+                                                e.target.src = '/images/placeholder.png';
+                                                e.target.onerror = null;
+                                            }}
+                                        />
+                                        <div className="product-details">
+                                            <h4>{item.product.name}</h4>
+                                            <p>Quantity: {item.quantity}</p>
+                                            <p>₹{item.price}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        
                         <div className="order-footer">
                             <div className="order-total">
-                                <span>Total Amount:</span>
-                                <span className="total-amount">₹{order.totalAmount}</span>
+                                <p>Total Amount: ₹{order.totalAmount}</p>
                             </div>
                             <div className="order-actions">
                                 <button 

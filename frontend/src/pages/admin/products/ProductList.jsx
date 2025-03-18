@@ -5,7 +5,8 @@ import {
     toggleProductActive, 
     deleteProduct,
     getAllCategories,
-    getAllProductUnits 
+    getAllProductUnits,
+    updateAllProductStocks
 } from '../../../services/adminapi/index';
 import { isAdminLoggedIn } from '../../../services/adminAuthService';
 import { FaEdit, FaTrash, FaToggleOn, FaToggleOff } from 'react-icons/fa';
@@ -20,6 +21,8 @@ const ProductList = () => {
         category: '',
         isActive: ''
     });
+    const [bulkStock, setBulkStock] = useState('');
+    const [updateLoading, setUpdateLoading] = useState(false);
 
     useEffect(() => {
         const checkAuthAndFetchData = async () => {
@@ -115,6 +118,30 @@ const ProductList = () => {
         }
     };
 
+    const handleBulkStockUpdate = async () => {
+        if (!bulkStock || isNaN(bulkStock) || parseInt(bulkStock) < 0) {
+            setError('Please enter a valid stock number');
+            return;
+        }
+
+        try {
+            setUpdateLoading(true);
+            await updateAllProductStocks(parseInt(bulkStock));
+            await fetchProducts(); // Refresh the list
+            setBulkStock(''); // Clear input
+            setError('');
+        } catch (error) {
+            console.error('Error updating stocks:', error);
+            if (error.response?.status === 401) {
+                handleUnauthorized();
+            } else {
+                setError('Failed to update stocks. Please try again.');
+            }
+        } finally {
+            setUpdateLoading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="loading-screen">
@@ -150,6 +177,23 @@ const ProductList = () => {
                         <option value="true">Active</option>
                         <option value="false">Inactive</option>
                     </select>
+                    <div className="bulk-stock-update">
+                        <input
+                            type="number"
+                            min="0"
+                            value={bulkStock}
+                            onChange={(e) => setBulkStock(e.target.value)}
+                            placeholder="Enter stock value"
+                            disabled={updateLoading}
+                        />
+                        <button 
+                            onClick={handleBulkStockUpdate}
+                            disabled={updateLoading || !bulkStock}
+                            className="update-stock-btn"
+                        >
+                            {updateLoading ? 'Updating...' : 'Update All Stocks'}
+                        </button>
+                    </div>
                 </div>
             </div>
 

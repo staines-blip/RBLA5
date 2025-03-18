@@ -22,8 +22,10 @@ axios.defaults.baseURL = 'http://localhost:5000';
 const UserLogin = lazy(() => import('./pages/UserLogin'));
 const AdminLogin = lazy(() => import('./pages/admin/adminlogin'));
 const AdminDashboard = lazy(() => import('./pages/admin/admindashboard'));
+const EditProduct = lazy(() => import('./pages/admin/products/EditProduct'));
 const ProductDetails = lazy(() => import('./pages/Product/ProductDetails/ProductDetails'));
 const WishlistPage = lazy(() => import('./pages/User/Wishlist/WishlistPage'));
+const ReviewPage = lazy(() => import('./pages/User/Reviews/ReviewPage'));
 
 // Lazy load groups of related components
 const ProductPages = {
@@ -133,6 +135,7 @@ const App = () => {
 
               {/* Admin Dashboard route - without Layout */}
               <Route path="/admin/dashboard" element={<StandalonePage><AdminDashboard /></StandalonePage>} />
+              <Route path="/admin/products/edit/:id" element={<StandalonePage><EditProduct /></StandalonePage>} />
 
               {/* Superadmin Dashboard route - without Layout */}
               <Route path="/superadmin/dashboard" element={<StandalonePage><SuperAdminPages.Dashboard /></StandalonePage>} />
@@ -240,6 +243,18 @@ const App = () => {
                   <ProtectedRoute>
                     <MainLayout>
                       <OrderTracking />
+                    </MainLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Review Page Route */}
+              <Route
+                path="/review/:productId"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <ReviewPage />
                     </MainLayout>
                   </ProtectedRoute>
                 }

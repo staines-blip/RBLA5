@@ -19,7 +19,7 @@ const SuperadminLogin = () => {
       console.log('Attempting login...'); // Debug log
 
       const response = await axios.post(
-        'http://localhost:5000/api/superadmin/login',
+        'http://localhost:5000/api/superadmin/auth/login',
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );

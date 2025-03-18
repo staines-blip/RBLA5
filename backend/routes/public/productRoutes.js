@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Product } = require('../../models');
+const Review = require('../../models/user/Review');
 
 // Get all products
 router.get('/', async (req, res) => {
@@ -84,9 +85,28 @@ router.get('/:id', async (req, res) => {
             });
         }
 
+        // Fetch reviews for this product
+        const reviews = await Review.find({ product: req.params.id })
+            .populate('user', 'name')
+            .sort('-createdAt');
+
+        // Calculate average rating
+        let averageRating = 0;
+        if (reviews.length > 0) {
+            const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+            averageRating = totalRating / reviews.length;
+        }
+
+        // Add reviews and average rating to product data
+        const productData = {
+            ...product.toObject(),
+            reviews,
+            averageRating
+        };
+
         res.status(200).json({
             success: true,
-            data: product
+            data: productData
         });
     } catch (error) {
         res.status(500).json({

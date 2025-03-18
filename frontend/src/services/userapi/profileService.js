@@ -12,8 +12,9 @@ export const getProfile = async (token) => {
         });
         return response.data;
     } catch (error) {
-        throw error.response?.data || { 
-            success: false, 
+        console.error('Error fetching profile:', error);
+        throw {
+            error,
             message: 'Error fetching profile' 
         };
     }
@@ -27,14 +28,16 @@ export const updateProfile = async (token, profileData) => {
             profileData,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             }
         );
         return response.data;
     } catch (error) {
-        throw error.response?.data || { 
-            success: false, 
+        console.error('Error updating profile:', error);
+        throw {
+            error,
             message: 'Error updating profile' 
         };
     }

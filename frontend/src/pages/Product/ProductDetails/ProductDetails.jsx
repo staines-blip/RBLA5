@@ -4,6 +4,8 @@ import { getProduct } from '../../../services/publicapi/productAPI';
 import { useCart } from '../../../Context/CartContext';
 import WishlistButton from '../../../components/Wishlist/WishlistButton';
 import { toast } from 'react-toastify';
+import ReviewStars from '../../User/Reviews/ReviewStars';
+import ReviewList from '../../User/Reviews/ReviewList';
 import './ProductDetails.css';
 
 const ProductDetails = () => {
@@ -22,7 +24,9 @@ const ProductDetails = () => {
   const getFullImageUrl = (imagePath) => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http')) return imagePath;
-    return `http://localhost:5000${imagePath}`;
+    // Make sure the path starts with a slash
+    const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `http://localhost:5000${path}`;
   };
 
   useEffect(() => {
@@ -30,14 +34,27 @@ const ProductDetails = () => {
       try {
         setLoading(true);
         const data = await getProduct(id);
+        console.log("Product data:", data); // Debug log
 
-        if (data.success && data.product) {
+        if (data.success && data.data) {
+          // Ensure we have valid image URLs
+          let productImages = [];
+          if (data.data.images && Array.isArray(data.data.images)) {
+            productImages = data.data.images.map(img => getFullImageUrl(img));
+          }
+          
+          // If no images array or empty, use the main image_url
+          if (productImages.length === 0 && data.data.image_url) {
+            productImages = [getFullImageUrl(data.data.image_url)];
+          }
+          
           const productData = {
-            ...data.product,
-            images: data.product.images?.map(img => getFullImageUrl(img)) || [],
-            image_url: getFullImageUrl(data.product.image_url)
+            ...data.data,
+            images: productImages,
+            image_url: getFullImageUrl(data.data.image_url)
           };
           
+          console.log("Processed product data:", productData); // Debug log
           setProduct(productData);
           setSelectedImage(0);
         } else {
@@ -106,10 +123,8 @@ const ProductDetails = () => {
   };
 
   const handleBuyNow = async () => {
-    // First add to cart
     const success = await handleAddToCart();
     if (success) {
-      // Then navigate to checkout
       navigate('/checkout');
     }
   };
@@ -137,160 +152,164 @@ const ProductDetails = () => {
 
   return (
     <div className="product-details-container">
-      {/* Product Images Section */}
-      <div className="product-images-section">
-        <div className="main-image">
-          {product.images?.[selectedImage] && (
-            <img 
-              src={product.images[selectedImage]}
-              alt={product.name}
-              className="product-main-image"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = product.image_url;
-              }}
-            />
-          )}
-        </div>
-        <div className="image-thumbnails">
-          {product.images?.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`${product.name} view ${index + 1}`}
-              className={`thumbnail ${selectedImage === index ? 'selected' : ''}`}
-              onClick={() => setSelectedImage(index)}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = product.image_url;
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Product Info Section */}
-      <div className="product-info-section">
-        <div className="product-header">
-          <h1 className="product-title">{product.name}</h1>
-          <WishlistButton productId={id} />
-        </div>
-        <p className="product-description">{product.description}</p>
-
-        <div className="price-section">
-          {product.old_price && (
-            <div className="original-price">₹{product.old_price}</div>
-          )}
-          <div className="current-price">₹{product.new_price || product.price}</div>
-          <div className="stock-info">
-            {product.stock > 0 ? (
-              <span className={`in-stock ${product.stock <= 5 ? 'low' : ''}`}>
-                {product.stock <= 5 ? 'Low Stock' : 'In Stock'} ({product.stock} {product.stock === 1 ? 'item' : 'items'} left)
-              </span>
+      <div className="product-main-section">
+        {/* Product Images Section */}
+        <div className="product-images-section">
+          <div className="main-image">
+            {product.images && product.images.length > 0 ? (
+              <img 
+                src={product.images[selectedImage]}
+                alt={product.name}
+                className="product-main-image"
+                onError={(e) => {
+                  console.log("Image error, falling back to default");
+                  e.target.onerror = null;
+                  e.target.src = product.image_url || '/placeholder-image.jpg';
+                }}
+              />
             ) : (
-              <span className="out-of-stock">Out of Stock</span>
+              <div className="no-image-placeholder">No image available</div>
             )}
           </div>
+          <div className="image-thumbnails">
+            {product.images && product.images.length > 0 ? (
+              product.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`${product.name} view ${index + 1}`}
+                  className={`thumbnail ${selectedImage === index ? 'selected' : ''}`}
+                  onClick={() => setSelectedImage(index)}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = product.image_url || '/placeholder-image.jpg';
+                  }}
+                />
+              ))
+            ) : null}
+          </div>
         </div>
 
-        {/* Product Options */}
-        <div className="product-options">
-          <div className="option-group">
-            <label>Size:</label>
-            <select 
-              value={size} 
-              onChange={(e) => setSize(e.target.value)}
-              className="size-select"
-              disabled={product.stock === 0}
-            >
-              <option value="default">Default</option>
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-            </select>
+        {/* Product Info Section */}
+        <div className="product-info-section">
+          <div className="product-header">
+            <h1 className="product-title">{product.name}</h1>
+            <WishlistButton productId={id} />
           </div>
+          
+          {/* Display average rating if available */}
+          {product.averageRating > 0 && (
+            <div className="product-rating">
+              <ReviewStars rating={product.averageRating} />
+              <span className="rating-text">({product.averageRating.toFixed(1)})</span>
+            </div>
+          )}
+          
+          <p className="product-description">{product.description}</p>
 
-          <div className="option-group">
-            <label>Printed Side:</label>
-            <select 
-              value={printedSide} 
-              onChange={(e) => setPrintedSide(e.target.value)}
-              className="side-select"
-            >
-              <option value="single">Single Side</option>
-              <option value="double">Double Side</option>
-            </select>
-          </div>
-
-          <div className="option-group">
-            <label>Quantity:</label>
-            <div className="quantity-controls">
-              <button 
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                disabled={quantity <= 1 || product.stock === 0}
-              >
-                -
-              </button>
-              <input 
-                type="number" 
-                value={quantity} 
-                onChange={(e) => {
-                  const newQuantity = parseInt(e.target.value);
-                  if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= product.stock) {
-                    setQuantity(newQuantity);
-                  }
-                }}
-                min="1"
-                max={product.stock}
-                disabled={product.stock === 0}
-              />
-              <button 
-                onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                disabled={quantity >= product.stock}
-              >
-                +
-              </button>
+          <div className="price-section">
+            {product.old_price && (
+              <div className="original-price">₹{product.old_price}</div>
+            )}
+            <div className="current-price">₹{product.new_price || product.price}</div>
+            <div className="stock-info">
+              {product.stock > 0 ? (
+                <span className={`in-stock ${product.stock <= 5 ? 'low' : ''}`}>
+                  {product.stock <= 5 ? 'Low Stock' : 'In Stock'} ({product.stock} {product.stock === 1 ? 'item' : 'items'} left)
+                </span>
+              ) : (
+                <span className="out-of-stock">Out of Stock</span>
+              )}
             </div>
           </div>
+
+          {/* Product Options */}
+          <div className="product-options">
+            <div className="option-group">
+              <label>Size:</label>
+              <select value={size} onChange={(e) => setSize(e.target.value)} disabled={addingToCart}>
+                <option value="default">Default</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+
+            <div className="option-group">
+              <label>Printed Side:</label>
+              <select value={printedSide} onChange={(e) => setPrintedSide(e.target.value)} disabled={addingToCart}>
+                <option value="single">Single Side</option>
+                <option value="double">Double Side</option>
+              </select>
+            </div>
+
+            <div className="option-group">
+              <label>Quantity:</label>
+              <div className="quantity-controls">
+                <button 
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  disabled={quantity <= 1 || addingToCart}
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  disabled={addingToCart}
+                />
+                <button 
+                  onClick={() => setQuantity(q => q + 1)}
+                  disabled={addingToCart}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="total-price">
+              Total: ₹{calculatePrice()}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="action-buttons">
+            <button
+              className="add-to-cart-btn"
+              onClick={handleAddToCart}
+              disabled={addingToCart || product.stock <= 0}
+            >
+              {addingToCart ? 'Adding...' : 'Add to Cart'}
+            </button>
+            <button
+              className="buy-now-btn"
+              onClick={handleBuyNow}
+              disabled={addingToCart || product.stock <= 0}
+            >
+              Buy Now
+            </button>
+          </div>
         </div>
 
-        {/* Total Price */}
-        <div className="total-price">
-          <span>Total Price:</span>
-          <span className="price">₹{calculatePrice()}</span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="action-buttons">
-          <button
-            className="add-to-cart-btn"
-            onClick={handleAddToCart}
-            disabled={addingToCart || cartLoading || product.stock === 0}
-          >
-            {addingToCart ? 'Adding...' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-          </button>
-          <button
-            className="buy-now-btn"
-            onClick={handleBuyNow}
-            disabled={addingToCart || cartLoading || product.stock === 0}
-          >
-            {product.stock === 0 ? 'Out of Stock' : 'Buy Now'}
-          </button>
-        </div>
-
-        {/* Design Options */}
-        <div className="design-options">
-          <h3>Design Options</h3>
-          <div className="design-buttons">
-            <button onClick={() => navigate('/browse-design')} className="design-btn">
-              Browse Designs
-            </button>
-            <button onClick={() => navigate('/custom-design')} className="design-btn">
-              Custom Design
-            </button>
-            <button onClick={() => navigate('/upload-design')} className="design-btn">
-              Upload Design
-            </button>
+        {/* Reviews Section */}
+        <div className="reviews-section">
+          <div className="product-reviews-section">
+            <div className="reviews-summary">
+              <h2>Customer Reviews</h2>
+              {product.averageRating > 0 ? (
+                <div className="rating-summary">
+                  <ReviewStars rating={product.averageRating} />
+                  <span className="rating-text">
+                    {product.averageRating.toFixed(1)} out of 5
+                    ({product.reviews ? product.reviews.length : 0} {product.reviews?.length === 1 ? 'review' : 'reviews'})
+                  </span>
+                </div>
+              ) : (
+                <p>No reviews yet</p>
+              )}
+            </div>
+            <ReviewList productId={product._id} initialReviews={product.reviews || []} />
           </div>
         </div>
       </div>

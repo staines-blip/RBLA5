@@ -77,3 +77,13 @@ export const toggleProductActive = async (productId) => {
         throw error;
     }
 };
+
+// Update all product stocks
+export const updateAllProductStocks = async (stock) => {
+    try {
+        const response = await api.patch('/products/update-all-stocks', { stock });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

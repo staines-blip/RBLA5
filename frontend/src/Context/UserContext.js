@@ -3,7 +3,7 @@ import axios from 'axios';
 import { authEvents, AUTH_EVENTS } from '../services/userapi/authEvents';
 
 // API URL
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = 'http://localhost:5000/api/user/auth';
 
 // Action Types
 const USER_ACTIONS = {

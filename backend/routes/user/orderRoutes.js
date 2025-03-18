@@ -5,7 +5,8 @@ const {
     createOrder,
     getUserOrders,
     getOrderDetails,
-    trackOrder
+    trackOrder,
+    checkProductPurchase
 } = require('../../controllers/user/orderController');
 
 // All routes are protected with auth middleware
@@ -22,5 +23,8 @@ router.get('/:orderId', getOrderDetails);
 
 // Track order status
 router.get('/:orderId/track', trackOrder);
+
+// Check if user has purchased a product
+router.get('/check-purchase/:productId', checkProductPurchase);
 
 module.exports = router;
