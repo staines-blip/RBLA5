@@ -1,16 +1,19 @@
 import React from 'react'
-import Hero from '../components/Hero/Hero'
+
 import FashionForward from '../components/FashionForward/FashionForward'
-import SellerStories from '../components/SellerStories/SellerStories'
+
 import './Home.css'
+import SellerStories from '../components/SellerStories/SellerStories'
 
 const Home = () => {
   return (
-    <div className="home-container">
-      
-      <FashionForward/>
-      <SellerStories/>
-    </div>
+    <div className="page-container">
+  
+    <FashionForward />
+    <SellerStories/>
+  
+</div>
+
   )
 }
 

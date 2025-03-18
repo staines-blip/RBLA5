@@ -1,86 +1,77 @@
 import React from "react";
 import "./Footer.css";
 import { Link } from "react-router-dom";
-import logo from "../Assets/logo.png";
-import about1 from "../Assets/about1.png";
-import about2 from "../Assets/about2.png";
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaLinkedinIn, FaWhatsapp, FaEnvelope, FaCommentDots } from "react-icons/fa";
+import Chatbot from "../Chatbot/Chatbot";
 
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-stories">
-        <div className="footer-stories-left">
-          <div className="seller-story">
-            <img src={about1} alt="Seller Stories" />
-            <div className="story-content">
-              <h3>Seller Stories</h3>
-              <p>Discover the artisans behind our handcrafted products</p>
-              <Link to="/AboutPage" className="story-link">Meet Our Kreators →</Link>
-            </div>
-          </div>
-        </div>
-        <div className="footer-stories-right">
-          <div className="crafting-story">
-            <img src={about2} alt="Crafting Stories" />
-            <div className="story-content">
-              <h3>Crafting Stories</h3>
-              <p>Shaping lives at each turn</p>
-              <Link to="/Gallery" className="story-link">View Gallery →</Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="footer-content">
+
+        {/* Quick Links Section */}
         <div className="footer-section">
-          <h3>Quick Links</h3>
+          <h3>Get Know Us</h3>
           <ul>
             <li><Link to="/AboutPage">About RBLA</Link></li>
             <li><Link to="/ProductPage">Products</Link></li>
             <li><Link to="/careers">Careers</Link></li>
             <li><Link to="/press">Press Releases</Link></li>
-            <li><Link to="/ReturnOrder">Returns Centre</Link></li>
-            <li><Link to="/ContactUs">Help</Link></li>
+            
           </ul>
         </div>
 
-        <div className="footer-section">
-          <h3>Categories</h3>
+        <div className="footer-section-help">
+          <h3>Get Know Us</h3>
           <ul>
-            <li><Link to="/towels">Towels</Link></li>
-            <li><Link to="/bedsheets">Bedsheets</Link></li>
-            <li><Link to="/napkins">Napkins</Link></li>
-            <li><Link to="/bags">Bags</Link></li>
-            <li><Link to="/cupcoaster">Cup Coasters</Link></li>
-            <li><Link to="/paperfiles">Paper Files</Link></li>
-            <li><Link to="/bamboo">Bamboo Products</Link></li>
+          <li><Link to="/ReturnOrder">Returns Centre</Link></li>
+          <li><Link to="/ContactUs">Help</Link></li>
           </ul>
-        </div>
+          </div>
 
+        {/* Contact Us Section (New Design) 
+        <div className="footer-section contact-section">
+          <h3>Contact Us</h3>
+          <p>+91 81473 49478</p>
+          <p>1800-266-0123</p>
+          <hr className="divider" />
+          <div className="contact-icons">
+            <a href="#" aria-label="WhatsApp"><FaWhatsapp /></a>
+            <a href="#" aria-label="Email"><FaEnvelope /></a>
+            <a href="#" aria-label="Chat"><FaCommentDots /></a>
+          </div>
+        </div>*/}
+
+        {/* Social Links Section */}
         <div className="footer-section">
           <h3>Connect with us</h3>
           <div className="social-links">
-            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a>
-            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">Twitter</a>
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
-            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YouTube</a>
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <FaFacebookF />
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <FaTwitter />
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <FaInstagram />
+            </a>
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <FaYoutube />
+            </a>
+            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <FaLinkedinIn />
+            </a>
           </div>
         </div>
       </div>
 
+      {/* Footer Bottom Section */}
       <div className="footer-bottom">
         <div className="footer-bottom-left">
-          <div className="footer-logo">
-            <img src={logo} alt="RBLA Logo" />
-          </div>
-          <div className="footer-country">
-            <button>English</button>
-            <button>India</button>
-          </div>
-        </div>
-        <Link to="/UserLogin" className="superadmin-link">super/admin login</Link>
+        <Link to="/UserLogin" className="superadmin-link">SUPER/ADMIN LOGIN</Link>
       </div>
+      </div>
+      <Chatbot/>
     </footer>
   );
 };

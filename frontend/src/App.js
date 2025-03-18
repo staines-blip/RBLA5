@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { isLoggedIn } from './services/userapi/authservice';
-import Chatbot from './components/Chatbot/Chatbot';
+
 import { UserProvider } from "./Context/UserContext";
 import { CartProvider } from "./Context/CartContext";
 import { WishlistProvider } from "./Context/WishlistContext";
@@ -259,7 +259,7 @@ const App = () => {
               <Route path="/superadmin/units" element={<StandalonePage><div>Units Page</div></StandalonePage>} />
               <Route path="/superadmin/adminregistration" element={<StandalonePage><SuperAdminPages.AdminRegistration /></StandalonePage>} />
             </Routes>
-            <Chatbot />
+            
           </WishlistProvider>
         </CartProvider>
       </Router>

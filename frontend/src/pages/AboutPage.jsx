@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./AboutPage.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './AboutPage.css';
+
+import artisanImage from "../components/Assets/v6.png";
 import varlogo from "../components/Assets/varlogo.png";
-import about2 from "../components/Assets/about2.png";
-import about1 from "../components/Assets/about1.png";
-import about3 from "../components/Assets/about3.png";
-import homepage from "../components/Assets/homepage.jpg";
-import homepage2 from "../components/Assets/homepage2.jpg";
 import vaalogo from "../components/Assets/vaalogo.png";
 import sirlogo from "../components/Assets/sirlogo.png";
 
 const AboutPage = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
   const handleUnitClick = (unit) => {
@@ -27,79 +23,92 @@ const AboutPage = () => {
   return (
     <div className="about-container">
       <div className="about-content">
-        <aside className="about-sidebar">
-          <div className="vertical-text">ABOUT US</div>
-        </aside>
-        <main className="about-main">
-          <div className="hero-section">
-            <div className="hero-background" style={{ backgroundImage: `url(${homepage})` }}></div>
-            <div className="hero-background hero-background-2" style={{ backgroundImage: `url(${homepage2})` }}></div>
-            <div className="hero-content">
-              <h1>REHABILITATE</h1>
-              <p>Empowering survivors through sustainable rehabilitation</p>
+
+        {/* Hero Section */}
+        <div className="hero-section">
+          <div className="heading">
+            <h1>
+              A social enterprise An authentic platform for pure craft.
+            </h1>
+          </div>
+          <div className="content">
+            <p>
+              The India Craft House is a digital platform for some of the world's oldest
+              and most intricate craft forms. We started this social enterprise close to
+              10 years ago in order to preserve, showcase and share the talent of
+              India's artisans with the world. We hope to be able to raise the dignity
+              of the Indian artisan in our own way and kindle an interest and support
+              for an unsurpassed legacy of craft that spans millennia and spreads
+              across the length and breadth of the land. It is our effort to curate an
+              undeniably unique selection of traditional art and craft translated into a
+              range of beautiful, contemporary products.
+            </p>
+          </div>
+        </div>
+
+        {/* Artisan Section */}
+        <div className="section artisan-section">
+          <div className="heading">
+            <h3>Established in 2010, Gurgaon, India.</h3>
+          </div>
+          <div className="content">
+            <p>
+              We are headquartered in Gurgaon, India near the capital city of
+              New Delhi. Our objective has always been to empower our
+              artisans to deliver sustainable products of the finest quality. We
+              devote ourselves to these causes. Each of our products are
+              handcrafted and unique. Each product tells the unique story of
+              the artisan who made it.
+            </p>
+            <div className="artisan-image">
+              <img src={artisanImage} alt="Artisan crafting" />
             </div>
           </div>
-          <div className="about-text">
-            <h1>OUR MISSION</h1>
-            <div className="intro-text">
-              Since 2023, RBLA has been at the forefront of transforming lives through 
-              comprehensive rehabilitation programs. We empower survivors of bonded labor 
-              with skills, opportunities, and support to build independent futures.
-            </div>
+        </div>
 
-            <div className="mission-text">
-              <h2>Our Approach</h2>
-              <p>
-                The Rehabilitation of Bonded Labourers Act (RBLA) combines sustainable 
-                practices with economic empowerment. We create pathways to independence 
-                through skill development, community support, and dignified employment 
-                opportunities.
-              </p>
-              <div className={`expandable-content ${isExpanded ? "expanded" : ""}`}>
-                <p>Through our specialized units, we focus on:</p>
-                <ul>
-                  <li>Comprehensive skill development programs</li>
-                  <li>Sustainable employment creation</li>
-                  <li>Quality product development</li>
-                  <li>Community-based rehabilitation</li>
-                  <li>Environmental responsibility</li>
-                </ul>
-              </div>
-              <button 
-                className="read-more-btn" 
-                onClick={() => setIsExpanded(!isExpanded)}
-                aria-expanded={isExpanded}
-                aria-controls="expandable-content"
+        {/* Heritage Section */}
+        <div className="section heritage-section">
+          <div className="heading">
+            <h1>Celebrating a heritage.</h1>
+          </div>
+          <div className="content">
+            <p>
+              With a legacy of craft that spans millennia and some of the forms dating as
+              far back as to the era of the Indus Valley civilisation, the fantastic world of
+              India’s craftspeople remains unsurpassed in its beauty and extent.
+              "Craftsmanship in India comes naturally to hundreds of thousands of its
+              unlettered people who weave myths, legends and simple daily experiences
+              into different forms of creativity that can change shape from day to day, yet
+              maintain their consistency for centuries to enrich their lives.
+            </p>
+          </div>
+        </div>
+
+        {/* Units Section */}
+        <div className="units-section">
+          <h2>Our Units</h2>
+          <div className="units-grid">
+            {units.map((unit) => (
+              <div
+                key={unit.name}
+                className="unit-card"
+                onClick={() => handleUnitClick(unit.name)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleUnitClick(unit.name);
+                  }
+                }}
+                aria-label={`Visit ${unit.name} page`}
               >
-                {isExpanded ? "Read Less" : "Read More"}
-              </button>
-            </div>
-
-            <div className="units-section">
-              <h2>Our Units</h2>
-              <div className="units-grid">
-                {units.map((unit) => (
-                  <div
-                    key={unit.name}
-                    className="unit-card"
-                    onClick={() => handleUnitClick(unit.name)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        handleUnitClick(unit.name);
-                      }
-                    }}
-                    aria-label={`Visit ${unit.name} page`}
-                  >
-                    <img src={unit.logo} alt={`${unit.name} Logo`} />
-                    <p>{unit.name}</p>
-                  </div>
-                ))}
+                <img src={unit.logo} alt={`${unit.name} Logo`} />
+                <p>{unit.name}</p>
               </div>
-            </div>
+            ))}
           </div>
-        </main>
+        </div>
+
       </div>
     </div>
   );
