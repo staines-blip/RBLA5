@@ -88,16 +88,17 @@ const MyOrders = () => {
                             {order.products.map((item) => (
                                 <div key={item._id} className="order-product">
                                     <img 
-                                        src={item.product.image_url} 
+                                        src={`http://localhost:5000/${item.product.image}`} 
                                         alt={item.product.name}
                                         onError={(e) => {
-                                            e.target.src = '/placeholder.png';
+                                            e.target.src = '/images/placeholder.png';
+                                            e.target.onerror = null; // Prevent infinite loop
                                         }}
                                     />
                                     <div className="product-details">
                                         <h4>{item.product.name}</h4>
                                         <p>Quantity: {item.quantity}</p>
-                                        <p>₹{item.price}</p>
+                                        <p>₹{item.product.price}</p>
                                     </div>
                                 </div>
                             ))}

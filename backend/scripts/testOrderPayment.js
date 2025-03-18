@@ -14,12 +14,8 @@ const TEST_USER = {
 const TEST_ORDER = {
     products: [
         {
-            product: "67ce989317698bf95b3da1dc", // Bedsheet 1 (₹200, stock: 3)
-            quantity: 1
-        },
-        {
-            product: "67ce980617698bf95b3da19f", // Towels 2 (₹119.99, stock: 2)
-            quantity: 1
+            product: "67ce974717698bf95b3da15a", // Paperfile 1 (₹35, stock: 6)
+            quantity: 2
         }
     ],
     shippingAddress: {
@@ -65,9 +61,8 @@ async function testOrderPaymentFlow() {
         // 2. Create Order
         console.log('\n2. Creating test order...');
         console.log('Ordering:');
-        console.log('- 1x Bedsheet 1 (₹200)');
-        console.log('- 1x Towels 2 (₹119.99)');
-        console.log('Expected Total: ₹319.99\n');
+        console.log('- 2x Paperfile 1 (₹35)');
+        console.log('Expected Total: ₹70\n');
 
         const orderResponse = await axios.post(
             `${API_URL}/user/orders`,
