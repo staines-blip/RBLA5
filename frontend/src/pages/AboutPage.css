@@ -18,56 +18,56 @@
   width: 100%;
   min-height: 100%;
   background: #f5f1e9;
-  overflow-y: visible;
+  overflow-y: visible;
 }
+
 .hero-section {
   margin-bottom: 4rem;
   background: #f5f1e9;
 }
 
 .heading h1 {
-  font-size: 5rem;          /* Maintains impactful size */
-  line-height: 1.1;         /* Optimal spacing for large headings */
-  margin-bottom: 2rem;      /* Adequate spacing below the heading */
-  font-weight: 700;         /* Strong bold appearance */
-  font-family: 'Playfair Display', serif; /* Elegant cursive-like style */
-  letter-spacing: -0.03em;  /* Slightly tighter spacing for boldness */
-  color: #060606;              /* Rich dark tone for better contrast */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  font-size: 5rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+  color: #060606;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .heading h3 {
   text-align: center;
-  font-size: 3rem;          /* Maintains impactful size */
-  line-height: 1.1;         /* Optimal spacing for large headings */
-  margin-bottom: 2rem;      /* Adequate spacing below the heading */
-  font-weight: 700;         /* Strong bold appearance */
-  font-family: 'Playfair Display', serif; /* Elegant cursive-like style */
-  letter-spacing: -0.03em;  /* Slightly tighter spacing for boldness */
-  color: #548ced;              /* Rich dark tone for better contrast */
+  font-size: 3rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+  color: #548ced;
 }
 
-
 .content p {
-  font-size: 1.2rem;       /* Slightly larger for improved readability */
-  line-height: 1.8;        /* Increased line height for better text flow */
-  color: #333;             /* Softer black for less strain on the eyes */
-  max-width: 550px;        /* Maintains optimal text width */
-  margin-bottom: 1.5rem;   /* Adds spacing between paragraphs */
-  text-align: justify;     /* Balanced text alignment */
-  word-spacing: 0.1rem;    /* Slightly increases space between words for readability */
-  letter-spacing: 0.02rem; /* Improves character spacing for better clarity */
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #333;
+  max-width: 550px;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  word-spacing: 0.1rem;
+  letter-spacing: 0.02rem;
 }
 
 .artisan-section .content p {
-  font-size: 1.2rem;       /* Slightly larger for improved readability */
-  line-height: 1.8;        /* Increased line height for better text flow */
-  color: #333;             /* Softer black for less strain on the eyes */
-  max-width: 550px;        /* Maintains optimal text width */
-  margin-bottom: 1.5rem;   /* Adds spacing between paragraphs */
-  text-align: justify;     /* Balanced text alignment */
-  word-spacing: 0.1rem;    /* Slightly increases space between words for readability */
-  letter-spacing: 0.02rem; /* Improves character spacing for better clarity */
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #333;
+  max-width: 550px;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  word-spacing: 0.1rem;
+  letter-spacing: 0.02rem;
 }
 
 .artisan-image img {
@@ -79,21 +79,38 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.heritage-section .heading h1 {
-  font-size: 5rem;          /* Maintains impactful size */
-  line-height: 1.1;         /* Optimal spacing for large headings */
-  margin-bottom: 2rem;      /* Adequate spacing below the heading */
-  font-weight: 700;         /* Strong bold appearance */
-  font-family: 'Playfair Display', serif; /* Elegant cursive-like style */
-  letter-spacing: -0.03em;  /* Slightly tighter spacing for boldness */
-  color: #222;              /* Rich dark tone for better contrast */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+.heritage-section {
+  width: 100%;
+  min-height: 100%;
+  background: #f5f1e9;
+  overflow-y: visible;
 }
 
-.units-section {
-  margin-top: 4rem;
-  padding: 2rem 0;
+.content-left {
+  font-size: 5rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  font-weight: 450;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+  color: #060606;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+.heading-right {
+  
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #333;
+  max-width: 550px;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  word-spacing: 0.1rem;
+  letter-spacing: 0.02rem;
+}
+
+
+
 
 .units-section h2 {
   font-size: 2rem;
@@ -110,13 +127,11 @@
 }
 
 .unit-card {
-  background: rgb(205, 205, 244);
-  border-radius: 10px;
-  padding: 1.5rem;
+ 
   text-align: center;
   transition: transform 0.3s ease;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
 }
 
 .unit-card:hover {
@@ -124,7 +139,7 @@
 }
 
 .unit-card img {
-  height: 80px;
+  height: 150px;
   width: auto;
   margin-bottom: 1rem;
   object-fit: contain;
@@ -189,4 +204,23 @@
   .hero-section .heading h1 {
     font-size: 5rem;
   }
+}
+
+.hero-section {
+  margin-bottom: 2rem;
+}
+
+.heritage-section {
+  margin-bottom: 2rem;
+}
+
+.units-section {
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.content p,
+.artisan-section .content p,
+.heritage-section .content p {
+  margin-bottom: 1rem;
 }

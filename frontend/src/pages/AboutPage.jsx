@@ -51,7 +51,7 @@ const AboutPage = () => {
           <div className="heading">
             <h3>Established in 2010, Gurgaon, India.</h3>
           </div>
-          <div className="content">
+          <div className="content"><center>
             <p>
               We are headquartered in Gurgaon, India near the capital city of
               New Delhi. Our objective has always been to empower our
@@ -59,31 +59,12 @@ const AboutPage = () => {
               devote ourselves to these causes. Each of our products are
               handcrafted and unique. Each product tells the unique story of
               the artisan who made it.
-            </p>
+            </p></center>
             <div className="artisan-image">
               <img src={artisanImage} alt="Artisan crafting" />
             </div>
           </div>
         </div>
-
-        {/* Heritage Section */}
-        <div className="section heritage-section">
-          <div className="heading">
-            <h1>Celebrating a heritage.</h1>
-          </div>
-          <div className="content">
-            <p>
-              With a legacy of craft that spans millennia and some of the forms dating as
-              far back as to the era of the Indus Valley civilisation, the fantastic world of
-              India’s craftspeople remains unsurpassed in its beauty and extent.
-              "Craftsmanship in India comes naturally to hundreds of thousands of its
-              unlettered people who weave myths, legends and simple daily experiences
-              into different forms of creativity that can change shape from day to day, yet
-              maintain their consistency for centuries to enrich their lives.
-            </p>
-          </div>
-        </div>
-
         {/* Units Section */}
         <div className="units-section">
           <h2>Our Units</h2>

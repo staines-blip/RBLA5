@@ -24,10 +24,15 @@
 
 .fashion-forward-left h1 span {
   display: block;
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-size: 3rem;         /* Enhanced for a bold statement */
+  font-weight: 700;        /* Ensures a strong presence */
+  font-family: 'Playfair Display', serif; /* Elegant and stylish font */
+  letter-spacing: 1.5px;   /* Adds a modern touch */
+  text-transform: uppercase; /* Bold and confident look */
+  color: #fffefe;          /* A striking red for a fashion-forward vibe */
+  margin-bottom: 0.7rem;   /* Slightly increased for better spacing */
 }
+
 
 .category-buttons {
   margin: 1.5rem 0;

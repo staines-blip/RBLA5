@@ -13,7 +13,7 @@ const SellerStories = () => {
           Know our sellers
         </Link>
       </div>
-      <div className="seller-stories-right" style={{ backgroundImage: `linear-gradient(rgba(128, 0, 47, 0.7), rgba(128, 0, 47, 0.7)), url(${about1})` }}>
+      <div className="seller-stories-right" style={{ backgroundImage: ` url(${about1})` }}>
         <div className="crafting-stories">
           <h2>Crafting Stories</h2>
           <p>Shaping lives at each turn</p>

@@ -52,9 +52,9 @@ const FashionForward = () => {
     <div className="fashion-forward">
       <div className="fashion-forward-left">
         <h1>
-          <span>Be</span>
-          <span>Fashion</span>
-          <span>Forward</span>
+          <span>"Make it simple, </span>
+          <span>but significant."</span>
+          
         </h1>
         <div className="category-buttons">
           {moreCategories.map(category => (
