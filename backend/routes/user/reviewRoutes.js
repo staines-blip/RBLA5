@@ -8,11 +8,15 @@ const {
     getProductReviews,
     updateReview,
     deleteReview,
-    voteReview
+    voteReview,
+    canReviewProduct
 } = require('../../controllers/user/reviewController');
 
 // Get reviews for a product (public)
 router.get('/product/:productId', getProductReviews);
+
+// Check if user can review a product
+router.get('/can-review/:productId', auth, canReviewProduct);
 
 // Protected routes - apply auth middleware
 router.use(auth);

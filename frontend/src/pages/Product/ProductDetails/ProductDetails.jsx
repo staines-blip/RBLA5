@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProduct } from '../../../services/publicapi/productAPI';
+import { canReviewProduct } from '../../../services/userapi/reviewAPI';
 import { useCart } from '../../../Context/CartContext';
+import { useUser } from '../../../Context/UserContext';
 import WishlistButton from '../../../components/Wishlist/WishlistButton';
 import { toast } from 'react-toastify';
 import ReviewStars from '../../User/Reviews/ReviewStars';
@@ -12,6 +14,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart, loading: cartLoading } = useCart();
+  const { isAuthenticated } = useUser();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,6 +23,8 @@ const ProductDetails = () => {
   const [size, setSize] = useState('default');
   const [printedSide, setPrintedSide] = useState('single');
   const [addingToCart, setAddingToCart] = useState(false);
+  const [canReview, setCanReview] = useState(false);
+  const [reviewMessage, setReviewMessage] = useState('');
 
   const getFullImageUrl = (imagePath) => {
     if (!imagePath) return '';
@@ -72,6 +77,18 @@ const ProductDetails = () => {
       fetchProduct();
     }
   }, [id]);
+
+  useEffect(() => {
+    const checkReviewEligibility = async () => {
+      if (isAuthenticated && product?._id) {
+        const result = await canReviewProduct(product._id);
+        setCanReview(result.canReview);
+        setReviewMessage(result.message);
+      }
+    };
+    
+    checkReviewEligibility();
+  }, [isAuthenticated, product?._id]);
 
   const calculatePrice = () => {
     if (!product) return 0;
@@ -294,19 +311,26 @@ const ProductDetails = () => {
 
         {/* Reviews Section */}
         <div className="reviews-section">
+          <h2>Customer Reviews</h2>
           <div className="product-reviews-section">
-            <div className="reviews-summary">
-              <h2>Customer Reviews</h2>
-              {product.averageRating > 0 ? (
-                <div className="rating-summary">
-                  <ReviewStars rating={product.averageRating} />
-                  <span className="rating-text">
-                    {product.averageRating.toFixed(1)} out of 5
-                    ({product.reviews ? product.reviews.length : 0} {product.reviews?.length === 1 ? 'review' : 'reviews'})
-                  </span>
-                </div>
-              ) : (
-                <p>No reviews yet</p>
+            <div className="reviews-header">
+              <div className="average-rating">
+                <ReviewStars rating={product.averageRating || 0} />
+                <span>({product.reviews?.length || 0} reviews)</span>
+              </div>
+              {isAuthenticated && (
+                canReview ? (
+                  <button 
+                    className="write-review-btn"
+                    onClick={() => navigate(`/review/${product._id}`)}
+                  >
+                    Write a Review
+                  </button>
+                ) : (
+                  <div className="review-message">
+                    {reviewMessage || 'Purchase this product to write a review'}
+                  </div>
+                )
               )}
             </div>
             <ReviewList productId={product._id} initialReviews={product.reviews || []} />

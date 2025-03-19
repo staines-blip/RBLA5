@@ -1,5 +1,6 @@
 const Review = require('../../models/user/Review');
 const Order = require('../../models/user/Order');
+const Product = require('../../models/Product');
 
 // Create a new review
 const createReview = async (req, res, next) => {
@@ -20,7 +21,7 @@ const createReview = async (req, res, next) => {
         const hasOrdered = await Order.findOne({
             user: userId,
             'products.product': productId,
-            orderStatus: 'Delivered'
+            orderStatus: { $in: ['Processing', 'Delivered'] }
         });
 
         const review = new Review({
@@ -150,10 +151,58 @@ const voteReview = async (req, res, next) => {
     }
 };
 
+// Check if user can review a product
+const canReviewProduct = async (req, res, next) => {
+    try {
+        const { productId } = req.params;
+        const userId = req.user._id;
+
+        // Check if product exists
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({
+                canReview: false,
+                message: 'Product not found'
+            });
+        }
+
+        // Check if user has already reviewed
+        const existingReview = await Review.findOne({ user: userId, product: productId });
+        if (existingReview) {
+            return res.json({
+                canReview: false,
+                message: 'You have already reviewed this product'
+            });
+        }
+
+        // Check if user has purchased the product
+        const hasOrdered = await Order.findOne({
+            user: userId,
+            'products.product': productId,
+            orderStatus: { $in: ['Processing', 'Delivered'] }
+        });
+
+        if (!hasOrdered) {
+            return res.json({
+                canReview: false,
+                message: 'Purchase this product to write a review'
+            });
+        }
+
+        res.json({
+            canReview: true,
+            message: 'You can review this product'
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createReview,
     getProductReviews,
     updateReview,
     deleteReview,
-    voteReview
+    voteReview,
+    canReviewProduct
 };

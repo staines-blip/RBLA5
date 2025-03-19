@@ -3,6 +3,23 @@ import { getAuthToken } from './authservice';
 
 const BASE_URL = 'http://localhost:5000/api/user/reviews';
 
+// Check if user can review a product
+export const canReviewProduct = async (productId) => {
+    try {
+        const response = await axios.get(
+            `${BASE_URL}/can-review/${productId}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${getAuthToken()}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        return { canReview: false, message: error.response?.data?.message || 'Unable to verify purchase' };
+    }
+};
+
 // Create a new review
 export const createReview = async (reviewData) => {
     try {
