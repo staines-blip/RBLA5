@@ -45,7 +45,7 @@
   font-weight: 700;
   font-family: 'Playfair Display', serif;
   letter-spacing: -0.03em;
-  color: #548ced;
+  color: #80002f;
 }
 
 .content p {
@@ -113,10 +113,15 @@
 
 
 .units-section h2 {
-  font-size: 2rem;
+  font-size: 3.2rem;
+  line-height: 1.1;
   margin-bottom: 2rem;
-  text-align: center;
   font-weight: 400;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+  color: #060606;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
 .units-grid {

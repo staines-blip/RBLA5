@@ -69,7 +69,7 @@ const Varnam = () => {
       {/* About Section */}
       <section className="varnam-about">
         <h2>About Varnam</h2>
-        <h4><center>**Varnam: Empowering Survivors of Bonded Labour through Sustainable Livelihood**</center></h4>
+        <h3><center>**Varnam: Empowering Survivors of Bonded Labour through Sustainable Livelihood**</center></h3>
 
         <p className={showMore ? "expanded" : ""}>
           'Varnam' is a remarkable community enterprise that stands as a beacon of hope and empowerment for individuals who have endured the harsh realities of bonded labour. Established in 2019 in the town of Thiruthani, located in the Tiruvallur district of Tamil Nadu, Varnam is a collective of survivors who have transformed their lives through resilience, skill development, and entrepreneurship. This initiative, which initially brought together 14 individuals, has evolved into a thriving block printing and tailoring unit, providing not just livelihood, but also dignity and purpose to those involved.
@@ -117,30 +117,28 @@ const Varnam = () => {
         </div>
       )}
 
-      {/* Services Section */}
-      <section className="varnam-services">
-        <h2>Our Services</h2>
-        <ul>
-          <li>Innovative product development</li>
-          <li>State-of-the-art software solutions</li>
-          <li>Customized consultancy services</li>
-          <li>Technical training and upskilling programs</li>
-        </ul>
-      </section>
+<div className="varnam-container">
+            {/* Services Section */}
+            <section className="varnam-section varnam-services">
+                <h2>Our Services</h2>
+                <ul>
+                    <li>Innovative product development</li>
+                    <li>State-of-the-art software solutions</li>
+                    <li>Customized consultancy services</li>
+                    <li>Technical training and upskilling programs</li>
+                </ul>
+            </section>
 
-      {/* Contact Section */}
-      <section className="varnam-contact">
-        <h2>Contact Us</h2>
-        <p>Have questions? Get in touch with us at:</p>
-        <p>Email: info@varnamunit.com</p>
-        <p>Phone: +1 234 567 8901</p>
-        <button onClick={() => navigate("/AboutPage")}>Go to About Us</button>
-      </section>
+            {/* Contact Section */}
+            <section className="varnam-section varnam-contact">
+                <h2>Contact Us</h2>
+                <p>Have questions? Get in touch with us at:</p>
+                <p>Email: info@varnamunit.com</p>
+                <p>Phone: +1 234 567 8901</p>
+                <button onClick={() => navigate("/AboutPage")}>Go to About Us</button>
+            </section>
+        </div>
 
-      {/* Footer */}
-      <footer className="varnam-footer">
-        <p>&copy; 2025 Varnam Unit. All rights reserved.</p>
-      </footer>
     
     </div>
   

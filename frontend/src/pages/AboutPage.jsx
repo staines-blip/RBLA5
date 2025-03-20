@@ -15,10 +15,13 @@ const AboutPage = () => {
   };
 
   const units = [
-    { name: "Varnam", logo: varlogo },
-    { name: "Vaagai", logo: vaalogo },
-    { name: "Siragugal", logo: sirlogo }
-  ];
+    { name: "Varnam", text_color: "#80002f", font_style: "italic", logo: varlogo },
+    { name: "Vaagai", text_color: "#80002f", font_style: "italic", logo: vaalogo },
+    { name: "Siragugal", text_color: "#80002f", font_style: "italic", logo: sirlogo }
+];
+
+
+
 
   return (
     <div className="about-container">
@@ -65,30 +68,42 @@ const AboutPage = () => {
             </div>
           </div>
         </div>
-        {/* Units Section */}
-        <div className="units-section">
-          <h2>Our Units</h2>
-          <div className="units-grid">
-            {units.map((unit) => (
-              <div
+        <div className="units-section p-6 bg-gray-100 dark:bg-gray-800">
+    <h2 className="text-3xl font-bold text-center text-red-500 mb-6">Our Units</h2>
+    <div className="units-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {units.map((unit) => (
+            <div
                 key={unit.name}
-                className="unit-card"
+                className="unit-card flex flex-col items-center p-4 border-2 border-yellow-400 rounded-2xl shadow-lg cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-700 transition-all duration-300"
                 onClick={() => handleUnitClick(unit.name)}
                 role="button"
                 tabIndex={0}
                 onKeyPress={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleUnitClick(unit.name);
-                  }
+                    if (e.key === "Enter" || e.key === " ") {
+                        handleUnitClick(unit.name);
+                    }
                 }}
                 aria-label={`Visit ${unit.name} page`}
-              >
-                <img src={unit.logo} alt={`${unit.name} Logo`} />
-                <p>{unit.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+            >
+                <img 
+                    src={unit.logo} 
+                    alt={`${unit.name} Logo`} 
+                    className="w-16 h-16 mb-2"
+                />
+                <p 
+    className="text-xl transition-all duration-300"
+    style={{ 
+        color: unit.text_color, 
+        fontStyle: unit.font_style === "italic" ? "italic" : "normal",
+        fontWeight: unit.font_style === "bold" ? "bold" : "normal"
+    }}
+>
+    {unit.name}
+</p>
+            </div>
+        ))}
+    </div>
+</div>
 
       </div>
     </div>
