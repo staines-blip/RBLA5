@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Towels.css';
 import Header from '../components/Header/Header';
-import Footer from '../components/Footer/Footer';
+
 import Marquee from './Marquee';
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
@@ -126,7 +126,7 @@ const Towels = () => {
           </div>
         </div>
       </div>
-      <Footer />
+     
     </div>
   );
 };

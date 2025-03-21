@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Napkins.css';
 import Header from '../components/Header/Header';
 import Marquee from './Marquee';
-import Footer from '../components/Footer/Footer';
+
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Napkins = () => {
@@ -131,7 +131,7 @@ const Napkins = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Cupcoaster.css';
 import Header from '../components/Header/Header';
 import Marquee from './Marquee';
-import Footer from '../components/Footer/Footer';
+
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Cupcoaster = () => {
@@ -131,7 +131,7 @@ const Cupcoaster = () => {
           </div>
         </div>
       </div>
-      <Footer />
+     
     </div>
   );
 };

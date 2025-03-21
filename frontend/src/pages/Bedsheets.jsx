@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Bedsheets.css';
 import Header from '../components/Header/Header';
-import Footer from '../components/Footer/Footer';
+
 import Marquee from './Marquee';
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
@@ -131,7 +131,7 @@ const Bedsheets = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

@@ -19,6 +19,7 @@ body {
     flex-direction: column;
     background: #fff;
     overflow-y: auto; /* Enable vertical scrolling */
+    padding-top: 50px;
 }
 
 /* Header Styles */
@@ -64,9 +65,25 @@ body {
 .varnam-about h2,
 .varnam-services h2,
 .varnam-contact h2 {
-    margin-bottom: 20px;
-    color: #0073e6; /* Warm orange for headings */
-    font-size: 2rem;
+  font-size: 3.2rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+  color: #060606;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+.varnam-contact h3 {
+  font-size: 3.2rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.03em;
+  color: #000000;
+  text-align: center;
 }
 
 .varnam-about p,
@@ -74,6 +91,7 @@ body {
     line-height: 1.8;
     font-size: 1rem;
     margin-bottom: 15px;
+    color: #000000;
 }
 
 .varnam-services ul {
@@ -89,7 +107,7 @@ body {
 
 .varnam-services li::before {
     content: "✔ ";
-    color: #0073e6; /* Warm orange checkmark */
+    color: #8d6e63; /* Warm orange checkmark */
     font-weight: bold;
 }
 
@@ -99,7 +117,7 @@ button {
     padding: 12px 25px;
     font-size: 1rem;
     color: #fff;
-    background-color: #0073e6; /* Warm orange background */
+    background-color: #8d6e63; /* Warm orange background */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -108,18 +126,11 @@ button {
 }
 
 button:hover {
-    background-color: #0073e6; /* Darker orange shade */
+    background-color: #5d4037; /* Darker orange shade */
     transform: scale(1.05);
 }
 
-/* Footer */
-.varnam-footer {
-    text-align: center;
-    font-size: 0.9rem;
-    color: #fff;
-    background-color: #0073e6; /* Warm orange footer */
-    padding: 15px 20px;
-}
+
 
  /* Video Section Styles */
  .about-video {
@@ -281,4 +292,36 @@ button:hover {
     background: rgba(0, 0, 0, 0.8);
   }
   
+  .varnam-album h2{
+    font-size: 3.2rem;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -0.03em;
+    color: #000000;
+    text-align: left;
+  }
   
+  .varnam-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Adds spacing between sections */
+    padding: 20px;
+}
+
+.varnam-section {
+    flex: 1; /* Ensures equal width */
+    border: 2px solid #ddd;
+    border-radius: 50px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.varnam-services {
+    background-color: #fff4e6; /* Light orange tone */
+}
+
+.varnam-contact {
+    background-color: #fff4e6; /* Light blue tone */
+}

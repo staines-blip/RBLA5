@@ -48,30 +48,26 @@ const Siragugal = () => {
         </button>
       </section>
 
-      {/* Services Section */}
-      <section className="siragugal-services">
-        <h2>Our Services</h2>
-        <ul>
-          <li>Sanitary Napkin Unit - Meesanallur</li>
+      <div className="siragugal-container">
+            {/* Services Section */}
+            <section className="siragugal-section siragugal-services">
+                <h2>Our Services</h2>
+                <ul>
+                <li>Sanitary Napkin Unit - Meesanallur</li>
           <li>Siragugal Bricks</li>
           <li>Siragugal Handicrafts</li>
-          
-        </ul>
-      </section>
+                </ul>
+            </section>
 
-      {/* Contact Section */}
-      <section className="siragugal-contact">
-        <h2>Contact Us</h2>
-        <p>Have questions? Get in touch with us at:</p>
-        <p>Email: info@siragugalunit.com</p>
-        <p>Phone: +1 234 567 8901</p>
-        <button onClick={() => navigate("/AboutPage")}>Go to About Us</button>
-      </section>
-
-      {/* Footer */}
-      <footer className="siragugal-footer">
-        <p>&copy; 2025 Siragugal Unit. All rights reserved.</p>
-      </footer>
+            {/* Contact Section */}
+            <section className="siragugal-section siragugal-contact">
+                <h2>Contact Us</h2>
+                <p>Have questions? Get in touch with us at:</p>
+                <p>Email: info@varnamunit.com</p>
+                <p>Phone: +1 234 567 8901</p>
+                <button onClick={() => navigate("/AboutPage")}>Go to About Us</button>
+            </section>
+        </div>
     </div>
   );
 };
