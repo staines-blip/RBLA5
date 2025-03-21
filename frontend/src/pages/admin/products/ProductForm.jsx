@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createProduct, getAllCategories } from '../../../services/adminapi/index';
 import { createCategory } from '../../../services/adminapi/categoryAPI';
 import { uploadImage } from '../../../services/adminapi/uploadAPI';
-import { isAdminLoggedIn } from '../../../services/adminAuthService';
+import { isAdminLoggedIn, getAdminStore } from '../../../services/adminAuthService';
 import './ProductForm.css';
 
 const ProductForm = () => {
@@ -30,6 +30,7 @@ const ProductForm = () => {
     const [newCategory, setNewCategory] = useState('');
     const [showCategoryInput, setShowCategoryInput] = useState(false);
     const [uploadLoading, setUploadLoading] = useState(false);
+    const [adminStore, setAdminStore] = useState('');
     const stores = ['varnam', 'siragugal', 'vaagai'];
 
     useEffect(() => {
@@ -40,6 +41,14 @@ const ProductForm = () => {
                     navigate('/admin/login');
                     return;
                 }
+                
+                // Get admin's store and set it in the form
+                const store = getAdminStore();
+                if (store) {
+                    setAdminStore(store);
+                    setFormData(prev => ({ ...prev, store }));
+                }
+                
                 await fetchCategories();
             } catch (error) {
                 console.error('Authentication check failed:', error);
@@ -286,21 +295,15 @@ const ProductForm = () => {
 
                 <div className="form-group">
                     <label htmlFor="store">Store *</label>
-                    <select
+                    <input
+                        type="text"
                         id="store"
                         name="store"
-                        value={formData.store}
-                        onChange={handleChange}
-                        required
-                        disabled={loading}
-                    >
-                        <option value="">Select a store</option>
-                        {stores.map(store => (
-                            <option key={store} value={store}>
-                                {store.charAt(0).toUpperCase() + store.slice(1)}
-                            </option>
-                        ))}
-                    </select>
+                        value={formData.store.charAt(0).toUpperCase() + formData.store.slice(1)}
+                        disabled={true}
+                        readOnly
+                        className="readonly-field"
+                    />
                 </div>
 
                 <div className="form-group">

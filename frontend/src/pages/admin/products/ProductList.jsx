@@ -7,7 +7,7 @@ import {
     getAllCategories,
     updateAllProductStocks
 } from '../../../services/adminapi/index';
-import { isAdminLoggedIn } from '../../../services/adminAuthService';
+import { isAdminLoggedIn, getAdminStore } from '../../../services/adminAuthService';
 import { FaEdit, FaTrash, FaToggleOn, FaToggleOff } from 'react-icons/fa';
 import './ProductList.css';
 
@@ -16,6 +16,7 @@ const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [adminStore, setAdminStore] = useState('');
     const [filter, setFilter] = useState({
         category: '',
         isActive: ''
@@ -31,6 +32,13 @@ const ProductList = () => {
                     navigate('/admin/login');
                     return;
                 }
+                
+                // Get admin's store
+                const store = getAdminStore();
+                if (store) {
+                    setAdminStore(store);
+                }
+                
                 await Promise.all([fetchProducts()]);
             } catch (error) {
                 console.error('Authentication check failed:', error);

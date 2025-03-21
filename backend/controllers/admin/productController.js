@@ -3,12 +3,9 @@ const { Product } = require('../../models');
 // Get all products with optional filtering
 exports.getAllProducts = async (req, res) => {
     try {
-        const query = {};
+        const query = { store: req.adminStore }; // Filter by admin's store
         if (req.query.category) {
             query.category = req.query.category;
-        }
-        if (req.query.store) {
-            query.store = req.query.store;
         }
         if (req.query.isActive !== undefined) {
             query.isActive = req.query.isActive === 'true';
@@ -31,6 +28,14 @@ exports.getProduct = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+        
+        // Check if product belongs to admin's store
+        if (product.store !== req.adminStore) {
+            return res.status(403).json({ 
+                message: 'Access denied: You can only view products from your store' 
+            });
+        }
+        
         res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -40,6 +45,7 @@ exports.getProduct = async (req, res) => {
 // Create new product
 exports.createProduct = async (req, res) => {
     try {
+        // Force store to be admin's store
         const product = new Product({
             name: req.body.name,
             description: req.body.description,
@@ -53,7 +59,7 @@ exports.createProduct = async (req, res) => {
             },
             images: req.body.images,
             image_url: req.body.image_url,
-            store: req.body.store,
+            store: req.adminStore, // Set store to admin's store
             isActive: req.body.isActive !== undefined ? req.body.isActive : true
         });
 
@@ -71,6 +77,13 @@ exports.updateProduct = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+        
+        // Check if product belongs to admin's store
+        if (product.store !== req.adminStore) {
+            return res.status(403).json({ 
+                message: 'Access denied: You can only update products from your store' 
+            });
+        }
 
         // Update only the fields that are provided
         const updates = req.body;
@@ -79,7 +92,8 @@ exports.updateProduct = async (req, res) => {
                 product.size.breadth = updates.size.breadth || product.size.breadth;
                 product.size.height = updates.size.height || product.size.height;
             } else if (key === 'store') {
-                product.store = updates.store;
+                // Do not allow updating store
+                return;
             } else {
                 product[key] = updates[key];
             }
@@ -99,6 +113,14 @@ exports.deleteProduct = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+        
+        // Check if product belongs to admin's store
+        if (product.store !== req.adminStore) {
+            return res.status(403).json({ 
+                message: 'Access denied: You can only delete products from your store' 
+            });
+        }
+        
         await Product.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
@@ -112,6 +134,13 @@ exports.updateStock = async (req, res) => {
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
+        }
+        
+        // Check if product belongs to admin's store
+        if (product.store !== req.adminStore) {
+            return res.status(403).json({ 
+                message: 'Access denied: You can only update stock of products from your store' 
+            });
         }
 
         product.stock = req.body.stock;
@@ -128,6 +157,13 @@ exports.toggleActive = async (req, res) => {
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
+        }
+        
+        // Check if product belongs to admin's store
+        if (product.store !== req.adminStore) {
+            return res.status(403).json({ 
+                message: 'Access denied: You can only toggle active status of products from your store' 
+            });
         }
 
         product.isActive = !product.isActive;
@@ -147,12 +183,12 @@ exports.updateAllStocks = async (req, res) => {
             return res.status(400).json({ message: 'Invalid stock value' });
         }
 
-        // Update all products' stock
-        await Product.updateMany({}, { stock });
+        // Update all products' stock from admin's store
+        await Product.updateMany({ store: req.adminStore }, { stock });
 
         res.status(200).json({ 
             success: true,
-            message: `Updated stock to ${stock} for all products` 
+            message: `Updated stock to ${stock} for all products in your store` 
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

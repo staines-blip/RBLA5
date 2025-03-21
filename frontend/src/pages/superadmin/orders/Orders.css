@@ -1,0 +1,153 @@
+.orders-container {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.orders-header h2 {
+  color: #333;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filters select,
+.filters input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.filters select:focus,
+.filters input:focus {
+  border-color: #2196f3;
+}
+
+.orders-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Status colors - Updated to match schema */
+.status-pending {
+  color: #ff9800;
+}
+
+.status-processing {
+  color: #2196f3;
+}
+
+.status-delivered {
+  color: #4caf50;
+}
+
+.status-canceled {
+  color: #f44336;
+}
+
+/* Payment status styles */
+.payment-paid {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.payment-unpaid {
+  color: #f44336;
+  font-weight: 500;
+}
+
+/* Status select styling */
+td select {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* View Details button */
+td button {
+  padding: 6px 12px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+td button:hover {
+  background-color: #1976d2;
+}
+
+/* Loading and error states */
+.loading, .error {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.error {
+  color: #f44336;
+}
+
+/* Product list in table */
+td div {
+  margin: 2px 0;
+  font-size: 13px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .orders-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filters select,
+  .filters input {
+    flex: 1;
+    min-width: 150px;
+  }
+}

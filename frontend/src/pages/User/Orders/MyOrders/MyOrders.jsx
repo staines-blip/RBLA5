@@ -8,76 +8,72 @@ const MyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user } = useUser();
     const navigate = useNavigate();
-    const { isAuthenticated } = useUser();
-
-    const getFullImageUrl = (imagePath) => {
-        if (!imagePath) return '';
-        if (imagePath.startsWith('http')) return imagePath;
-        const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-        return `http://localhost:5000${path}`;
-    };
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-            return;
-        }
         fetchOrders();
-    }, [isAuthenticated, navigate]);
+    }, []);
 
     const fetchOrders = async () => {
         try {
             setLoading(true);
             const response = await getUserOrders();
-            if (response.success) {
-                setOrders(response.data);
-            } else {
-                setError('Failed to fetch orders');
-            }
+            // Ensure we're setting an array
+            setOrders(response.data || []);
+            setError(null);
         } catch (error) {
+            console.error('Error fetching orders:', error);
             setError(error.message || 'Failed to fetch orders');
+            setOrders([]); // Reset orders to empty array on error
         } finally {
             setLoading(false);
         }
     };
 
     const getStatusColor = (status) => {
-        switch (status) {
-            case 'Delivered':
-                return 'status-delivered';
-            case 'Processing':
-                return 'status-processing';
-            case 'Pending':
+        switch (status.toLowerCase()) {
+            case 'pending':
                 return 'status-pending';
-            case 'Canceled':
-                return 'status-canceled';
+            case 'processing':
+                return 'status-processing';
+            case 'shipped':
+                return 'status-shipped';
+            case 'delivered':
+                return 'status-delivered';
+            case 'cancelled':
+                return 'status-cancelled';
             default:
                 return '';
         }
     };
 
+    const getFullImageUrl = (path) => {
+        if (!path) return '/images/placeholder.png';
+        return path.startsWith('http') ? path : `http://localhost:5000${path}`;
+    };
+
     if (loading) {
-        return <div className="orders-loading">Loading orders...</div>;
+        return <div className="loading">Loading your orders...</div>;
     }
 
     if (error) {
-        return <div className="orders-error">{error}</div>;
+        return <div className="error">{error}</div>;
     }
 
-    if (orders.length === 0) {
+    if (!Array.isArray(orders) || orders.length === 0) {
         return (
-            <div className="orders-empty">
-                <h2>No Orders Found</h2>
+            <div className="no-orders">
+                <h2>No orders found</h2>
                 <p>You haven't placed any orders yet.</p>
-                <button onClick={() => navigate('/')}>Continue Shopping</button>
+                <button onClick={() => navigate('/products')}>Start Shopping</button>
             </div>
         );
     }
 
     return (
-        <div className="my-orders-container">
-            <h1>My Orders</h1>
+        <div className="my-orders">
+            <h2>My Orders</h2>
             <div className="orders-list">
                 {orders.map((order) => (
                     <div key={order._id} className="order-card">
@@ -92,20 +88,24 @@ const MyOrders = () => {
                         </div>
                         
                         <div className="order-products">
-                            {order.products.map((item) => {
-                                // Get the image URL from either images array or image_url
-                                let imageUrl = '';
-                                if (item.product.images && item.product.images.length > 0) {
-                                    imageUrl = getFullImageUrl(item.product.images[0]);
-                                } else if (item.product.image_url) {
-                                    imageUrl = getFullImageUrl(item.product.image_url);
+                            {Array.isArray(order.products) && order.products.map((item) => {
+                                // Safely handle null product
+                                if (!item?.product) {
+                                    return null;
                                 }
+
+                                // Get the image URL from either images array or image_url
+                                let imageUrl = getFullImageUrl(
+                                    item.product.image_url || 
+                                    (item.product.images && item.product.images.length > 0 ? item.product.images[0] : null)
+                                );
 
                                 return (
                                     <div key={item._id} className="order-product">
                                         <img 
-                                            src={imageUrl || '/images/placeholder.png'} 
+                                            src={imageUrl}
                                             alt={item.product.name}
+                                            className="product-image"
                                             onError={(e) => {
                                                 e.target.src = '/images/placeholder.png';
                                                 e.target.onerror = null;
@@ -114,7 +114,7 @@ const MyOrders = () => {
                                         <div className="product-details">
                                             <h4>{item.product.name}</h4>
                                             <p>Quantity: {item.quantity}</p>
-                                            <p>₹{item.price}</p>
+                                            <p>Price: ₹{item.product.new_price}</p>
                                         </div>
                                     </div>
                                 );
@@ -124,20 +124,7 @@ const MyOrders = () => {
                         <div className="order-footer">
                             <div className="order-total">
                                 <p>Total Amount: ₹{order.totalAmount}</p>
-                            </div>
-                            <div className="order-actions">
-                                <button 
-                                    onClick={() => navigate(`/orders/${order._id}`)}
-                                    className="view-details-btn"
-                                >
-                                    View Details
-                                </button>
-                                <button 
-                                    onClick={() => navigate(`/orders/${order._id}/track`)}
-                                    className="track-order-btn"
-                                >
-                                    Track Order
-                                </button>
+                                <p>Payment Status: {order.paymentStatus}</p>
                             </div>
                         </div>
                     </div>

@@ -8,9 +8,16 @@ const multer = require('multer');
 const connectDB = require('./utils/database/mongoConfig');
 
 const productRoutes = require('./routes/productRoutes');
-const workerRoutes = require('./routes/workerRoutes');
 const superadminRoutes = require('./routes/superadmin');
 const superadminAuthRoutes = require('./routes/superadminauthroutes');
+const superadminProductRoutes = require('./routes/superadmin/productRoutes');
+const superadminCategoryRoutes = require('./routes/superadmin/categoryRoutes');
+const superadminUploadRoutes = require('./routes/superadmin/uploadRoutes');
+const superadminOrderRoutes = require('./routes/superadmin/orderRoutes');
+const superadminPaymentRoutes = require('./routes/superadmin/paymentRoutes');
+const superadminReviewRoutes = require('./routes/superadmin/reviewRoutes');
+const superadminSalesReportRoutes = require('./routes/superadmin/salesReportRoutes');
+const superadminWorkerRoutes = require('./routes/superadmin/workerRoutes');
 // const unitRoutes = require('./routes/unitRoutes'); // Commented out as unit field is replaced by store
 const customerRoutes = require('./routes/superadmin/customerRoutes');
 const adminRoutes = require('./routes/superadmin/admins');
@@ -47,15 +54,13 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Cookie parser middleware
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Body parser middleware
-app.use(express.json());
-
-// Serve static files from uploads directory
+// Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/uploads/products', express.static(path.join(__dirname, 'uploads', 'products')));
 
 // Routes
 app.get('/', (req, res) => {
@@ -64,20 +69,33 @@ app.get('/', (req, res) => {
 
 // API Routes of all the files 
 app.use('/api/products', productRoutes);
-app.use('/api/workers', workerRoutes);
+// superadmin api 
 app.use('/api/superadmin', superadminRoutes);
 app.use('/api/superadmin/auth', superadminAuthRoutes);
+app.use('/api/superadmin/products', superadminProductRoutes);
+app.use('/api/superadmin/categories', superadminCategoryRoutes);
+app.use('/api/superadmin/upload', superadminUploadRoutes);
+app.use('/api/superadmin/orders', superadminOrderRoutes);
+app.use('/api/superadmin/payments', superadminPaymentRoutes);
+app.use('/api/superadmin/reviews', superadminReviewRoutes);
+app.use('/api/superadmin/sales', superadminSalesReportRoutes);
+app.use('/api/superadmin/workers', superadminWorkerRoutes);
 // app.use('/api/units', unitRoutes); // Commented out as unit field is replaced by store
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);
+// admin api routes 
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/upload', adminUploadRoutes);
 // app.use('/api/admin/product-units', adminProductUnitRoutes); // Commented out as unit field is replaced by store
+
+// public api routes 
 app.use('/api/public/products', publicProductRoutes);
 app.use('/api/public/general', publicGeneralRoutes);
 app.use('/api/public', publicRoutes);
+
+// user api routes 
 app.use('/api/user/auth', userAuthRoutes);
 app.use('/api/user/profile', userProfileRoutes);
 app.use('/api/user/cart', userCartRoutes);
@@ -86,7 +104,7 @@ app.use('/api/user/orders', userOrderRoutes);
 app.use('/api/user/braintree', userBraintreeRoutes);
 app.use('/api/user/reviews', userReviewRoutes);
 
-// Public routes
+// Public routes 
 app.use('/api/public', publicRoutes);
 app.use('/api/public/products', publicProductRoutes);
 app.use('/api/public', publicGeneralRoutes);

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 // admin module categories/ products 
-// Import schemas
+// Import models and schemas
 const productSchema = require('./Product').schema;
-const categorySchema = require('./schemas/categorySchema');
+const Category = require('./category');
 const Order = require('./user/Order');
 const Review = require('./user/Review');
 const User = require('./user/User');
@@ -11,7 +11,7 @@ const User = require('./user/User');
 // Create and export models
 module.exports = {
     Product: mongoose.model('Product', productSchema),
-    Category: mongoose.model('Category', categorySchema),
+    Category: Category,
     Order: Order,
     Review: Review,
     User: User

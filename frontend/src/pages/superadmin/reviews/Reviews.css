@@ -1,0 +1,148 @@
+.reviews-container {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reviews-header h2 {
+  color: #333;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filters select,
+.filters input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.filters select:focus,
+.filters input:focus {
+  border-color: #2196f3;
+}
+
+.reviews-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Rating stars styling */
+.rating {
+  white-space: nowrap;
+}
+
+.stars {
+  color: #ffc107;
+  letter-spacing: 2px;
+}
+
+.rating-5 { color: #4caf50; }
+.rating-4 { color: #8bc34a; }
+.rating-3 { color: #ffc107; }
+.rating-2 { color: #ff9800; }
+.rating-1 { color: #f44336; }
+
+/* Comment column */
+.comment {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Product link */
+td a {
+  color: #2196f3;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+
+/* Delete button */
+.delete-btn {
+  padding: 6px 12px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Loading and error states */
+.loading, .error {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.error {
+  color: #f44336;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .reviews-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filters select,
+  .filters input {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .comment {
+    max-width: 150px;
+  }
+}

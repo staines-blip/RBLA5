@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../../controllers/admin/productController');
 const adminMiddleware = require('../../middleware/admin/adminMiddleware');
+const { storeAccessMiddleware } = require('../../middleware/storeAuth');
 
-// All routes are protected by adminMiddleware
+// All routes are protected by adminMiddleware and storeAccessMiddleware
 router.use(adminMiddleware);
+router.use(storeAccessMiddleware);
 
 // GET all products with optional filtering
 router.get('/', productController.getAllProducts);

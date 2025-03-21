@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { loginSuperadmin } from '../../services/superadminAuthService';
 import './superadminlogin.css';
 
-const SuperadminLogin = () => {
+const SuperadminLogin = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,39 +16,30 @@ const SuperadminLogin = () => {
     setError('');
 
     try {
-      console.log('Attempting login...'); // Debug log
+      const response = await loginSuperadmin({ username, password });
 
-      const response = await axios.post(
-        'http://localhost:5000/api/superadmin/auth/login',
-        { username, password },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
+      if (response.token) {
+        // Store the token
+        localStorage.setItem('token', response.token);
 
-      console.log('Login response:', response.data); // Debug log
+        // Store superadmin info if available
+        if (response.superadmin) {
+          localStorage.setItem('superadmin', JSON.stringify(response.superadmin));
+        }
 
-      if (response.data.token) {
-        // Clear any existing tokens and data
-        localStorage.clear();
-
-        // Store the new token
-        localStorage.setItem('token', response.data.token);
-        console.log('Token stored:', response.data.token); // Debug log
-
-        // Store superadmin info if needed
-        if (response.data.superadmin) {
-          localStorage.setItem('superadmin', JSON.stringify(response.data.superadmin));
+        // Call the onLogin prop if provided
+        if (onLogin) {
+          onLogin(response.token);
         }
 
         // Navigate to dashboard
         navigate('/superadmin/dashboard');
       } else {
-        setError('No token received. Please try again.');
+        setError('Login failed. Please try again.');
       }
     } catch (err) {
-      console.error('Login error:', err.response?.data || err.message); // Debug log
-      setError(
-        err.response?.data?.message || 'Invalid credentials or server error. Please try again.'
-      );
+      console.error('Login error:', err);
+      setError(err.message || 'Invalid credentials or server error. Please try again.');
     } finally {
       setIsLoading(false);
     }

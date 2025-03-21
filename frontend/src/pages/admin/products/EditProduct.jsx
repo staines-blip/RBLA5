@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProduct, updateProduct, updateProductStock } from '../../../services/adminapi/index';
 import { getAllCategories } from '../../../services/adminapi/categoryAPI';
 import { uploadImage } from '../../../services/adminapi/uploadAPI';
-import { isAdminLoggedIn } from '../../../services/adminAuthService';
+import { isAdminLoggedIn, getAdminStore } from '../../../services/adminAuthService';
 import { toast } from 'react-toastify';
 import './ProductForm.css';
 import './EditProduct.css';
@@ -33,6 +33,7 @@ const EditProduct = () => {
     const [imagePreview, setImagePreview] = useState('');
     const [uploadLoading, setUploadLoading] = useState(false);
     const [stockOnly, setStockOnly] = useState(false);
+    const [adminStore, setAdminStore] = useState('');
     const stores = ['varnam', 'siragugal', 'vaagai'];
 
     useEffect(() => {
@@ -43,6 +44,13 @@ const EditProduct = () => {
                     navigate('/admin/login');
                     return;
                 }
+                
+                // Get admin's store
+                const store = getAdminStore();
+                if (store) {
+                    setAdminStore(store);
+                }
+                
                 await Promise.all([fetchProduct(), fetchCategories()]);
             } catch (error) {
                 console.error('Authentication check failed:', error);
@@ -58,6 +66,15 @@ const EditProduct = () => {
     const fetchProduct = async () => {
         try {
             const product = await getProduct(id);
+            
+            // Check if product belongs to admin's store
+            const adminStore = getAdminStore();
+            if (product.store !== adminStore) {
+                setError('You can only edit products from your store');
+                navigate('/admin/products');
+                return;
+            }
+            
             setFormData({
                 name: product.name || '',
                 description: product.description || '',
@@ -275,21 +292,15 @@ const EditProduct = () => {
 
                         <div className="form-group">
                             <label htmlFor="store">Store *</label>
-                            <select
+                            <input
+                                type="text"
                                 id="store"
                                 name="store"
-                                value={formData.store}
-                                onChange={handleChange}
-                                required
-                                disabled={submitting}
-                            >
-                                <option value="">Select a store</option>
-                                {stores.map(store => (
-                                    <option key={store} value={store}>
-                                        {store.charAt(0).toUpperCase() + store.slice(1)}
-                                    </option>
-                                ))}
-                            </select>
+                                value={formData.store.charAt(0).toUpperCase() + formData.store.slice(1)}
+                                disabled={true}
+                                readOnly
+                                className="readonly-field"
+                            />
                         </div>
 
                         <div className="form-group">

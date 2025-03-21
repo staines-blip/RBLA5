@@ -50,7 +50,7 @@ const UserPages = {
 };
 // superadmin module 
 const SuperAdminPages = {
-  Login: lazy(() => import('./components/superadmin/superadminlogin')),
+  Login: lazy(() => import('./pages/superadmin/superadminlogin')),
   Dashboard: lazy(() => import('./pages/superadmin/superadmindashboard')),
   Workers: lazy(() => import('./pages/superadmin/workers')),
   CustomerManager: lazy(() => import('./pages/superadmin/customermanager')),

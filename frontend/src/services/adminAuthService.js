@@ -21,7 +21,8 @@ export const loginAdmin = async (credentials) => {
       localStorage.setItem('admin', JSON.stringify({
         id: response.data.admin.id,
         username: response.data.admin.username,
-        storeName: response.data.admin.storeName
+        name: response.data.admin.name,
+        store: response.data.admin.store
       }));
     }
 
@@ -41,9 +42,14 @@ export const getCurrentAdmin = () => {
     return admin ? JSON.parse(admin) : null;
   } catch (error) {
     console.error('Error parsing admin data:', error);
-    localStorage.removeItem('admin');
     return null;
   }
+};
+
+// Get admin's store
+export const getAdminStore = () => {
+  const admin = getCurrentAdmin();
+  return admin ? admin.store : null;
 };
 
 // Check if admin is logged in
