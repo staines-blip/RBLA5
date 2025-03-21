@@ -20,6 +20,28 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 const DashboardHome = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('Last 7 days');
   const [date, setDate] = useState(new Date());
+  const [events, setEvents] = useState([
+    {
+      date: '2025-03-22',
+      title: 'Retake Stock Count',
+      description: 'Complete inventory check and update stock records',
+      type: 'inventory'
+    },
+    {
+      date: '2025-03-25',
+      title: 'Monthly Sales Review',
+      description: 'Review sales performance and set targets',
+      type: 'meeting'
+    },
+    {
+      date: '2025-03-28',
+      title: 'New Product Launch',
+      description: 'Launch spring collection items',
+      type: 'product'
+    }
+  ]);
+  const [hoveredDate, setHoveredDate] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [dashboardData, setDashboardData] = useState({
     totalUsers: 0,
     totalOrders: 0,
@@ -76,6 +98,42 @@ const DashboardHome = () => {
 
   if (loading) return <div className="loading">Loading dashboard data...</div>;
   if (error) return <div className="error">Error: {error}</div>;
+
+  // Calendar tile content
+  const getTileContent = ({ date, view }) => {
+    if (view === 'month') {
+      const dateStr = date.toISOString().split('T')[0];
+      const eventForDate = events.find(event => event.date === dateStr);
+      
+      if (eventForDate) {
+        return (
+          <div className="calendar-event-indicator">
+            <div className={`event-dot ${eventForDate.type}`} />
+          </div>
+        );
+      }
+    }
+    return null;
+  };
+
+  // Handle tile hover
+  const handleTileHover = (event, date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    const eventForDate = events.find(e => e.date === dateStr);
+    
+    if (eventForDate) {
+      const tileRect = event.currentTarget.getBoundingClientRect();
+      const calendarRect = event.currentTarget.closest('.calendar-wrapper').getBoundingClientRect();
+      
+      setTooltipPosition({
+        left: tileRect.right - calendarRect.left,
+        top: tileRect.top - calendarRect.top + (tileRect.height / 2)
+      });
+      setHoveredDate(dateStr);
+    } else {
+      setHoveredDate(null);
+    }
+  };
 
   return (
     <div className="dashboard-home">
@@ -197,11 +255,38 @@ const DashboardHome = () => {
 
         <div className="chart-card calendar-card">
           <h3>Calendar</h3>
-          <Calendar
-            onChange={setDate}
-            value={date}
-            className="dashboard-calendar"
-          />
+          <div className="calendar-wrapper">
+            <Calendar
+              onChange={setDate}
+              value={date}
+              tileContent={getTileContent}
+              onClickDay={(value, event) => handleTileHover(event, value)}
+              onMouseOver={(value, event) => handleTileHover(event, value)}
+              onMouseOut={() => setHoveredDate(null)}
+              className="react-calendar"
+            />
+          </div>
+          {hoveredDate && (
+            <div 
+              className="event-tooltip" 
+              style={{ 
+                left: `${tooltipPosition.left}px`,
+                top: `${tooltipPosition.top}px`
+              }}
+            >
+              {events
+                .filter(event => event.date === hoveredDate)
+                .map((event, index) => (
+                  <div key={index} className="event-tooltip-content">
+                    <div className={`event-type-indicator ${event.type}`} />
+                    <div>
+                      <h4>{event.title}</h4>
+                      <p>{event.description}</p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
 
         <div className="chart-card recent-orders">
@@ -244,7 +329,7 @@ const SuperAdminDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('superadminToken');
-    navigate('/superadmin/login');
+    navigate('/login');
   };
 
   const renderComponent = () => {
@@ -271,61 +356,61 @@ const SuperAdminDashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard">
       <div className="sidebar">
         <div className="sidebar-header">
           <h2>Super Admin</h2>
         </div>
-        <nav className="sidebar-nav">
-          <button
-            className={`nav-item ${activeComponent === 'dashboard' ? 'active' : ''}`}
+        <nav className="sidebar-links">
+          <button 
+            className={activeComponent === 'dashboard' ? 'active' : ''} 
             onClick={() => setActiveComponent('dashboard')}
           >
             <FaTachometerAlt /> Dashboard
           </button>
-          <button
-            className={`nav-item ${activeComponent === 'workers' ? 'active' : ''}`}
-            onClick={() => setActiveComponent('workers')}
-          >
-            <FaUsers /> Workers
-          </button>
-          <button
-            className={`nav-item ${activeComponent === 'admins' ? 'active' : ''}`}
+          <button 
+            className={activeComponent === 'admins' ? 'active' : ''} 
             onClick={() => setActiveComponent('admins')}
           >
             <FaUserShield /> Admins
           </button>
-          <button
-            className={`nav-item ${activeComponent === 'products' ? 'active' : ''}`}
+          <button 
+            className={activeComponent === 'products' ? 'active' : ''} 
             onClick={() => setActiveComponent('products')}
           >
             <FaBox /> Products
           </button>
-          <button
-            className={`nav-item ${activeComponent === 'orders' ? 'active' : ''}`}
+          <button 
+            className={activeComponent === 'orders' ? 'active' : ''} 
             onClick={() => setActiveComponent('orders')}
           >
             <FaShoppingCart /> Orders
           </button>
-          <button
-            className={`nav-item ${activeComponent === 'payments' ? 'active' : ''}`}
+          <button 
+            className={activeComponent === 'payments' ? 'active' : ''} 
             onClick={() => setActiveComponent('payments')}
           >
             <FaCreditCard /> Payments
           </button>
-          <button
-            className={`nav-item ${activeComponent === 'reviews' ? 'active' : ''}`}
+          <button 
+            className={activeComponent === 'reviews' ? 'active' : ''} 
             onClick={() => setActiveComponent('reviews')}
           >
             <FaComments /> Reviews
           </button>
-          <button
-            className={`nav-item ${activeComponent === 'sales' ? 'active' : ''}`}
+          <button 
+            className={activeComponent === 'workers' ? 'active' : ''} 
+            onClick={() => setActiveComponent('workers')}
+          >
+            <FaUsers /> Workers
+          </button>
+          <button 
+            className={activeComponent === 'sales' ? 'active' : ''} 
             onClick={() => setActiveComponent('sales')}
           >
             <FaChartLine /> Sales Report
           </button>
-          <button className="nav-item logout" onClick={handleLogout}>
+          <button className="logout-button" onClick={handleLogout}>
             <FaSignOutAlt /> Logout
           </button>
         </nav>
