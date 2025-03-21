@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../../middleware/uploadMiddleware');
-const { adminMiddleware } = require('../../middleware/admin/adminMiddleware');
+const adminMiddleware = require('../../middleware/admin/adminMiddleware');
 
 // Route to handle single image upload
 router.post('/image', adminMiddleware, upload.single('image'), (req, res) => {

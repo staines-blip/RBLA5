@@ -5,7 +5,6 @@ import {
     toggleProductActive, 
     deleteProduct,
     getAllCategories,
-    getAllProductUnits,
     updateAllProductStocks
 } from '../../../services/adminapi/index';
 import { isAdminLoggedIn } from '../../../services/adminAuthService';

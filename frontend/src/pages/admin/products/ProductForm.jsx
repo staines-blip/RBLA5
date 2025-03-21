@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createProduct, getAllCategories } from '../../../services/adminapi/index';
 import { createCategory } from '../../../services/adminapi/categoryAPI';
-import { getAllProductUnits, createProductUnit } from '../../../services/adminapi/productUnitAPI';
 import { uploadImage } from '../../../services/adminapi/uploadAPI';
 import { isAdminLoggedIn } from '../../../services/adminAuthService';
 import './ProductForm.css';
@@ -13,7 +12,7 @@ const ProductForm = () => {
         name: '',
         description: '',
         category: '',
-        unit: '',
+        store: '',
         new_price: '',
         old_price: '',
         stock: '',
@@ -25,15 +24,13 @@ const ProductForm = () => {
         isActive: true
     });
     const [categories, setCategories] = useState([]);
-    const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(true); 
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('');
     const [newCategory, setNewCategory] = useState('');
-    const [newUnit, setNewUnit] = useState('');
     const [showCategoryInput, setShowCategoryInput] = useState(false);
-    const [showUnitInput, setShowUnitInput] = useState(false);
     const [uploadLoading, setUploadLoading] = useState(false);
+    const stores = ['varnam', 'siragugal', 'vaagai'];
 
     useEffect(() => {
         const checkAuthAndFetchData = async () => {
@@ -43,7 +40,7 @@ const ProductForm = () => {
                     navigate('/admin/login');
                     return;
                 }
-                await Promise.all([fetchCategories(), fetchUnits()]);
+                await fetchCategories();
             } catch (error) {
                 console.error('Authentication check failed:', error);
                 navigate('/admin/login');
@@ -51,14 +48,9 @@ const ProductForm = () => {
                 setLoading(false);
             }
         };
+
         checkAuthAndFetchData();
     }, [navigate]);
-
-    const handleUnauthorized = () => {
-        setError('');
-        setLoading(false);
-        navigate('/admin/login');
-    };
 
     const fetchCategories = async () => {
         try {
@@ -69,36 +61,25 @@ const ProductForm = () => {
             if (error.response?.status === 401) {
                 handleUnauthorized();
             } else {
-                setError('Failed to load categories. Please try again.');
+                setError('Failed to load categories. Please refresh the page.');
             }
         }
     };
 
-    const fetchUnits = async () => {
-        try {
-            const data = await getAllProductUnits();
-            setUnits(data);
-        } catch (error) {
-            console.error('Error fetching units:', error);
-            if (error.response?.status === 401) {
-                handleUnauthorized();
-            } else {
-                setError('Failed to load units. Please try again.');
-            }
-        }
+    const handleUnauthorized = () => {
+        localStorage.removeItem('adminToken');
+        navigate('/admin/login');
     };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         
-        if (name.includes('.')) {
-            // Handle nested object fields (e.g., size.breadth)
-            const [parent, child] = name.split('.');
+        if (name === 'breadth' || name === 'height') {
             setFormData(prev => ({
                 ...prev,
-                [parent]: {
-                    ...prev[parent],
-                    [child]: value
+                size: {
+                    ...prev.size,
+                    [name]: value
                 }
             }));
         } else {
@@ -107,44 +88,23 @@ const ProductForm = () => {
                 [name]: type === 'checkbox' ? checked : value
             }));
         }
-
-        if (name === 'image_url' && value) {
-            setImagePreview(value);
-        }
-    };
-
-    const validateForm = () => {
-        const errors = [];
-        if (!formData.name.trim()) errors.push('Name is required');
-        if (!formData.description.trim()) errors.push('Description is required');
-        if (!formData.category) errors.push('Category is required');
-        if (!formData.unit) errors.push('Unit is required');
-        if (!formData.new_price || isNaN(formData.new_price)) errors.push('Valid price is required');
-        if (formData.old_price && isNaN(formData.old_price)) errors.push('Old price must be a valid number');
-        if (!formData.stock || isNaN(formData.stock)) errors.push('Valid stock quantity is required');
-        if (!formData.size.breadth || isNaN(formData.size.breadth)) errors.push('Valid breadth is required');
-        if (!formData.size.height || isNaN(formData.size.height)) errors.push('Valid height is required');
-        if (!formData.image_url) errors.push('Please upload a product image');
-
-        return errors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError('');
 
-        const validationErrors = validateForm();
-        if (validationErrors.length > 0) {
-            setError(validationErrors.join('\n'));
-            return;
-        }
-
-        setLoading(true);
         try {
+            // Validate form data
+            if (!formData.image_url) {
+                throw new Error('Please upload a product image');
+            }
+
             const productData = {
                 ...formData,
                 new_price: parseFloat(formData.new_price),
-                old_price: formData.old_price ? parseFloat(formData.old_price) : undefined,
+                old_price: parseFloat(formData.old_price),
                 stock: parseInt(formData.stock, 10),
                 size: {
                     breadth: parseFloat(formData.size.breadth),
@@ -189,29 +149,6 @@ const ProductForm = () => {
         }
     };
 
-    const handleAddUnit = async (e) => {
-        e.preventDefault();
-        if (!newUnit.trim()) {
-            setError('Unit name cannot be empty');
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const response = await createProductUnit({ name: newUnit.trim() });
-            setUnits([...units, response]);
-            setFormData(prev => ({ ...prev, unit: response._id }));
-            setNewUnit('');
-            setShowUnitInput(false);
-            setError('');
-        } catch (error) {
-            console.error('Error creating unit:', error);
-            setError(error.response?.data?.message || 'Failed to create unit');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -250,7 +187,7 @@ const ProductForm = () => {
         return (
             <div className="loading-screen">
                 <div className="spinner"></div>
-                <p>Loading form...</p>
+                <p>Loading...</p>
             </div>
         );
     }
@@ -258,15 +195,8 @@ const ProductForm = () => {
     return (
         <div className="product-form-container">
             <h2>Add New Product</h2>
+            {error && <div className="error-message">{error}</div>}
             
-            {error && (
-                <div className="error-message">
-                    {error.split('\n').map((err, index) => (
-                        <div key={index}>{err}</div>
-                    ))}
-                </div>
-            )}
-
             <form onSubmit={handleSubmit} className="product-form">
                 <div className="form-group">
                     <label htmlFor="name">Product Name *</label>
@@ -355,184 +285,147 @@ const ProductForm = () => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="unit">Unit/Store *</label>
-                    <div className="category-input-group">
-                        {showUnitInput ? (
-                            <div className="new-category-input">
-                                <input
-                                    type="text"
-                                    value={newUnit}
-                                    onChange={(e) => setNewUnit(e.target.value)}
-                                    placeholder="Enter new unit name"
-                                    disabled={loading}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleAddUnit}
-                                    disabled={loading || !newUnit.trim()}
-                                    className="add-category-btn"
-                                >
-                                    Add
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setShowUnitInput(false);
-                                        setNewUnit('');
-                                    }}
-                                    className="cancel-btn"
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        ) : (
-                            <>
-                                <select
-                                    id="unit"
-                                    name="unit"
-                                    value={formData.unit}
-                                    onChange={handleChange}
-                                    required
-                                    disabled={loading}
-                                >
-                                    <option value="">Select a unit</option>
-                                    {units.map(unit => (
-                                        <option key={unit._id} value={unit._id}>
-                                            {unit.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowUnitInput(true)}
-                                    className="new-category-btn"
-                                    disabled={loading}
-                                >
-                                    New Unit
-                                </button>
-                            </>
-                        )}
-                    </div>
+                    <label htmlFor="store">Store *</label>
+                    <select
+                        id="store"
+                        name="store"
+                        value={formData.store}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                    >
+                        <option value="">Select a store</option>
+                        {stores.map(store => (
+                            <option key={store} value={store}>
+                                {store.charAt(0).toUpperCase() + store.slice(1)}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="new_price">Price (₹) *</label>
-                        <input
-                            type="number"
-                            id="new_price"
-                            name="new_price"
-                            value={formData.new_price}
-                            onChange={handleChange}
-                            min="0"
-                            step="0.01"
-                            required
-                            disabled={loading}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="old_price">Old Price (₹)</label>
-                        <input
-                            type="number"
-                            id="old_price"
-                            name="old_price"
-                            value={formData.old_price}
-                            onChange={handleChange}
-                            min="0"
-                            step="0.01"
-                            disabled={loading}
-                        />
-                    </div>
+                <div className="form-group">
+                    <label htmlFor="new_price">New Price (₹) *</label>
+                    <input
+                        type="number"
+                        id="new_price"
+                        name="new_price"
+                        value={formData.new_price}
+                        onChange={handleChange}
+                        min="0"
+                        step="0.01"
+                        required
+                        disabled={loading}
+                    />
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="stock">Stock Quantity *</label>
-                        <input
-                            type="number"
-                            id="stock"
-                            name="stock"
-                            value={formData.stock}
-                            onChange={handleChange}
-                            min="0"
-                            required
-                            disabled={loading}
-                        />
-                    </div>
+                <div className="form-group">
+                    <label htmlFor="old_price">Old Price (₹) *</label>
+                    <input
+                        type="number"
+                        id="old_price"
+                        name="old_price"
+                        value={formData.old_price}
+                        onChange={handleChange}
+                        min="0"
+                        step="0.01"
+                        required
+                        disabled={loading}
+                    />
+                </div>
 
-                    <div className="form-group">
-                        <label htmlFor="image">Product Image *</label>
-                        <div className="image-upload-container">
+                <div className="form-group">
+                    <label htmlFor="stock">Stock Quantity *</label>
+                    <input
+                        type="number"
+                        id="stock"
+                        name="stock"
+                        value={formData.stock}
+                        onChange={handleChange}
+                        min="0"
+                        required
+                        disabled={loading}
+                    />
+                </div>
+
+                <div className="form-group size-group">
+                    <label>Size (cm) *</label>
+                    <div className="size-inputs">
+                        <div>
+                            <label htmlFor="breadth">Breadth:</label>
                             <input
-                                type="file"
-                                id="image"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                disabled={loading || uploadLoading}
-                                className="image-input"
+                                type="number"
+                                id="breadth"
+                                name="breadth"
+                                value={formData.size.breadth}
+                                onChange={handleChange}
+                                min="0"
+                                step="0.1"
+                                required
+                                disabled={loading}
                             />
-                            {uploadLoading && <div className="upload-loading">Uploading...</div>}
-                            {imagePreview && (
-                                <div className="image-preview">
-                                    <img src={imagePreview} alt="Product preview" />
-                                </div>
-                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="height">Height:</label>
+                            <input
+                                type="number"
+                                id="height"
+                                name="height"
+                                value={formData.size.height}
+                                onChange={handleChange}
+                                min="0"
+                                step="0.1"
+                                required
+                                disabled={loading}
+                            />
                         </div>
                     </div>
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="breadth">Breadth (cm) *</label>
-                        <input
-                            type="number"
-                            id="breadth"
-                            name="size.breadth"
-                            value={formData.size.breadth}
-                            onChange={handleChange}
-                            min="0"
-                            step="0.1"
-                            required
-                            disabled={loading}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="height">Height (cm) *</label>
-                        <input
-                            type="number"
-                            id="height"
-                            name="size.height"
-                            value={formData.size.height}
-                            onChange={handleChange}
-                            min="0"
-                            step="0.1"
-                            required
-                            disabled={loading}
-                        />
-                    </div>
+                <div className="form-group">
+                    <label htmlFor="image">Product Image *</label>
+                    <input
+                        type="file"
+                        id="image"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={loading || uploadLoading}
+                    />
+                    {uploadLoading && <div className="upload-loading">Uploading...</div>}
+                    {imagePreview && (
+                        <div className="image-preview">
+                            <img src={imagePreview} alt="Product preview" />
+                        </div>
+                    )}
                 </div>
 
-                <div className="checkbox-group">
-                    <input
-                        type="checkbox"
-                        id="isActive"
-                        name="isActive"
-                        checked={formData.isActive}
-                        onChange={handleChange}
-                        disabled={loading}
-                    />
-                    <label htmlFor="isActive">Product is active</label>
+                <div className="form-group checkbox-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="isActive"
+                            checked={formData.isActive}
+                            onChange={handleChange}
+                            disabled={loading}
+                        />
+                        Active (Product will be visible to customers)
+                    </label>
                 </div>
 
                 <div className="form-actions">
-                    <button 
-                        type="submit" 
-                        className="submit-button"
+                    <button
+                        type="submit"
+                        className="submit-btn"
+                        disabled={loading || uploadLoading}
+                    >
+                        {loading ? 'Creating...' : 'Create Product'}
+                    </button>
+                    <button
+                        type="button"
+                        className="cancel-btn"
+                        onClick={() => navigate('/admin/products')}
                         disabled={loading}
                     >
-                        {loading ? 'Creating Product...' : 'Create Product'}
+                        Cancel
                     </button>
                 </div>
             </form>

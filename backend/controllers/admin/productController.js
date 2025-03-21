@@ -7,13 +7,15 @@ exports.getAllProducts = async (req, res) => {
         if (req.query.category) {
             query.category = req.query.category;
         }
+        if (req.query.store) {
+            query.store = req.query.store;
+        }
         if (req.query.isActive !== undefined) {
             query.isActive = req.query.isActive === 'true';
         }
 
         const products = await Product.find(query)
             .populate('category', 'name')
-            .populate('unit', 'name')
             .sort({ date: -1 });
         res.status(200).json(products);
     } catch (error) {
@@ -25,8 +27,7 @@ exports.getAllProducts = async (req, res) => {
 exports.getProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
-            .populate('category', 'name')
-            .populate('unit', 'name');
+            .populate('category', 'name');
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -52,7 +53,7 @@ exports.createProduct = async (req, res) => {
             },
             images: req.body.images,
             image_url: req.body.image_url,
-            unit: req.body.unit,
+            store: req.body.store,
             isActive: req.body.isActive !== undefined ? req.body.isActive : true
         });
 
@@ -77,8 +78,8 @@ exports.updateProduct = async (req, res) => {
             if (key === 'size' && updates.size) {
                 product.size.breadth = updates.size.breadth || product.size.breadth;
                 product.size.height = updates.size.height || product.size.height;
-            } else if (key === 'unit') {
-                product.unit = updates.unit;
+            } else if (key === 'store') {
+                product.store = updates.store;
             } else {
                 product[key] = updates[key];
             }

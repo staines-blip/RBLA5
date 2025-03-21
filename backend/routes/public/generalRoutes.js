@@ -27,7 +27,8 @@ router.get('/newcollections', async (req, res) => {
             .sort({ createdAt: -1 })
             .limit(4)
             .populate('category', 'name')
-            .populate('unit', 'name');
+            // Removed unit population
+            ;
 
         res.json({
             success: true,

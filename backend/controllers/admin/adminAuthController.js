@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../../models/admin');
 require('dotenv').config();
 
-const loginAdmin = async (req, res) => {
+exports.loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -21,6 +21,13 @@ const loginAdmin = async (req, res) => {
       });
     }
 
+    // Check if admin is active
+    if (!admin.isActive) {
+      return res.status(403).json({
+        message: 'Your account has been deactivated. Please contact the superadmin.'
+      });
+    }
+
     // Verify password using the matchPassword method from admin model
     const isPasswordValid = await admin.matchPassword(password);
     if (!isPasswordValid) {
@@ -29,9 +36,22 @@ const loginAdmin = async (req, res) => {
       });
     }
 
-    // Generate JWT token
+    // Validate username format matches store
+    const usernamePattern = new RegExp(`^[a-zA-Z0-9_]+@${admin.storeName}$`);
+    if (!usernamePattern.test(username)) {
+      return res.status(401).json({
+        message: 'Invalid username format'
+      });
+    }
+
+    // Generate JWT token with store information
     const token = jwt.sign(
-      { id: admin._id, username: admin.username },
+      { 
+        id: admin._id, 
+        username: admin.username,
+        store: admin.storeName,  // Include store in token
+        name: admin.name
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -44,24 +64,28 @@ const loginAdmin = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
-    // Send response
+    // Send response with store information
     res.status(200).json({
       message: 'Login successful',
       admin: {
         id: admin._id,
+        name: admin.name,
         username: admin.username,
-        storeName: admin.storeName
+        email: admin.email,
+        store: admin.storeName,
+        phoneNumber: admin.phoneNumber
       }
     });
+
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ 
-      message: 'Failed to login. Please try again later.' 
+      message: 'An error occurred during login' 
     });
   }
 };
 
-const logoutAdmin = async (req, res) => {
+exports.logoutAdmin = async (req, res) => {
   try {
     // Clear the admin token cookie
     res.clearCookie('adminToken', {
@@ -76,26 +100,62 @@ const logoutAdmin = async (req, res) => {
   }
 };
 
-const verifySession = async (req, res) => {
+exports.verifySession = async (req, res) => {
   try {
-    // The adminMiddleware will already verify the token and attach admin to req
-    // If we reach here, it means the token is valid
+    const token = req.cookies.adminToken;
+
+    if (!token) {
+      return res.status(401).json({ 
+        message: 'No token found. Please login.' 
+      });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find admin and check if still active
+    const admin = await Admin.findById(decoded.id);
+    if (!admin) {
+      return res.status(401).json({ 
+        message: 'Admin not found' 
+      });
+    }
+
+    if (!admin.isActive) {
+      return res.status(403).json({
+        message: 'Your account has been deactivated. Please contact the superadmin.'
+      });
+    }
+
+    // Validate store matches
+    if (decoded.store !== admin.storeName) {
+      return res.status(403).json({
+        message: 'Store validation failed'
+      });
+    }
+
+    // Send response with store information
     res.status(200).json({
-      message: 'Session is valid',
+      isValid: true,
       admin: {
-        id: req.admin._id,
-        username: req.admin.username,
-        storeName: req.admin.storeName
+        id: admin._id,
+        name: admin.name,
+        username: admin.username,
+        email: admin.email,
+        store: admin.storeName,
+        phoneNumber: admin.phoneNumber
       }
     });
+
   } catch (error) {
     console.error('Session verification error:', error);
-    res.status(500).json({ message: 'Failed to verify session' });
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ 
+        message: 'Invalid token. Please login again.' 
+      });
+    }
+    res.status(500).json({ 
+      message: 'An error occurred while verifying session' 
+    });
   }
-};
-
-module.exports = {
-  loginAdmin,
-  logoutAdmin,
-  verifySession
 };

@@ -27,8 +27,7 @@ async function checkProducts() {
         // Find products in Bedsheets category
         if (bedsheetsCat) {
             const bedsheets = await Product.find({ category: bedsheetsCat._id })
-                .populate('category', 'name')
-                .populate('unit', 'name');
+                .populate('category', 'name');
             console.log('\nBedsheets Products:', bedsheets);
         }
 

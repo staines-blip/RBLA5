@@ -11,14 +11,14 @@ const productRoutes = require('./routes/productRoutes');
 const workerRoutes = require('./routes/workerRoutes');
 const superadminRoutes = require('./routes/superadmin');
 const superadminAuthRoutes = require('./routes/superadminauthroutes');
-const unitRoutes = require('./routes/unitRoutes');
+// const unitRoutes = require('./routes/unitRoutes'); // Commented out as unit field is replaced by store
 const customerRoutes = require('./routes/superadmin/customerRoutes');
 const adminRoutes = require('./routes/superadmin/admins');
 const adminAuthRoutes = require('./routes/admin/adminAuthRoutes');
 const adminProductRoutes = require('./routes/admin/productRoutes');
 const adminCategoryRoutes = require('./routes/admin/categoryRoutes');
 const adminUploadRoutes = require('./routes/admin/uploadRoutes');
-const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes');
+// const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes'); // Commented out as unit field is replaced by store
 const publicProductRoutes = require('./routes/public/productRoutes');
 const publicGeneralRoutes = require('./routes/public/generalRoutes');
 const publicRoutes = require('./routes/public/index');
@@ -67,14 +67,14 @@ app.use('/api/products', productRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/superadmin', superadminRoutes);
 app.use('/api/superadmin/auth', superadminAuthRoutes);
-app.use('/api/units', unitRoutes);
+// app.use('/api/units', unitRoutes); // Commented out as unit field is replaced by store
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/upload', adminUploadRoutes);
-app.use('/api/admin/product-units', adminProductUnitRoutes);
+// app.use('/api/admin/product-units', adminProductUnitRoutes); // Commented out as unit field is replaced by store
 app.use('/api/public/products', publicProductRoutes);
 app.use('/api/public/general', publicGeneralRoutes);
 app.use('/api/public', publicRoutes);

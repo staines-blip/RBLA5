@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 
         const products = await Product.find(query)
             .populate('category', 'name')
-            .populate('unit', 'name')
+            // Removed unit population
             .sort({ date: -1 });
 
         res.status(200).json({
@@ -56,7 +56,7 @@ router.get('/category/:categoryName', async (req, res) => {
             isActive: true // Only show active products
         })
         .populate('category', 'name')
-        .populate('unit', 'name')
+        // Removed unit population
         .sort({ date: -1 });
 
         res.status(200).json({
@@ -76,7 +76,8 @@ router.get('/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
             .populate('category', 'name')
-            .populate('unit', 'name');
+            // Removed unit population
+            ;
 
         if (!product) {
             return res.status(404).json({

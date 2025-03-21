@@ -4,6 +4,7 @@ const {
   createAdmin,
   updateAdmin,
   deleteAdmin,
+  getAdmins
 } = require('../../controllers/superadmin/AdminController');
 const protectSuperadmin = require('../../middleware/superadminmiddleware'); // Assuming this middleware exists
 
@@ -18,12 +19,7 @@ router.put('/:id', protectSuperadmin, updateAdmin);
 // Delete an admin by ID
 router.delete('/:id', protectSuperadmin, deleteAdmin);
 
-// Optional: Get all admins (if implemented)
-router.get('/', protectSuperadmin, (req, res) => {
-  res.status(501).json({ message: 'Get admins not implemented yet' });
-  // Uncomment and implement if needed:
-  // const { getAdmins } = require('../../controllers/superadmin/AdminController');
-  // return getAdmins(req, res);
-});
+// Get all admins
+router.get('/', protectSuperadmin, getAdmins);
 
 module.exports = router;

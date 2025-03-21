@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../../controllers/admin/productController');
-const { adminMiddleware } = require('../../middleware/admin/adminMiddleware');
+const adminMiddleware = require('../../middleware/admin/adminMiddleware');
 
 // All routes are protected by adminMiddleware
 router.use(adminMiddleware);

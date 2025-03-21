@@ -26,9 +26,35 @@ const adminMiddleware = async (req, res, next) => {
                 });
             }
 
-            // Add admin and token info to request object
+            // Check if admin is active
+            if (!admin.isActive) {
+                return res.status(403).json({
+                    status: 'error',
+                    message: 'Your account has been deactivated. Please contact the superadmin.'
+                });
+            }
+
+            // Validate store information
+            if (decoded.store !== admin.storeName) {
+                return res.status(403).json({
+                    status: 'error',
+                    message: 'Store validation failed. Please login again.'
+                });
+            }
+
+            // Validate username format
+            const usernamePattern = new RegExp(`^[a-zA-Z0-9_]+@${admin.storeName}$`);
+            if (!usernamePattern.test(admin.username)) {
+                return res.status(403).json({
+                    status: 'error',
+                    message: 'Invalid username format detected. Please contact the superadmin.'
+                });
+            }
+
+            // Add admin, token, and store info to request object
             req.admin = admin;
             req.token = token;
+            req.store = admin.storeName; // Add store for easy access in routes
             next();
         } catch (err) {
             if (err.name === 'TokenExpiredError') {
@@ -37,23 +63,21 @@ const adminMiddleware = async (req, res, next) => {
                     message: 'Your session has expired. Please log in again'
                 });
             }
-            
             if (err.name === 'JsonWebTokenError') {
                 return res.status(401).json({
                     status: 'error',
                     message: 'Invalid token. Please log in again'
                 });
             }
-
-            throw err; // Re-throw unexpected errors
+            throw err;
         }
     } catch (error) {
         console.error('Admin middleware error:', error);
-        res.status(500).json({ 
+        return res.status(500).json({
             status: 'error',
-            message: 'Authentication failed. Please try again later'
+            message: 'Authentication failed. Please try again.'
         });
     }
 };
 
-module.exports = { adminMiddleware };
+module.exports = adminMiddleware;

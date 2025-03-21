@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProduct, updateProduct, updateProductStock } from '../../../services/adminapi/index';
 import { getAllCategories } from '../../../services/adminapi/categoryAPI';
-import { getAllProductUnits } from '../../../services/adminapi/productUnitAPI';
 import { uploadImage } from '../../../services/adminapi/uploadAPI';
 import { isAdminLoggedIn } from '../../../services/adminAuthService';
 import { toast } from 'react-toastify';
@@ -16,7 +15,7 @@ const EditProduct = () => {
         name: '',
         description: '',
         category: '',
-        unit: '',
+        store: '',
         new_price: '',
         old_price: '',
         stock: '',
@@ -28,13 +27,13 @@ const EditProduct = () => {
         isActive: true
     });
     const [categories, setCategories] = useState([]);
-    const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState('');
     const [uploadLoading, setUploadLoading] = useState(false);
     const [stockOnly, setStockOnly] = useState(false);
+    const stores = ['varnam', 'siragugal', 'vaagai'];
 
     useEffect(() => {
         const checkAuthAndFetchData = async () => {
@@ -44,7 +43,7 @@ const EditProduct = () => {
                     navigate('/admin/login');
                     return;
                 }
-                await Promise.all([fetchProduct(), fetchCategories(), fetchUnits()]);
+                await Promise.all([fetchProduct(), fetchCategories()]);
             } catch (error) {
                 console.error('Authentication check failed:', error);
                 navigate('/admin/login');
@@ -52,35 +51,29 @@ const EditProduct = () => {
                 setLoading(false);
             }
         };
+
         checkAuthAndFetchData();
     }, [id, navigate]);
 
-    const handleUnauthorized = () => {
-        setError('');
-        setLoading(false);
-        navigate('/admin/login');
-    };
-
     const fetchProduct = async () => {
         try {
-            const data = await getProduct(id);
+            const product = await getProduct(id);
             setFormData({
-                name: data.name || '',
-                description: data.description || '',
-                category: data.category?._id || '',
-                unit: data.unit?._id || '',
-                new_price: data.new_price || '',
-                old_price: data.old_price || '',
-                stock: data.stock || 0,
-                image_url: data.image_url || '',
-                images: data.images || [],
+                name: product.name || '',
+                description: product.description || '',
+                category: product.category?._id || product.category || '',
+                store: product.store || '',
+                new_price: product.new_price || '',
+                old_price: product.old_price || '',
+                stock: product.stock || '',
+                image_url: product.image_url || '',
                 size: {
-                    breadth: data.size?.breadth || '',
-                    height: data.size?.height || ''
+                    breadth: product.size?.breadth || '',
+                    height: product.size?.height || ''
                 },
-                isActive: data.isActive
+                isActive: product.isActive !== undefined ? product.isActive : true
             });
-            setImagePreview(data.image_url);
+            setImagePreview(product.image_url);
         } catch (error) {
             console.error('Error fetching product:', error);
             if (error.response?.status === 401) {
@@ -105,43 +98,66 @@ const EditProduct = () => {
         }
     };
 
-    const fetchUnits = async () => {
-        try {
-            const data = await getAllProductUnits();
-            setUnits(data);
-        } catch (error) {
-            console.error('Error fetching units:', error);
-            if (error.response?.status === 401) {
-                handleUnauthorized();
-            } else {
-                setError('Failed to load units. Please try again.');
-            }
-        }
+    const handleUnauthorized = () => {
+        localStorage.removeItem('adminToken');
+        navigate('/admin/login');
     };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         
-        if (name.includes('.')) {
-            // Handle nested object fields (e.g., size.breadth)
-            const [parent, child] = name.split('.');
+        if (name === 'breadth' || name === 'height') {
             setFormData(prev => ({
                 ...prev,
-                [parent]: {
-                    ...prev[parent],
-                    [child]: value
+                size: {
+                    ...prev.size,
+                    [name]: value
                 }
-            }));
-        } else if (type === 'checkbox') {
-            setFormData(prev => ({
-                ...prev,
-                [name]: checked
             }));
         } else {
             setFormData(prev => ({
                 ...prev,
-                [name]: value
+                [name]: type === 'checkbox' ? checked : value
             }));
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setError('');
+
+        try {
+            const productData = {
+                ...formData,
+                new_price: parseFloat(formData.new_price),
+                old_price: parseFloat(formData.old_price),
+                stock: parseInt(formData.stock, 10),
+                size: {
+                    breadth: parseFloat(formData.size.breadth),
+                    height: parseFloat(formData.size.height)
+                }
+            };
+
+            if (stockOnly) {
+                await updateProductStock(id, { stock: productData.stock });
+                toast.success('Product stock updated successfully');
+            } else {
+                await updateProduct(id, productData);
+                toast.success('Product updated successfully');
+            }
+            
+            navigate('/admin/products');
+        } catch (error) {
+            console.error('Error updating product:', error);
+            if (error.response?.status === 401) {
+                handleUnauthorized();
+            } else {
+                setError(error.response?.data?.message || 'Failed to update product. Please try again.');
+                toast.error('Failed to update product');
+            }
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -149,85 +165,38 @@ const EditProduct = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Preview the selected image
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImagePreview(reader.result);
-        };
-        reader.readAsDataURL(file);
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setError('Please upload an image file');
+            return;
+        }
 
-        // Upload the image to the server
-        const formData = new FormData();
-        formData.append('image', file);
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Image size should be less than 5MB');
+            return;
+        }
+
+        setUploadLoading(true);
+        setError('');
 
         try {
-            setUploadLoading(true);
-            const response = await uploadImage(formData);
-            setFormData(prev => ({
-                ...prev,
-                image_url: response.fileUrl
-            }));
-            setError('');
+            const result = await uploadImage(file);
+            const fileUrl = result.fileUrl;
+            setFormData(prev => ({ ...prev, image_url: fileUrl }));
+            setImagePreview(URL.createObjectURL(file));
         } catch (error) {
             console.error('Error uploading image:', error);
-            if (error.response?.status === 401) {
-                handleUnauthorized();
-            } else {
-                setError('Failed to upload image. Please try again.');
-            }
+            setError(error.response?.data?.message || 'Failed to upload image');
+            // Clear the file input on error
+            e.target.value = '';
         } finally {
             setUploadLoading(false);
         }
     };
 
-    const handleStockUpdate = async (e) => {
-        e.preventDefault();
-        
-        try {
-            setSubmitting(true);
-            await updateProductStock(id, formData.stock);
-            toast.success('Stock updated successfully!');
-            navigate('/admin/dashboard');
-        } catch (error) {
-            console.error('Error updating stock:', error);
-            if (error.response?.status === 401) {
-                handleUnauthorized();
-            } else {
-                setError('Failed to update stock. Please try again.');
-                toast.error('Failed to update stock');
-            }
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // Validate form
-        if (!formData.name || !formData.description || !formData.category || 
-            !formData.unit || !formData.new_price || !formData.old_price || 
-            !formData.stock || !formData.image_url) {
-            setError('Please fill in all required fields');
-            return;
-        }
-
-        try {
-            setSubmitting(true);
-            await updateProduct(id, formData);
-            toast.success('Product updated successfully!');
-            navigate('/admin/dashboard');
-        } catch (error) {
-            console.error('Error updating product:', error);
-            if (error.response?.status === 401) {
-                handleUnauthorized();
-            } else {
-                setError('Failed to update product. Please try again.');
-                toast.error('Failed to update product');
-            }
-        } finally {
-            setSubmitting(false);
-        }
+    const toggleStockOnly = () => {
+        setStockOnly(!stockOnly);
     };
 
     if (loading) {
@@ -240,262 +209,221 @@ const EditProduct = () => {
     }
 
     return (
-        <div className="product-form-container">
+        <div className="product-form-container edit-product">
             <div className="form-header">
                 <h2>Edit Product</h2>
-                <div className="edit-options">
-                    <button 
-                        className={`option-btn ${!stockOnly ? 'active' : ''}`}
-                        onClick={() => setStockOnly(false)}
-                    >
-                        Full Edit
-                    </button>
-                    <button 
-                        className={`option-btn ${stockOnly ? 'active' : ''}`}
-                        onClick={() => setStockOnly(true)}
-                    >
-                        Stock Only
-                    </button>
+                <div className="stock-toggle">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={stockOnly}
+                            onChange={toggleStockOnly}
+                        />
+                        Update Stock Only
+                    </label>
                 </div>
             </div>
 
             {error && <div className="error-message">{error}</div>}
-
-            {stockOnly ? (
-                <form onSubmit={handleStockUpdate} className="product-form stock-only-form">
-                    <div className="form-group">
-                        <label>Product Name:</label>
-                        <input
-                            type="text"
-                            value={formData.name}
-                            disabled
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Current Stock:</label>
-                        <input
-                            type="number"
-                            name="stock"
-                            value={formData.stock}
-                            onChange={handleChange}
-                            min="0"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-actions">
-                        <button 
-                            type="button" 
-                            onClick={() => navigate('/admin/dashboard')}
-                            className="cancel-btn"
-                            disabled={submitting}
-                        >
-                            Cancel
-                        </button>
-                        <button 
-                            type="submit" 
-                            className="submit-btn"
-                            disabled={submitting}
-                        >
-                            {submitting ? 'Updating...' : 'Update Stock'}
-                        </button>
-                    </div>
-                </form>
-            ) : (
-                <form onSubmit={handleSubmit} className="product-form">
-                    <div className="form-section">
-                        <h3>Basic Information</h3>
+            
+            <form onSubmit={handleSubmit} className="product-form">
+                {!stockOnly ? (
+                    <>
                         <div className="form-group">
-                            <label>Product Name:</label>
+                            <label htmlFor="name">Product Name *</label>
                             <input
                                 type="text"
+                                id="name"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
+                                disabled={submitting}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label>Description:</label>
+                            <label htmlFor="description">Description *</label>
                             <textarea
+                                id="description"
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 required
+                                disabled={submitting}
                             />
                         </div>
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Category:</label>
-                                <select
-                                    name="category"
-                                    value={formData.category}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Select Category</option>
-                                    {categories.map(category => (
-                                        <option key={category._id} value={category._id}>
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Unit:</label>
-                                <select
-                                    name="unit"
-                                    value={formData.unit}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Select Unit</option>
-                                    {units.map(unit => (
-                                        <option key={unit._id} value={unit._id}>
-                                            {unit.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-section">
-                        <h3>Pricing & Inventory</h3>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Current Price (₹):</label>
-                                <input
-                                    type="number"
-                                    name="new_price"
-                                    value={formData.new_price}
-                                    onChange={handleChange}
-                                    min="0"
-                                    step="0.01"
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Original Price (₹):</label>
-                                <input
-                                    type="number"
-                                    name="old_price"
-                                    value={formData.old_price}
-                                    onChange={handleChange}
-                                    min="0"
-                                    step="0.01"
-                                    required
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label htmlFor="category">Category *</label>
+                            <select
+                                id="category"
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                required
+                                disabled={submitting}
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map(category => (
+                                    <option key={category._id} value={category._id}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="form-group">
-                            <label>Stock Quantity:</label>
+                            <label htmlFor="store">Store *</label>
+                            <select
+                                id="store"
+                                name="store"
+                                value={formData.store}
+                                onChange={handleChange}
+                                required
+                                disabled={submitting}
+                            >
+                                <option value="">Select a store</option>
+                                {stores.map(store => (
+                                    <option key={store} value={store}>
+                                        {store.charAt(0).toUpperCase() + store.slice(1)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="new_price">New Price (₹) *</label>
                             <input
                                 type="number"
-                                name="stock"
-                                value={formData.stock}
+                                id="new_price"
+                                name="new_price"
+                                value={formData.new_price}
                                 onChange={handleChange}
                                 min="0"
+                                step="0.01"
                                 required
+                                disabled={submitting}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label>Product Status:</label>
-                            <div className="checkbox-group">
+                            <label htmlFor="old_price">Old Price (₹) *</label>
+                            <input
+                                type="number"
+                                id="old_price"
+                                name="old_price"
+                                value={formData.old_price}
+                                onChange={handleChange}
+                                min="0"
+                                step="0.01"
+                                required
+                                disabled={submitting}
+                            />
+                        </div>
+                    </>
+                ) : null}
+
+                <div className="form-group">
+                    <label htmlFor="stock">Stock Quantity *</label>
+                    <input
+                        type="number"
+                        id="stock"
+                        name="stock"
+                        value={formData.stock}
+                        onChange={handleChange}
+                        min="0"
+                        required
+                        disabled={submitting}
+                    />
+                </div>
+
+                {!stockOnly ? (
+                    <>
+                        <div className="form-group size-group">
+                            <label>Size (cm) *</label>
+                            <div className="size-inputs">
+                                <div>
+                                    <label htmlFor="breadth">Breadth:</label>
+                                    <input
+                                        type="number"
+                                        id="breadth"
+                                        name="breadth"
+                                        value={formData.size.breadth}
+                                        onChange={handleChange}
+                                        min="0"
+                                        step="0.1"
+                                        required
+                                        disabled={submitting}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="height">Height:</label>
+                                    <input
+                                        type="number"
+                                        id="height"
+                                        name="height"
+                                        value={formData.size.height}
+                                        onChange={handleChange}
+                                        min="0"
+                                        step="0.1"
+                                        required
+                                        disabled={submitting}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="image">Product Image</label>
+                            <input
+                                type="file"
+                                id="image"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                disabled={submitting || uploadLoading}
+                            />
+                            {uploadLoading && <div className="upload-loading">Uploading...</div>}
+                            {imagePreview && (
+                                <div className="image-preview">
+                                    <img src={imagePreview} alt="Product preview" />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="form-group checkbox-group">
+                            <label>
                                 <input
                                     type="checkbox"
                                     name="isActive"
                                     checked={formData.isActive}
                                     onChange={handleChange}
-                                    id="isActive"
+                                    disabled={submitting}
                                 />
-                                <label htmlFor="isActive">Active</label>
-                            </div>
+                                Active (Product will be visible to customers)
+                            </label>
                         </div>
-                    </div>
+                    </>
+                ) : null}
 
-                    <div className="form-section">
-                        <h3>Dimensions</h3>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Width:</label>
-                                <input
-                                    type="number"
-                                    name="size.breadth"
-                                    value={formData.size.breadth}
-                                    onChange={handleChange}
-                                    min="0"
-                                    step="0.1"
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Height:</label>
-                                <input
-                                    type="number"
-                                    name="size.height"
-                                    value={formData.size.height}
-                                    onChange={handleChange}
-                                    min="0"
-                                    step="0.1"
-                                    required
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-section">
-                        <h3>Product Image</h3>
-                        <div className="image-upload-section">
-                            <div className="image-preview">
-                                {imagePreview ? (
-                                    <img src={imagePreview} alt="Product preview" />
-                                ) : (
-                                    <div className="no-image">No image selected</div>
-                                )}
-                            </div>
-                            <div className="upload-controls">
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    id="image-upload"
-                                />
-                                <label htmlFor="image-upload" className="upload-btn">
-                                    {uploadLoading ? 'Uploading...' : 'Choose Image'}
-                                </label>
-                                <p className="upload-help">Recommended size: 800x800px, max 5MB</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="form-actions">
-                        <button 
-                            type="button" 
-                            onClick={() => navigate('/admin/dashboard')}
-                            className="cancel-btn"
-                            disabled={submitting}
-                        >
-                            Cancel
-                        </button>
-                        <button 
-                            type="submit" 
-                            className="submit-btn"
-                            disabled={submitting || uploadLoading}
-                        >
-                            {submitting ? 'Updating...' : 'Update Product'}
-                        </button>
-                    </div>
-                </form>
-            )}
+                <div className="form-actions">
+                    <button
+                        type="submit"
+                        className="submit-btn"
+                        disabled={submitting || uploadLoading}
+                    >
+                        {submitting ? 'Updating...' : stockOnly ? 'Update Stock' : 'Update Product'}
+                    </button>
+                    <button
+                        type="button"
+                        className="cancel-btn"
+                        onClick={() => navigate('/admin/products')}
+                        disabled={submitting}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

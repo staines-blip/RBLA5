@@ -24,6 +24,14 @@ const adminSchema = new mongoose.Schema({
     required: [true, 'Username is required'],
     unique: true,
     trim: true,
+    validate: {
+      validator: function(v) {
+        // Username must be in format: something@storename
+        const storePattern = new RegExp(`^[a-zA-Z0-9_]+@${this.storeName}$`);
+        return storePattern.test(v);
+      },
+      message: props => `${props.value} is not a valid username. Format should be username@storename`
+    }
   },
   password: {
     type: String,
@@ -44,6 +52,10 @@ const adminSchema = new mongoose.Schema({
     required: [true, 'Aadhar number is required'],
     unique: true,
     match: [/^[0-9]{12}$/, 'Aadhar number must be 12 digits'],
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   },
   createdAt: {
     type: Date,

@@ -47,7 +47,6 @@ exports.getProductDetails = async (req, res) => {
 
         const product = await Product.findById(req.params.id)
             .populate('category', 'name')
-            .populate('unit', 'name')
             .lean();
 
         if (!product) {
@@ -57,33 +56,18 @@ exports.getProductDetails = async (req, res) => {
             });
         }
 
-        // Format image paths to be relative to the uploads directory
-        const processedProduct = {
-            ...product,
-            image_url: `/uploads/products/${path.basename(product.image_url)}`,
-            images: Array.isArray(product.images) && product.images.length > 0
-                ? product.images.map(img => `/uploads/products/${path.basename(img)}`)
-                : [`/uploads/products/${path.basename(product.image_url)}`]
-        };
-
-        console.log('Final processed product data:', {
-            id: processedProduct._id,
-            name: processedProduct.name,
-            image_url: processedProduct.image_url,
-            images: processedProduct.images
-        });
-
+        console.log('Product found:', product.name);
+        
         res.status(200).json({
             success: true,
-            product: processedProduct
+            product
         });
     } catch (error) {
-        console.error('Product details error:', error);
+        console.error('Error fetching product details:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching product details',
-            error: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            error: error.message
         });
     }
 };

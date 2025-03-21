@@ -16,7 +16,4 @@ export {
     deleteCategory
 } from './categoryAPI';
 
-export {
-    getAllProductUnits,
-    createProductUnit
-} from './productUnitAPI';
+// Unit-related exports removed as unit field is replaced by store

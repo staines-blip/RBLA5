@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 // this is the product model for the admin its for the crud of the products
 const productSchema = new mongoose.Schema({
@@ -28,10 +27,10 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true,
     },
-    unit: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProductUnit',
-        required: true
+    store: {
+        type: String,
+        required: true,
+        enum: ['varnam', 'siragugal', 'vaagai']
     },
     size: {
         breadth: { type: Number, required: true },
