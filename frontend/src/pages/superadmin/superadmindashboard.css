@@ -348,6 +348,37 @@
   color: var(--text-secondary);
 }
 
+/* Custom toast notification styles */
+.toast-custom-icon {
+  font-size: 18px;
+  margin-right: 8px;
+  color: #9333ea;
+}
+
+/* Override react-toastify styles */
+.Toastify__toast {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--info {
+  background-color: #f8f9fa;
+  color: #333;
+  border-left: 4px solid #9333ea;
+}
+
+.Toastify__toast--success {
+  background-color: #f8f9fa;
+  color: #333;
+  border-left: 4px solid #10b981;
+}
+
+.Toastify__toast-body {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  padding: 8px 0;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 60px;

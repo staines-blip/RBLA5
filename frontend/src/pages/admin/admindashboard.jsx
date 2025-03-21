@@ -4,8 +4,14 @@ import "./admindashboard.css";
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
 import { FaTachometerAlt, FaShoppingCart, FaBox, FaUsers, FaMoneyBillWave, FaChartLine, FaStar, FaUserFriends, FaSignOutAlt } from "react-icons/fa";
-import { logoutAdmin, isAdminLoggedIn } from "../../services/adminAuthService";
+import { logoutAdmin, isAdminLoggedIn, getCurrentAdmin } from "../../services/adminAuthService";
 import Products from './products/Products';
+import Orders from './orders/Orders';
+import Users from './users/Users';
+import Payments from './payments/Payments';
+import Sales from './sales/Sales';
+import Reviews from './reviews/Reviews';
+import Workers from './workers/Workers';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
@@ -14,6 +20,12 @@ const DashboardHome = () => {
   const [monthlySales, setMonthlySales] = useState(1200);
   const [orders, setOrders] = useState(340);
   const [users, setUsers] = useState(1500);
+  const [adminInfo, setAdminInfo] = useState(null);
+
+  useEffect(() => {
+    const admin = getCurrentAdmin();
+    setAdminInfo(admin);
+  }, []);
 
   const salesData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -40,6 +52,12 @@ const DashboardHome = () => {
 
   return (
     <div className="dashboard-content">
+      {adminInfo && (
+        <div className="store-info">
+          <h2>{adminInfo.store.charAt(0).toUpperCase() + adminInfo.store.slice(1)} Store Dashboard</h2>
+          <p>Welcome, {adminInfo.name}</p>
+        </div>
+      )}
       <div className="stats">
         <div className="card">Revenue: ${revenue}</div>
         <div className="card">Monthly Sales: {monthlySales}</div>
@@ -65,6 +83,7 @@ const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedSection, setSelectedSection] = useState('home');
   const [isLoading, setIsLoading] = useState(true);
+  const [adminInfo, setAdminInfo] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -72,6 +91,9 @@ const AdminDashboard = () => {
         const isLoggedIn = await isAdminLoggedIn();
         if (!isLoggedIn) {
           navigate('/admin/login');
+        } else {
+          const admin = getCurrentAdmin();
+          setAdminInfo(admin);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -106,7 +128,7 @@ const AdminDashboard = () => {
     <div className="dashboard">
       <nav className={`sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
         <div className="sidebar-header">
-          <h2>Admin Panel</h2>
+          <h2>{adminInfo?.store?.charAt(0).toUpperCase() + adminInfo?.store?.slice(1)} Admin</h2>
           <button className="toggle-sidebar" onClick={() => setSidebarOpen(!sidebarOpen)}>
             {sidebarOpen ? '←' : '→'}
           </button>
@@ -114,12 +136,12 @@ const AdminDashboard = () => {
         <ul className="sidebar-links">
           <li><button className={selectedSection === 'home' ? 'active' : ''} onClick={() => setSelectedSection('home')}><FaTachometerAlt /> Dashboard</button></li>
           <li><button className={selectedSection === 'products' ? 'active' : ''} onClick={() => setSelectedSection('products')}><FaBox /> Products</button></li>
-          <li><button disabled className="disabled-button"><FaShoppingCart /> Orders</button></li>
-          <li><button disabled className="disabled-button"><FaUsers /> Customers</button></li>
-          <li><button disabled className="disabled-button"><FaMoneyBillWave /> Payments</button></li>
-          <li><button disabled className="disabled-button"><FaChartLine /> Sales</button></li>
-          <li><button disabled className="disabled-button"><FaStar /> Reviews</button></li>
-          <li><button disabled className="disabled-button"><FaUserFriends /> Workers</button></li>
+          <li><button className={selectedSection === 'orders' ? 'active' : ''} onClick={() => setSelectedSection('orders')}><FaShoppingCart /> Orders</button></li>
+          <li><button className={selectedSection === 'users' ? 'active' : ''} onClick={() => setSelectedSection('users')}><FaUsers /> Users</button></li>
+          <li><button className={selectedSection === 'payments' ? 'active' : ''} onClick={() => setSelectedSection('payments')}><FaMoneyBillWave /> Payments</button></li>
+          <li><button className={selectedSection === 'sales' ? 'active' : ''} onClick={() => setSelectedSection('sales')}><FaChartLine /> Sales</button></li>
+          <li><button className={selectedSection === 'reviews' ? 'active' : ''} onClick={() => setSelectedSection('reviews')}><FaStar /> Reviews</button></li>
+          <li><button className={selectedSection === 'workers' ? 'active' : ''} onClick={() => setSelectedSection('workers')}><FaUserFriends /> Workers</button></li>
           <li><button className="logout-button" onClick={handleLogout}><FaSignOutAlt /> Log out</button></li>
         </ul>
       </nav>
@@ -129,6 +151,18 @@ const AdminDashboard = () => {
           <DashboardHome />
         ) : selectedSection === 'products' ? (
           <Products />
+        ) : selectedSection === 'orders' ? (
+          <Orders />
+        ) : selectedSection === 'users' ? (
+          <Users />
+        ) : selectedSection === 'payments' ? (
+          <Payments />
+        ) : selectedSection === 'sales' ? (
+          <Sales />
+        ) : selectedSection === 'reviews' ? (
+          <Reviews />
+        ) : selectedSection === 'workers' ? (
+          <Workers />
         ) : null}
       </main>
     </div>

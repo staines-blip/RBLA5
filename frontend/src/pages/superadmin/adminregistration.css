@@ -5,25 +5,25 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f7f6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+/* Admin Registration Page Styles */
+.admin-registration-page {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
 }
 
 /* Title and Description */
-h2 {
+.admin-registration-page h2 {
   font-size: 28px;
   color: #2c3e50;
   margin-bottom: 10px;
   text-align: center;
 }
 
-p {
+.admin-registration-page p {
   font-size: 14px;
   color: #7f8c8d;
   text-align: center;
@@ -31,7 +31,7 @@ p {
 }
 
 /* Form Styling */
-form {
+.admin-registration-page form {
   background: transparent; /* No background */
   padding: 0; /* No padding */
   max-width: 600px;
@@ -42,22 +42,22 @@ form {
 }
 
 /* Labels */
-label {
+.admin-registration-page label {
   font-size: 14px;
   color: #34495e;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-label span {
+.admin-registration-page label span {
   color: #e74c3c;
 }
 
 /* Input Fields */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
+.admin-registration-page input[type="text"],
+.admin-registration-page input[type="email"],
+.admin-registration-page input[type="password"],
+.admin-registration-page select {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -68,38 +68,38 @@ select {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-select:focus {
+.admin-registration-page input[type="text"]:focus,
+.admin-registration-page input[type="email"]:focus,
+.admin-registration-page input[type="password"]:focus,
+.admin-registration-page select:focus {
   border-color: #3498db;
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
 /* Input Group (for side-by-side fields) */
-.input-group {
+.admin-registration-page .input-group {
   display: flex;
   gap: 15px;
 }
 
-.input-group > div {
+.admin-registration-page .input-group > div {
   flex: 1;
 }
 
 /* Error Styling */
-input.error,
-select.error {
+.admin-registration-page input.error,
+.admin-registration-page select.error {
   border-color: #e74c3c;
 }
 
-.error-message {
+.admin-registration-page .error-message {
   font-size: 12px;
   color: #e74c3c;
   margin-top: 5px;
 }
 
 /* Success and error messages */
-.success-message {
+.admin-registration-page .success-message {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
@@ -111,7 +111,7 @@ select.error {
   animation: fadeIn 0.5s;
 }
 
-.error-message {
+.admin-registration-page .error-message {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
@@ -121,7 +121,7 @@ select.error {
   font-size: 14px;
 }
 
-.global-error {
+.admin-registration-page .global-error {
   padding: 15px;
   margin-bottom: 20px;
   text-align: center;
@@ -136,7 +136,7 @@ select.error {
 }
 
 /* Toast notification */
-.toast-notification {
+.admin-registration-page .toast-notification {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -151,29 +151,29 @@ select.error {
   animation: slideIn 0.3s ease-out forwards;
 }
 
-.toast-success {
+.admin-registration-page .toast-success {
   background-color: #d4edda;
   color: #155724;
   border-left: 5px solid #28a745;
 }
 
-.toast-error {
+.admin-registration-page .toast-error {
   background-color: #f8d7da;
   color: #721c24;
   border-left: 5px solid #dc3545;
 }
 
-.toast-content {
+.admin-registration-page .toast-content {
   display: flex;
   align-items: center;
 }
 
-.toast-icon {
+.admin-registration-page .toast-icon {
   margin-right: 12px;
   font-size: 20px;
 }
 
-.toast-close {
+.admin-registration-page .toast-close {
   background: none;
   border: none;
   color: inherit;
@@ -183,7 +183,7 @@ select.error {
   transition: opacity 0.2s;
 }
 
-.toast-close:hover {
+.admin-registration-page .toast-close:hover {
   opacity: 1;
 }
 
@@ -198,7 +198,7 @@ select.error {
 }
 
 /* Submit Button */
-button[type="submit"] {
+.admin-registration-page button[type="submit"] {
   background-color: palevioletred;
   color: #ffffff;
   padding: 12px;
@@ -210,17 +210,17 @@ button[type="submit"] {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-button[type="submit"]:hover {
+.admin-registration-page button[type="submit"]:hover {
   background-color: palevioletred;
   transform: translateY(-2px);
 }
 
-button[type="submit"]:active {
+.admin-registration-page button[type="submit"]:active {
   transform: translateY(0);
 }
 
 /* Admin List Modal */
-.modal-overlay {
+.admin-registration-page .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -233,7 +233,7 @@ button[type="submit"]:active {
   z-index: 1000;
 }
 
-.modal-content {
+.admin-registration-page .modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -244,7 +244,7 @@ button[type="submit"]:active {
   position: relative;
 }
 
-.modal-close {
+.admin-registration-page .modal-close {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -255,45 +255,45 @@ button[type="submit"]:active {
   color: #666;
 }
 
-.modal-close:hover {
+.admin-registration-page .modal-close:hover {
   color: #000;
 }
 
-.modal-header {
+.admin-registration-page .modal-header {
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
 
-.admin-list-table {
+.admin-registration-page .admin-list-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.admin-list-table th,
-.admin-list-table td {
+.admin-registration-page .admin-list-table th,
+.admin-registration-page .admin-list-table td {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-.admin-list-table th {
+.admin-registration-page .admin-list-table th {
   background-color: #f8f9fa;
   font-weight: 600;
   color: #495057;
 }
 
-.admin-list-table tr:hover {
+.admin-registration-page .admin-list-table tr:hover {
   background-color: #f1f1f1;
 }
 
-.admin-list-empty {
+.admin-registration-page .admin-list-empty {
   text-align: center;
   padding: 20px;
   color: #666;
 }
 
-.view-admins-btn {
+.admin-registration-page .view-admins-btn {
   background-color: #6c757d;
   color: white;
   border: none;
@@ -305,11 +305,11 @@ button[type="submit"]:active {
   display: inline-block;
 }
 
-.view-admins-btn:hover {
+.admin-registration-page .view-admins-btn:hover {
   background-color: #5a6268;
 }
 
-.admin-status {
+.admin-registration-page .admin-status {
   display: inline-block;
   padding: 4px 8px;
   border-radius: 12px;
@@ -317,27 +317,27 @@ button[type="submit"]:active {
   font-weight: 500;
 }
 
-.admin-active {
+.admin-registration-page .admin-active {
   background-color: #d4edda;
   color: #155724;
 }
 
-.admin-inactive {
+.admin-registration-page .admin-inactive {
   background-color: #f8d7da;
   color: #721c24;
 }
 
 /* Responsive Design */
 @media (max-width: 480px) {
-  .input-group {
+  .admin-registration-page .input-group {
     flex-direction: column;
   }
 
-  h2 {
+  .admin-registration-page h2 {
     font-size: 24px;
   }
 
-  p {
+  .admin-registration-page p {
     font-size: 12px;
   }
 }

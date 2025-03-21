@@ -359,7 +359,7 @@ const AdminRegistration = () => {
     }, []);
 
     return (
-        <div className="container">
+        <div className="admin-registration-page">
             <h2>Admin Registration</h2>
             <p>Create a store admin account</p>
             

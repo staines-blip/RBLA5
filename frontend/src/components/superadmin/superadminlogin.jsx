@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { loginSuperadmin } from '../../services/superadminAuthService';
 import './superadminlogin.css';
 
@@ -21,6 +22,7 @@ const SuperadminLogin = ({ onLogin }) => {
       if (response.token) {
         // Store the token
         localStorage.setItem('token', response.token);
+        localStorage.setItem('superadminToken', response.token);
 
         // Store superadmin info if available
         if (response.superadmin) {
@@ -31,6 +33,16 @@ const SuperadminLogin = ({ onLogin }) => {
         if (onLogin) {
           onLogin(response.token);
         }
+
+        // Show success toast notification
+        toast.success('Superadmin logged in successfully!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
 
         // Navigate to dashboard
         navigate('/superadmin/dashboard');

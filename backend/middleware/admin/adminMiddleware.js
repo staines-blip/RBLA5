@@ -54,7 +54,8 @@ const adminMiddleware = async (req, res, next) => {
             // Add admin, token, and store info to request object
             req.admin = admin;
             req.token = token;
-            req.store = admin.storeName; // Add store for easy access in routes
+            req.store = admin.storeName; // Keep for backward compatibility
+            req.adminStore = admin.storeName; // Add standardized property for consistency
             next();
         } catch (err) {
             if (err.name === 'TokenExpiredError') {

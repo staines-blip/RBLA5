@@ -18,6 +18,8 @@ const superadminPaymentRoutes = require('./routes/superadmin/paymentRoutes');
 const superadminReviewRoutes = require('./routes/superadmin/reviewRoutes');
 const superadminSalesReportRoutes = require('./routes/superadmin/salesReportRoutes');
 const superadminWorkerRoutes = require('./routes/superadmin/workerRoutes');
+const superadminUserRoutes = require('./routes/superadmin/users');
+
 // const unitRoutes = require('./routes/unitRoutes'); // Commented out as unit field is replaced by store
 const customerRoutes = require('./routes/superadmin/customerRoutes');
 const adminRoutes = require('./routes/superadmin/admins');
@@ -25,6 +27,10 @@ const adminAuthRoutes = require('./routes/admin/adminAuthRoutes');
 const adminProductRoutes = require('./routes/admin/productRoutes');
 const adminCategoryRoutes = require('./routes/admin/categoryRoutes');
 const adminUploadRoutes = require('./routes/admin/uploadRoutes');
+const adminOrderRoutes = require('./routes/admin/orderRoutes');
+const adminPaymentRoutes = require('./routes/admin/paymentRoutes');
+const adminReviewRoutes = require('./routes/admin/reviewRoutes');
+
 // const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes'); // Commented out as unit field is replaced by store
 const publicProductRoutes = require('./routes/public/productRoutes');
 const publicGeneralRoutes = require('./routes/public/generalRoutes');
@@ -80,6 +86,7 @@ app.use('/api/superadmin/payments', superadminPaymentRoutes);
 app.use('/api/superadmin/reviews', superadminReviewRoutes);
 app.use('/api/superadmin/sales', superadminSalesReportRoutes);
 app.use('/api/superadmin/workers', superadminWorkerRoutes);
+app.use('/api/superadmin/users', superadminUserRoutes);
 // app.use('/api/units', unitRoutes); // Commented out as unit field is replaced by store
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);
@@ -88,6 +95,9 @@ app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/upload', adminUploadRoutes);
+app.use('/api/admin/orders', adminOrderRoutes);
+app.use('/api/admin/payments', adminPaymentRoutes);
+app.use('/api/admin/reviews', adminReviewRoutes);
 // app.use('/api/admin/product-units', adminProductUnitRoutes); // Commented out as unit field is replaced by store
 
 // public api routes 
