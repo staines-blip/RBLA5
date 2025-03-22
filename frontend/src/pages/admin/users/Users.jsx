@@ -1,32 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaFilter, FaEye, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaEye, FaShoppingBag } from 'react-icons/fa';
 import { isAdminLoggedIn, getAdminStore } from '../../../services/adminAuthService';
+import { getStoreUsers, getUserStats, getUserDetails, getUserOrders } from '../../../services/admin/userService';
 import './Users.css';
-
-// This will be replaced with actual API calls
-const mockUsers = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', phone: '9876543210', registeredDate: '2025-01-15', lastOrder: '2025-03-10', totalOrders: 8, store: 'varnam' },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com', phone: '8765432109', registeredDate: '2025-01-20', lastOrder: '2025-03-15', totalOrders: 5, store: 'varnam' },
-  { id: '3', name: 'Robert Johnson', email: 'robert@example.com', phone: '7654321098', registeredDate: '2025-02-05', lastOrder: '2025-03-18', totalOrders: 3, store: 'varnam' },
-  { id: '4', name: 'Emily Davis', email: 'emily@example.com', phone: '6543210987', registeredDate: '2025-02-10', lastOrder: '2025-03-01', totalOrders: 2, store: 'siragugal' },
-  { id: '5', name: 'Michael Brown', email: 'michael@example.com', phone: '5432109876', registeredDate: '2025-02-15', lastOrder: '2025-03-05', totalOrders: 4, store: 'siragugal' },
-  { id: '6', name: 'Sarah Wilson', email: 'sarah@example.com', phone: '4321098765', registeredDate: '2025-02-20', lastOrder: '2025-02-28', totalOrders: 1, store: 'vaagai' },
-  { id: '7', name: 'David Taylor', email: 'david@example.com', phone: '3210987654', registeredDate: '2025-03-01', lastOrder: '2025-03-12', totalOrders: 6, store: 'vaagai' },
-];
 
 const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [userStats, setUserStats] = useState({
+    totalCustomers: 0,
+    newCustomers: 0,
+    repeatCustomers: 0,
+    recentOrdersCount: 0
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [adminStore, setAdminStore] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'registeredDate', direction: 'desc' });
+  const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5);
+  const [usersPerPage] = useState(10);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [userOrders, setUserOrders] = useState([]);
+  const [orderLoading, setOrderLoading] = useState(false);
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
@@ -41,22 +39,54 @@ const Users = () => {
         const store = getAdminStore();
         if (store) {
           setAdminStore(store);
-          // In a real implementation, you would fetch users from the backend
-          // For now, we'll filter the mock data by store
-          const storeUsers = mockUsers.filter(user => user.store === store);
-          setUsers(storeUsers);
+          await fetchUsers();
+          await fetchUserStats();
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
         setError('Authentication failed. Please log in again.');
         navigate('/admin/login');
-      } finally {
-        setLoading(false);
       }
     };
     
     checkAuthAndFetchData();
   }, [navigate]);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await getStoreUsers();
+      setUsers(response.data);
+      setError('');
+    } catch (err) {
+      setError(err.message || 'Error fetching users');
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserStats = async () => {
+    try {
+      const response = await getUserStats();
+      setUserStats(response.data);
+    } catch (err) {
+      console.error('Error fetching user stats:', err);
+    }
+  };
+
+  const fetchUserDetails = async (userId) => {
+    try {
+      setOrderLoading(true);
+      const response = await getUserDetails(userId);
+      setSelectedUser(response.data.user);
+      setUserOrders(response.data.recentOrders);
+    } catch (err) {
+      setError(err.message || 'Error fetching user details');
+    } finally {
+      setOrderLoading(false);
+    }
+  };
 
   // Sort users based on sortConfig
   const sortedUsers = React.useMemo(() => {
@@ -86,9 +116,10 @@ const Users = () => {
 
   // Filter users based on search term
   const filteredUsers = sortedUsers.filter(user => {
-    return user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-           user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           user.phone.includes(searchTerm);
+    const searchLower = searchTerm.toLowerCase();
+    return user.name.toLowerCase().includes(searchLower) || 
+           user.email.toLowerCase().includes(searchLower) ||
+           (user.phone && user.phone.includes(searchTerm));
   });
 
   // Get current users for pagination
@@ -99,14 +130,23 @@ const Users = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleViewUser = (user) => {
-    setSelectedUser(user);
+  const handleViewUser = async (user) => {
+    await fetchUserDetails(user._id);
     setIsViewModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsViewModalOpen(false);
     setSelectedUser(null);
+    setUserOrders([]);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   if (loading) {
@@ -121,28 +161,36 @@ const Users = () => {
   return (
     <div className="users-container">
       <div className="users-header">
-        <h1>Users Management</h1>
-        <p>Manage users for {adminStore.charAt(0).toUpperCase() + adminStore.slice(1)} store</p>
+        <h1>Customer Management</h1>
+        <p>Manage customers for {adminStore.charAt(0).toUpperCase() + adminStore.slice(1)} store</p>
       </div>
 
-      <div className="users-stats">
+      <div className="stats-dashboard">
         <div className="stat-card">
-          <h3>Total Users</h3>
-          <p>{users.length}</p>
+          <h3>Total Customers</h3>
+          <div className="stat-value">{userStats.totalCustomers}</div>
+          <div className="stat-subtitle">All time</div>
         </div>
         <div className="stat-card">
-          <h3>New Users (Last 30 Days)</h3>
-          <p>{users.filter(user => new Date(user.registeredDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}</p>
+          <h3>New Customers</h3>
+          <div className="stat-value">{userStats.newCustomers}</div>
+          <div className="stat-subtitle">Last 30 days</div>
         </div>
         <div className="stat-card">
-          <h3>Active Users</h3>
-          <p>{users.filter(user => new Date(user.lastOrder) > new Date(Date.now() - 60 * 24 * 60 * 60 * 1000)).length}</p>
+          <h3>Repeat Customers</h3>
+          <div className="stat-value">{userStats.repeatCustomers}</div>
+          <div className="stat-subtitle">Multiple orders</div>
+        </div>
+        <div className="stat-card">
+          <h3>Recent Orders</h3>
+          <div className="stat-value">{userStats.recentOrdersCount}</div>
+          <div className="stat-subtitle">Last 30 days</div>
         </div>
       </div>
 
-      <div className="users-filters">
+      <div className="search-filter-container">
         <div className="search-bar">
-          <FaSearch />
+          <FaSearch className="search-icon" />
           <input
             type="text"
             placeholder="Search by name, email or phone"
@@ -155,13 +203,13 @@ const Users = () => {
       {error && <div className="error-message">{error}</div>}
 
       {currentUsers.length === 0 ? (
-        <div className="no-users">
-          <p>No users found matching your criteria.</p>
+        <div className="no-data">
+          <p>No customers found matching your criteria.</p>
         </div>
       ) : (
         <>
-          <div className="users-table-container">
-            <table className="users-table">
+          <div className="reviews-table-container">
+            <table className="reviews-table">
               <thead>
                 <tr>
                   <th onClick={() => requestSort('name')}>
@@ -182,15 +230,9 @@ const Users = () => {
                       <span>{sortConfig.direction === 'asc' ? ' ▲' : ' ▼'}</span>
                     )}
                   </th>
-                  <th onClick={() => requestSort('registeredDate')}>
-                    Registered Date
-                    {sortConfig.key === 'registeredDate' && (
-                      <span>{sortConfig.direction === 'asc' ? ' ▲' : ' ▼'}</span>
-                    )}
-                  </th>
-                  <th onClick={() => requestSort('totalOrders')}>
-                    Orders
-                    {sortConfig.key === 'totalOrders' && (
+                  <th onClick={() => requestSort('createdAt')}>
+                    Joined
+                    {sortConfig.key === 'createdAt' && (
                       <span>{sortConfig.direction === 'asc' ? ' ▲' : ' ▼'}</span>
                     )}
                   </th>
@@ -199,33 +241,18 @@ const Users = () => {
               </thead>
               <tbody>
                 {currentUsers.map((user) => (
-                  <tr key={user.id}>
+                  <tr key={user._id}>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
-                    <td>{user.phone}</td>
-                    <td>{new Date(user.registeredDate).toLocaleDateString()}</td>
-                    <td>{user.totalOrders}</td>
-                    <td className="actions">
+                    <td>{user.phone || 'N/A'}</td>
+                    <td>{formatDate(user.createdAt)}</td>
+                    <td className="actions-cell">
                       <button 
-                        className="action-btn view-btn" 
+                        className="action-btn view-btn"
                         onClick={() => handleViewUser(user)}
-                        title="View User"
+                        title="View Details"
                       >
                         <FaEye />
-                      </button>
-                      <button 
-                        className="action-btn edit-btn" 
-                        title="Edit User"
-                        disabled
-                      >
-                        <FaEdit />
-                      </button>
-                      <button 
-                        className="action-btn delete-btn" 
-                        title="Delete User"
-                        disabled
-                      >
-                        <FaTrash />
                       </button>
                     </td>
                   </tr>
@@ -235,15 +262,23 @@ const Users = () => {
           </div>
 
           <div className="pagination">
-            {Array.from({ length: Math.ceil(filteredUsers.length / usersPerPage) }, (_, i) => (
-              <button
-                key={i + 1}
-                className={currentPage === i + 1 ? 'active' : ''}
-                onClick={() => paginate(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
+            <button
+              className="pagination-btn"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="pagination-info">
+              Page {currentPage} of {Math.ceil(filteredUsers.length / usersPerPage)}
+            </span>
+            <button
+              className="pagination-btn"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage >= Math.ceil(filteredUsers.length / usersPerPage)}
+            >
+              Next
+            </button>
           </div>
         </>
       )}
@@ -252,47 +287,63 @@ const Users = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>User Details</h2>
-              <button className="close-btn" onClick={handleCloseModal}>×</button>
+              <h3>Customer Details</h3>
+              <button className="close-btn" onClick={handleCloseModal}>&times;</button>
             </div>
             <div className="modal-body">
-              <div className="user-detail-row">
-                <span className="detail-label">Name:</span>
-                <span className="detail-value">{selectedUser.name}</span>
+              <div className="review-details">
+                <div className="review-detail-row">
+                  <div className="detail-label">Name:</div>
+                  <div className="detail-value">{selectedUser.name}</div>
+                </div>
+                <div className="review-detail-row">
+                  <div className="detail-label">Email:</div>
+                  <div className="detail-value">{selectedUser.email}</div>
+                </div>
+                <div className="review-detail-row">
+                  <div className="detail-label">Phone:</div>
+                  <div className="detail-value">{selectedUser.phone || 'N/A'}</div>
+                </div>
+                <div className="review-detail-row">
+                  <div className="detail-label">Joined:</div>
+                  <div className="detail-value">{formatDate(selectedUser.createdAt)}</div>
+                </div>
               </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Email:</span>
-                <span className="detail-value">{selectedUser.email}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Phone:</span>
-                <span className="detail-value">{selectedUser.phone}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Registered:</span>
-                <span className="detail-value">{new Date(selectedUser.registeredDate).toLocaleDateString()}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Last Order:</span>
-                <span className="detail-value">{new Date(selectedUser.lastOrder).toLocaleDateString()}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Total Orders:</span>
-                <span className="detail-value">{selectedUser.totalOrders}</span>
-              </div>
-              <div className="user-detail-row">
-                <span className="detail-label">Store:</span>
-                <span className="detail-value">{selectedUser.store.charAt(0).toUpperCase() + selectedUser.store.slice(1)}</span>
-              </div>
-              
-              <div className="user-orders">
-                <h3>Recent Orders</h3>
-                <p className="placeholder-text">User's recent orders would be displayed here in a real implementation.</p>
-              </div>
+
+              <h4 style={{ marginTop: '20px', marginBottom: '10px' }}>Recent Orders</h4>
+              {orderLoading ? (
+                <div className="loading-screen" style={{ height: '100px' }}>
+                  <div className="spinner"></div>
+                </div>
+              ) : userOrders.length > 0 ? (
+                <div className="reviews-table-container" style={{ marginTop: '10px' }}>
+                  <table className="reviews-table">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userOrders.map((order) => (
+                        <tr key={order._id}>
+                          <td>{order.orderNumber}</td>
+                          <td>{formatDate(order.createdAt)}</td>
+                          <td>{order.orderStatus}</td>
+                          <td>₹{order.totalAmount.toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="no-data">No orders found for this customer.</p>
+              )}
             </div>
             <div className="modal-footer">
-              <button className="btn secondary-btn" onClick={handleCloseModal}>Close</button>
-              <button className="btn primary-btn" disabled>Edit User</button>
+              <button className="cancel-btn" onClick={handleCloseModal}>Close</button>
             </div>
           </div>
         </div>

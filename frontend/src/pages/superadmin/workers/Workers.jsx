@@ -68,22 +68,59 @@ const WorkerForm = ({ open, handleClose, worker, handleSubmit, mode }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{mode === 'add' ? 'Add New Worker' : 'Edit Worker'}</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={handleClose} 
+      maxWidth="md" 
+      fullWidth
+      PaperProps={{
+        style: {
+          borderRadius: '16px',
+          padding: '16px'
+        }
+      }}
+    >
+      <DialogTitle>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 1,
+          color: '#5E35B1',
+          '& .MuiSvgIcon-root': {
+            fontSize: '2rem'
+          }
+        }}>
+          {mode === 'add' ? <AddIcon /> : <EditIcon />}
+          <Typography variant="h5" component="span" fontWeight="600">
+            {mode === 'add' ? 'Add New Worker' : 'Edit Worker'}
+          </Typography>
+        </Box>
+      </DialogTitle>
       <form onSubmit={handleFormSubmit}>
         <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
               <TextField
                 required
                 fullWidth
-                label="Name"
+                label="Full Name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  sx: {
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  },
+                }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 required
                 fullWidth
@@ -92,9 +129,20 @@ const WorkerForm = ({ open, handleClose, worker, handleSubmit, mode }) => {
                 type="number"
                 value={formData.age}
                 onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  sx: {
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  },
+                }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 required
                 fullWidth
@@ -102,22 +150,39 @@ const WorkerForm = ({ open, handleClose, worker, handleSubmit, mode }) => {
                 name="phoneNo"
                 value={formData.phoneNo}
                 onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  sx: {
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  },
+                }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
-                <InputLabel>Store</InputLabel>
-                <Select
-                  name="store"
-                  value={formData.store}
-                  onChange={handleChange}
-                  label="Store"
-                >
-                  <MenuItem value="Varnam">Varnam</MenuItem>
-                  <MenuItem value="Sirugugal">Sirugugal</MenuItem>
-                  <MenuItem value="Vaagai">Vaagai</MenuItem>
-                </Select>
-              </FormControl>
+            <Grid item xs={12} md={6}>
+              <TextField
+                required
+                fullWidth
+                label="Aadhar Number"
+                name="aadharNo"
+                value={formData.aadharNo}
+                onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  sx: {
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  },
+                }}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -126,19 +191,61 @@ const WorkerForm = ({ open, handleClose, worker, handleSubmit, mode }) => {
                 label="Address"
                 name="address"
                 multiline
-                rows={2}
+                rows={3}
                 value={formData.address}
                 onChange={handleChange}
+                variant="outlined"
+                InputProps={{
+                  sx: {
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  },
+                }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth required variant="outlined">
+                <InputLabel>Store</InputLabel>
+                <Select
+                  name="store"
+                  value={formData.store}
+                  onChange={handleChange}
+                  label="Store"
+                  sx={{
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="Varnam">Varnam</MenuItem>
+                  <MenuItem value="Sirugugal">Sirugugal</MenuItem>
+                  <MenuItem value="Vaagai">Vaagai</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth required variant="outlined">
                 <InputLabel>Role</InputLabel>
                 <Select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
                   label="Role"
+                  sx={{
+                    borderRadius: '8px',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5E35B1',
+                      },
+                    },
+                  }}
                 >
                   <MenuItem value="Store Manager">Store Manager</MenuItem>
                   <MenuItem value="Sales Associate">Sales Associate</MenuItem>
@@ -148,21 +255,36 @@ const WorkerForm = ({ open, handleClose, worker, handleSubmit, mode }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label="Aadhar Number"
-                name="aadharNo"
-                value={formData.aadharNo}
-                onChange={handleChange}
-              />
-            </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained" color="primary">
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button 
+            onClick={handleClose}
+            variant="outlined"
+            sx={{
+              borderRadius: '8px',
+              borderColor: '#5E35B1',
+              color: '#5E35B1',
+              '&:hover': {
+                borderColor: '#4527A0',
+                backgroundColor: 'rgba(94, 53, 177, 0.04)',
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            sx={{
+              borderRadius: '8px',
+              backgroundColor: '#5E35B1',
+              '&:hover': {
+                backgroundColor: '#4527A0',
+              },
+              px: 4,
+            }}
+          >
             {mode === 'add' ? 'Add Worker' : 'Update Worker'}
           </Button>
         </DialogActions>

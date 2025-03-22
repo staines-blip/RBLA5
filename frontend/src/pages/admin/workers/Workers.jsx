@@ -2,19 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaFilter, FaEye, FaEdit, FaTrash, FaPlus, FaUserCog } from 'react-icons/fa';
 import { isAdminLoggedIn, getAdminStore } from '../../../services/adminAuthService';
+import { getWorkers, addWorker, updateWorker, deleteWorker } from '../../../services/admin/workerService';
+import { toast } from 'react-toastify';
 import './Workers.css';
-
-// Mock data for workers
-const mockWorkers = [
-  { id: '1', name: 'John Smith', email: 'john@example.com', phone: '9876543210', role: 'Manager', joinDate: '2024-01-15', status: 'Active', store: 'varnam' },
-  { id: '2', name: 'Emma Johnson', email: 'emma@example.com', phone: '8765432109', role: 'Sales Associate', joinDate: '2024-02-10', status: 'Active', store: 'varnam' },
-  { id: '3', name: 'Michael Brown', email: 'michael@example.com', phone: '7654321098', role: 'Inventory Clerk', joinDate: '2024-03-05', status: 'Active', store: 'varnam' },
-  { id: '4', name: 'Sarah Davis', email: 'sarah@example.com', phone: '6543210987', role: 'Cashier', joinDate: '2024-03-15', status: 'Inactive', store: 'varnam' },
-  { id: '5', name: 'Robert Wilson', email: 'robert@example.com', phone: '5432109876', role: 'Sales Associate', joinDate: '2024-04-01', status: 'Active', store: 'varnam' },
-  { id: '6', name: 'Jennifer Taylor', email: 'jennifer@example.com', phone: '4321098765', role: 'Manager', joinDate: '2024-01-20', status: 'Active', store: 'siragugal' },
-  { id: '7', name: 'David Anderson', email: 'david@example.com', phone: '3210987654', role: 'Cashier', joinDate: '2024-02-15', status: 'Active', store: 'siragugal' },
-  { id: '8', name: 'Lisa Thomas', email: 'lisa@example.com', phone: '2109876543', role: 'Sales Associate', joinDate: '2024-03-10', status: 'Inactive', store: 'vaagai' },
-];
 
 const Workers = () => {
   const navigate = useNavigate();
@@ -24,24 +14,43 @@ const Workers = () => {
   const [workers, setWorkers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newWorker, setNewWorker] = useState({
     name: '',
-    email: '',
-    phone: '',
+    age: '',
+    phoneNo: '',
+    address: '',
     role: 'Sales Associate',
-    status: 'Active'
+    aadharNo: ''
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [workersPerPage] = useState(5);
 
+  // Fetch workers data
+  const fetchWorkers = async () => {
+    try {
+      console.log('Fetching workers...');
+      const response = await getWorkers();
+      console.log('Workers response:', response);
+      setWorkers(response.data);
+      setError('');
+    } catch (err) {
+      console.error('Error fetching workers:', err);
+      console.log('Full error object:', JSON.stringify(err, null, 2));
+      setError('Failed to fetch workers data');
+      toast.error('Failed to fetch workers data');
+    }
+  };
+
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
       try {
+        console.log('Checking auth...');
         const isLoggedIn = await isAdminLoggedIn();
+        console.log('Is admin logged in:', isLoggedIn);
         if (!isLoggedIn) {
           navigate('/admin/login');
           return;
@@ -49,12 +58,10 @@ const Workers = () => {
         
         // Get admin's store
         const store = getAdminStore();
+        console.log('Admin store:', store);
         if (store) {
           setAdminStore(store);
-          
-          // Filter workers by store
-          const storeWorkers = mockWorkers.filter(worker => worker.store === store);
-          setWorkers(storeWorkers);
+          await fetchWorkers();
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
@@ -68,15 +75,13 @@ const Workers = () => {
     checkAuthAndFetchData();
   }, [navigate]);
 
-  // Filter workers based on search term, role filter, and status filter
+  // Filter workers based on search term and role filter
   const filteredWorkers = workers.filter(worker => {
     const matchesSearch = worker.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          worker.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          worker.phone.includes(searchTerm);
+                          worker.phoneNo.includes(searchTerm);
     const matchesRole = roleFilter === '' || worker.role === roleFilter;
-    const matchesStatus = statusFilter === '' || worker.status === statusFilter;
     
-    return matchesSearch && matchesRole && matchesStatus;
+    return matchesSearch && matchesRole;
   });
 
   // Get current workers for pagination
@@ -93,8 +98,43 @@ const Workers = () => {
     setIsViewModalOpen(true);
   };
 
+  // Handle edit worker
+  const handleEditWorker = (worker) => {
+    setSelectedWorker(worker);
+    setNewWorker({
+      name: worker.name,
+      age: worker.age,
+      phoneNo: worker.phoneNo,
+      address: worker.address,
+      role: worker.role,
+      aadharNo: worker.aadharNo
+    });
+    setIsEditModalOpen(true);
+  };
+
+  // Handle delete worker
+  const handleDeleteWorker = async (workerId) => {
+    if (window.confirm('Are you sure you want to delete this worker?')) {
+      try {
+        await deleteWorker(workerId);
+        toast.success('Worker deleted successfully');
+        fetchWorkers(); // Refresh the list
+      } catch (error) {
+        toast.error('Failed to delete worker');
+      }
+    }
+  };
+
   // Handle add new worker
   const handleAddWorker = () => {
+    setNewWorker({
+      name: '',
+      age: '',
+      phoneNo: '',
+      address: '',
+      role: 'Sales Associate',
+      aadharNo: ''
+    });
     setIsAddModalOpen(true);
   };
 
@@ -106,29 +146,40 @@ const Workers = () => {
     }));
   };
 
-  const handleSubmitWorker = () => {
-    // In a real implementation, this would send the new worker data to the backend
-    const newWorkerData = {
-      id: (workers.length + 1).toString(),
-      ...newWorker,
-      joinDate: new Date().toISOString().split('T')[0],
-      store: adminStore
-    };
-    
-    setWorkers([...workers, newWorkerData]);
-    setIsAddModalOpen(false);
-    setNewWorker({
-      name: '',
-      email: '',
-      phone: '',
-      role: 'Sales Associate',
-      status: 'Active'
-    });
+  const handleSubmitWorker = async () => {
+    try {
+      await addWorker(newWorker);
+      toast.success('Worker added successfully');
+      setIsAddModalOpen(false);
+      fetchWorkers(); // Refresh the list
+      setNewWorker({
+        name: '',
+        age: '',
+        phoneNo: '',
+        address: '',
+        role: 'Sales Associate',
+        aadharNo: ''
+      });
+    } catch (error) {
+      toast.error('Failed to add worker');
+    }
+  };
+
+  const handleUpdateWorker = async () => {
+    try {
+      await updateWorker(selectedWorker._id, newWorker);
+      toast.success('Worker updated successfully');
+      setIsEditModalOpen(false);
+      fetchWorkers(); // Refresh the list
+    } catch (error) {
+      toast.error('Failed to update worker');
+    }
   };
 
   const handleCloseModal = () => {
     setIsViewModalOpen(false);
     setIsAddModalOpen(false);
+    setIsEditModalOpen(false);
     setSelectedWorker(null);
   };
 
@@ -154,16 +205,16 @@ const Workers = () => {
           <p>{workers.length}</p>
         </div>
         <div className="stat-card">
-          <h3>Active Workers</h3>
-          <p>{workers.filter(worker => worker.status === 'Active').length}</p>
-        </div>
-        <div className="stat-card">
           <h3>Managers</h3>
           <p>{workers.filter(worker => worker.role === 'Manager').length}</p>
         </div>
         <div className="stat-card">
           <h3>Sales Associates</h3>
           <p>{workers.filter(worker => worker.role === 'Sales Associate').length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Other Staff</h3>
+          <p>{workers.filter(worker => !['Manager', 'Sales Associate'].includes(worker.role)).length}</p>
         </div>
       </div>
 
@@ -172,7 +223,7 @@ const Workers = () => {
           <FaSearch />
           <input
             type="text"
-            placeholder="Search by name, email or phone"
+            placeholder="Search by name or phone"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -189,17 +240,6 @@ const Workers = () => {
               <option value="Sales Associate">Sales Associate</option>
               <option value="Cashier">Cashier</option>
               <option value="Inventory Clerk">Inventory Clerk</option>
-            </select>
-          </div>
-          <div className="filter-dropdown">
-            <FaFilter />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="">All Status</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
             </select>
           </div>
         </div>
@@ -222,26 +262,20 @@ const Workers = () => {
                 <tr>
                   <th>Name</th>
                   <th>Role</th>
-                  <th>Email</th>
+                  <th>Age</th>
                   <th>Phone</th>
-                  <th>Join Date</th>
-                  <th>Status</th>
+                  <th>Address</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {currentWorkers.map((worker) => (
-                  <tr key={worker.id}>
+                  <tr key={worker._id}>
                     <td>{worker.name}</td>
                     <td>{worker.role}</td>
-                    <td>{worker.email}</td>
-                    <td>{worker.phone}</td>
-                    <td>{new Date(worker.joinDate).toLocaleDateString()}</td>
-                    <td>
-                      <span className={`status-badge ${worker.status.toLowerCase()}`}>
-                        {worker.status}
-                      </span>
-                    </td>
+                    <td>{worker.age}</td>
+                    <td>{worker.phoneNo}</td>
+                    <td>{worker.address}</td>
                     <td className="actions">
                       <button 
                         className="action-btn view-btn" 
@@ -252,15 +286,15 @@ const Workers = () => {
                       </button>
                       <button 
                         className="action-btn edit-btn" 
+                        onClick={() => handleEditWorker(worker)}
                         title="Edit Worker"
-                        disabled
                       >
                         <FaEdit />
                       </button>
                       <button 
                         className="action-btn delete-btn" 
+                        onClick={() => handleDeleteWorker(worker._id)}
                         title="Delete Worker"
-                        disabled
                       >
                         <FaTrash />
                       </button>
@@ -299,26 +333,24 @@ const Workers = () => {
                 <span className="detail-value">{selectedWorker.name}</span>
               </div>
               <div className="worker-detail-row">
-                <span className="detail-label">Email:</span>
-                <span className="detail-value">{selectedWorker.email}</span>
+                <span className="detail-label">Age:</span>
+                <span className="detail-value">{selectedWorker.age}</span>
               </div>
               <div className="worker-detail-row">
                 <span className="detail-label">Phone:</span>
-                <span className="detail-value">{selectedWorker.phone}</span>
+                <span className="detail-value">{selectedWorker.phoneNo}</span>
               </div>
               <div className="worker-detail-row">
                 <span className="detail-label">Role:</span>
                 <span className="detail-value">{selectedWorker.role}</span>
               </div>
               <div className="worker-detail-row">
-                <span className="detail-label">Join Date:</span>
-                <span className="detail-value">{new Date(selectedWorker.joinDate).toLocaleDateString()}</span>
+                <span className="detail-label">Address:</span>
+                <span className="detail-value">{selectedWorker.address}</span>
               </div>
               <div className="worker-detail-row">
-                <span className="detail-label">Status:</span>
-                <span className={`status-badge ${selectedWorker.status.toLowerCase()}`}>
-                  {selectedWorker.status}
-                </span>
+                <span className="detail-label">Aadhar No:</span>
+                <span className="detail-value">{selectedWorker.aadharNo}</span>
               </div>
               <div className="worker-detail-row">
                 <span className="detail-label">Store:</span>
@@ -327,18 +359,18 @@ const Workers = () => {
             </div>
             <div className="modal-footer">
               <button className="btn secondary-btn" onClick={handleCloseModal}>Close</button>
-              <button className="btn primary-btn" disabled>Edit Worker</button>
+              <button className="btn primary-btn" onClick={() => handleEditWorker(selectedWorker)}>Edit Worker</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Add Worker Modal */}
-      {isAddModalOpen && (
+      {/* Add/Edit Worker Modal */}
+      {(isAddModalOpen || isEditModalOpen) && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Add New Worker</h2>
+              <h2>{isEditModalOpen ? 'Edit Worker' : 'Add New Worker'}</h2>
               <button className="close-btn" onClick={handleCloseModal}>×</button>
             </div>
             <div className="modal-body">
@@ -354,23 +386,33 @@ const Workers = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="age">Age</label>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={newWorker.email}
+                  type="number"
+                  id="age"
+                  name="age"
+                  value={newWorker.age}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="phone">Phone</label>
+                <label htmlFor="phoneNo">Phone</label>
                 <input
                   type="text"
-                  id="phone"
-                  name="phone"
-                  value={newWorker.phone}
+                  id="phoneNo"
+                  name="phoneNo"
+                  value={newWorker.phoneNo}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <textarea
+                  id="address"
+                  name="address"
+                  value={newWorker.address}
                   onChange={handleInputChange}
                   required
                 />
@@ -390,26 +432,24 @@ const Workers = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="status">Status</label>
-                <select
-                  id="status"
-                  name="status"
-                  value={newWorker.status}
+                <label htmlFor="aadharNo">Aadhar Number</label>
+                <input
+                  type="text"
+                  id="aadharNo"
+                  name="aadharNo"
+                  value={newWorker.aadharNo}
                   onChange={handleInputChange}
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
+                  required
+                />
               </div>
             </div>
             <div className="modal-footer">
               <button className="btn secondary-btn" onClick={handleCloseModal}>Cancel</button>
               <button 
                 className="btn primary-btn" 
-                onClick={handleSubmitWorker}
-                disabled={!newWorker.name || !newWorker.email || !newWorker.phone}
+                onClick={isEditModalOpen ? handleUpdateWorker : handleSubmitWorker}
               >
-                Add Worker
+                {isEditModalOpen ? 'Update Worker' : 'Add Worker'}
               </button>
             </div>
           </div>

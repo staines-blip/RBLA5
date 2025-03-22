@@ -30,8 +30,10 @@ const adminUploadRoutes = require('./routes/admin/uploadRoutes');
 const adminOrderRoutes = require('./routes/admin/orderRoutes');
 const adminPaymentRoutes = require('./routes/admin/paymentRoutes');
 const adminReviewRoutes = require('./routes/admin/reviewRoutes');
+const adminUserRoutes = require('./routes/admin/userRoutes');
+const adminSalesRoutes = require('./routes/admin/salesRoutes');
+const adminWorkerRoutes = require('./routes/admin/workerRoutes');
 
-// const adminProductUnitRoutes = require('./routes/admin/productUnitRoutes'); // Commented out as unit field is replaced by store
 const publicProductRoutes = require('./routes/public/productRoutes');
 const publicGeneralRoutes = require('./routes/public/generalRoutes');
 const publicRoutes = require('./routes/public/index');
@@ -98,7 +100,9 @@ app.use('/api/admin/upload', adminUploadRoutes);
 app.use('/api/admin/orders', adminOrderRoutes);
 app.use('/api/admin/payments', adminPaymentRoutes);
 app.use('/api/admin/reviews', adminReviewRoutes);
-// app.use('/api/admin/product-units', adminProductUnitRoutes); // Commented out as unit field is replaced by store
+app.use('/api/admin/users', adminUserRoutes);
+app.use('/api/admin/sales', adminSalesRoutes);
+app.use('/api/admin/workers', adminWorkerRoutes);
 
 // public api routes 
 app.use('/api/public/products', publicProductRoutes);

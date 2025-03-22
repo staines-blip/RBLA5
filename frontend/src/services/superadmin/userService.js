@@ -94,8 +94,8 @@ export const getUserStats = async () => {
     const headers = getSuperadminAuthHeader();
     const response = await axios.get(`${API_URL}/superadmin/users/stats`, { headers });
     
-    // The backend returns stats inside a 'stats' object, so we need to extract it
-    return response.data.stats || response.data;
+    // Return the stats object directly from the response
+    return response.data;
   } catch (error) {
     console.error('Error fetching user statistics:', error);
     throw error.response?.data || { message: 'Failed to fetch user statistics' };
