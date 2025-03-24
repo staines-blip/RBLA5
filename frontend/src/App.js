@@ -36,6 +36,7 @@ const ProductPages = {
   Napkins: lazy(() => import('./pages/Napkins')),
   Bedsheets: lazy(() => import('./pages/Bedsheets')),
   Cupcoaster: lazy(() => import('./pages/Cupcoaster')),
+  
   Bamboo: lazy(() => import('./pages/Bamboo')),
   Paperfiles: lazy(() => import('./pages/Paperfiles')),
   CustProduct: lazy(() => import('./pages/custproduct')),
