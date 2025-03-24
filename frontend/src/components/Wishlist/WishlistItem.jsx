@@ -28,6 +28,7 @@ const WishlistItem = ({ item }) => {
     const fullImageUrl = imageUrl ? `http://localhost:5000${imageUrl}` : '/placeholder.jpg';
 
     return (
+        
         <Card className="wishlist-item" onClick={handleClick}>
             <CardMedia
                 component="img"

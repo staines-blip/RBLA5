@@ -2,10 +2,12 @@
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
+    width: 100%; /* Ensure the container takes full width */
 }
 
 .order-details-header {
     margin-bottom: 2rem;
+    width: 100%; /* Ensure the header takes full width */
 }
 
 .back-button {
@@ -32,6 +34,7 @@
 .order-meta {
     color: #666;
     font-size: 0.9rem;
+    width: 100%; /* Ensure meta takes full width */
 }
 
 .order-meta p {
@@ -43,12 +46,14 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 2rem;
+    width: 100%; /* Ensure content takes full width */
 }
 
 .order-status-section {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid #eee;
+    width: 100%; /* Ensure status section takes full width */
 }
 
 .status-badge {
@@ -99,6 +104,7 @@
 
 .shipping-details {
     margin-bottom: 2rem;
+    width: 100%; /* Ensure shipping details take full width */
 }
 
 .address-card {
@@ -106,6 +112,7 @@
     padding: 1rem;
     border-radius: 4px;
     margin-top: 1rem;
+    width: 100%; /* Ensure address card takes full width */
 }
 
 .address-card p {
@@ -115,6 +122,7 @@
 
 .order-items {
     margin-bottom: 2rem;
+    width: 100%; /* Ensure order items take full width */
 }
 
 .order-item {
@@ -124,6 +132,7 @@
     border: 1px solid #eee;
     border-radius: 4px;
     margin-bottom: 1rem;
+    width: 100%; /* Ensure each order item takes full width */
 }
 
 .item-image {
@@ -167,6 +176,7 @@
     padding: 1.5rem;
     border-radius: 4px;
     margin-bottom: 2rem;
+    width: 100%; /* Ensure order summary takes full width */
 }
 
 .summary-details {
@@ -193,6 +203,7 @@
     gap: 1rem;
     justify-content: flex-start;
     margin-top: 2rem;
+    width: 100%; /* Ensure actions take full width */
 }
 
 .track-button,
@@ -233,6 +244,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 2rem auto;
     max-width: 600px;
+    width: 100%; /* Ensure loading/error/not-found messages take full width */
 }
 
 /* Responsive Design */

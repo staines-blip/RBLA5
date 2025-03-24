@@ -3,6 +3,7 @@
     transition: transform 0.2s;
     cursor: pointer;
     height: 100%;
+    padding-top: 50px;
 }
 
 .wishlist-item:hover {
