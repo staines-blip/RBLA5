@@ -64,7 +64,8 @@ body {
 
 .varnam-about h2,
 .varnam-services h2,
-.varnam-contact h2 {
+.varnam-contact h2,
+.our-work h2 {
   font-size: 3.2rem;
   line-height: 1.1;
   margin-bottom: 2rem;
@@ -325,3 +326,94 @@ button:hover {
 .varnam-contact {
     background-color: #fff4e6; /* Light blue tone */
 }
+
+.our-work {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #fff;
+}
+
+
+
+.work-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+
+
+
+
+.work-card img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 15px;
+}
+
+.work-card h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.work-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.read-more-btn {
+  padding: 10px 15px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.read-more-btn:hover {
+  background-color: #e63939;
+}
+
+
+/* Statistics Section */
+.statistics-section {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 50px 5%;
+  border-radius: 8px;
+  text-align: center;
+}
+
+
+
+.stat-card img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.stat-blue { color: #3da5f5; }
+.stat-yellow { color: #ffcc00; }
+.stat-green { color: #2db57c; }
+.stat-purple { color: #8b5cf6; }
+
+.stat-card p {
+  font-size: 1rem;
+  color: #333;
+}
+
+
