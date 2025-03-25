@@ -106,7 +106,7 @@ const Header = () => {
       <div className="top-bar">
         <div className="logo">
           <Link to="/">
-            <h1>RBLA</h1>
+            <h2>ஒன்றிணை நூலிழை</h2>
           </Link>
         </div>
 
