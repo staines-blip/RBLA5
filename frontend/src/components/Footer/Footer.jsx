@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="footer-content">
         {/* Quick Links Section */}
         <div className="footer-section">
-          <h3>Get Know Us</h3>
+          <h3>Get to Know Us</h3>
           <ul>
             <li><Link to="/AboutPage">About RBLA</Link></li>
             <li><Link to="/ProductPage">Products</Link></li>
@@ -18,13 +18,22 @@ const Footer = () => {
             <li><Link to="/press">Press Releases</Link></li>
           </ul>
         </div>
+        <div className="footer-section">
+          <h3>Services</h3>
+          <ul>
+            <li><Link to="/Bulkorders">Bulk Orders</Link></li>
+          </ul>
+        </div>
         
 
         <div className="footer-section-help">
-          <h3>Get Know Us</h3>
+          <h3>Terms and Conditions</h3>
           <ul>
             <li><Link to="/ReturnOrder">Returns Centre</Link></li>
-            <li><Link to="/ContactUs">Help</Link></li>
+            <li><Link to="/Report Fraud">Report Fraud</Link></li>
+            <li><Link to="/HelpCenter">Help Center</Link></li>
+          
+           
           </ul>
         </div>
 
