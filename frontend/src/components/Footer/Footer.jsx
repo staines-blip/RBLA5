@@ -1,14 +1,13 @@
 import React from "react";
 import "./Footer.css";
 import { Link } from "react-router-dom";
-import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaLinkedinIn, FaWhatsapp, FaEnvelope, FaCommentDots } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaLinkedinIn,  } from "react-icons/fa";
 import Chatbot from "../Chatbot/Chatbot";
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-
         {/* Quick Links Section */}
         <div className="footer-section">
           <h3>Get Know Us</h3>
@@ -17,30 +16,17 @@ const Footer = () => {
             <li><Link to="/ProductPage">Products</Link></li>
             <li><Link to="/careers">Careers</Link></li>
             <li><Link to="/press">Press Releases</Link></li>
-            
           </ul>
         </div>
+        
 
         <div className="footer-section-help">
           <h3>Get Know Us</h3>
           <ul>
-          <li><Link to="/ReturnOrder">Returns Centre</Link></li>
-          <li><Link to="/ContactUs">Help</Link></li>
+            <li><Link to="/ReturnOrder">Returns Centre</Link></li>
+            <li><Link to="/ContactUs">Help</Link></li>
           </ul>
-          </div>
-
-        {/* Contact Us Section (New Design) 
-        <div className="footer-section contact-section">
-          <h3>Contact Us</h3>
-          <p>+91 81473 49478</p>
-          <p>1800-266-0123</p>
-          <hr className="divider" />
-          <div className="contact-icons">
-            <a href="#" aria-label="WhatsApp"><FaWhatsapp /></a>
-            <a href="#" aria-label="Email"><FaEnvelope /></a>
-            <a href="#" aria-label="Chat"><FaCommentDots /></a>
-          </div>
-        </div>*/}
+        </div>
 
         {/* Social Links Section */}
         <div className="footer-section">
@@ -68,8 +54,11 @@ const Footer = () => {
       {/* Footer Bottom Section */}
       <div className="footer-bottom">
         <div className="footer-bottom-left">
-        <Link to="/UserLogin" className="superadmin-link">SUPER/ADMIN LOGIN</Link>
-      </div>
+          <Link to="/UserLogin" className="superadmin-link">Super Admin Login</Link>
+        </div>
+        <div className="footer-bottom-right">
+          <p>Designed & Developed by MCA'24 @MCC</p>
+        </div>
       </div>
       <Chatbot/>
     </footer>
