@@ -53,7 +53,7 @@ const FashionForward = () => {
       <div className="fashion-forward-left">
         <h1>
           <span>Threads Of Heritage </span>
-          <span>Hands of Empowerment</span> add
+          <span>Hands of Empowerment</span> 
           
         </h1>
         <div className="category-buttons">
