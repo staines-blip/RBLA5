@@ -76,7 +76,8 @@ body {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
-.varnam-contact h3 {
+.varnam-contact h3,
+.varnam-contact p h3  {
   font-size: 3.2rem;
   line-height: 1.1;
   margin-bottom: 2rem;
@@ -90,9 +91,11 @@ body {
 .varnam-about p,
 .varnam-contact p {
     line-height: 1.8;
-    font-size: 1rem;
+    font-size: 1.3rem;
     margin-bottom: 15px;
     color: #000000;
+    text-align: justify;
+    font-style: italic;
 }
 
 .varnam-services ul {

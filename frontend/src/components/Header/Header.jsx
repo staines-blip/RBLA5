@@ -17,6 +17,7 @@ const Header = () => {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isworksOpen, setIsworksOpen] = useState(false);
 
   const productCategories = [
     { name: "Paper Files", path: "/paperfiles" },
@@ -25,6 +26,13 @@ const Header = () => {
     { name: "Napkins", path: "/napkins" },
     { name: "Bedsheets", path: "/bedsheets" },
     { name: "Cup Coasters", path: "/cupcoaster" }
+  ];
+
+  const worksCategories = [
+    { name: "Blockprinting", path: "/block" },
+    { name: "Tailoring", path: "/tailoruing" },
+    { name: "Handmade Products", path: "/handmade" },
+    
   ];
 
   useEffect(() => {
@@ -49,11 +57,26 @@ const Header = () => {
       }
     };
 
+    
+
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.works-dropdown')) {
+        setIsworksOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+  
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -85,6 +108,11 @@ const Header = () => {
   const toggleProducts = (e) => {
     e.stopPropagation();
     setIsProductsOpen(!isProductsOpen);
+  };
+
+  const toggleworks = (e) => {
+    e.stopPropagation();
+    setIsworksOpen(!isworksOpen);
   };
 
   const handleLogout = async () => {
@@ -177,6 +205,22 @@ const Header = () => {
             </div>
             <div className={`dropdown-menu ${isProductsOpen ? 'show' : ''}`}>
               {productCategories.map((category) => (
+                <Link 
+                  key={category.path} 
+                  to={category.path}
+                  className="dropdown-item"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+          </li>
+          <li className={`works-dropdown ${isworksOpen ? 'active' : ''}`}>
+            <div className="nav-link" onClick={toggleworks}>
+              Our Works <FontAwesomeIcon icon={faChevronDown} className={`dropdown-icon ${isworksOpen ? 'open' : ''}`} />
+            </div>
+            <div className={`dropdown-menu ${isworksOpen ? 'show' : ''}`}>
+              {worksCategories.map((category) => (
                 <Link 
                   key={category.path} 
                   to={category.path}

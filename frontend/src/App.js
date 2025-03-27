@@ -16,6 +16,8 @@ import OrderDetails from './pages/User/Orders/OrderDetails/OrderDetails';
 import OrderTracking from './pages/User/Orders/OrderTracking/OrderTracking';
 import './App.css';
 
+
+
 // Set default Axios base URL
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -41,6 +43,11 @@ const ProductPages = {
   Paperfiles: lazy(() => import('./pages/Paperfiles')),
   CustProduct: lazy(() => import('./pages/custproduct')),
 };
+
+const workpage ={
+  Block: lazy(()=>import('./pages/block')),
+}
+
 // the userpages are loaded here with the lazy load 
 const UserPages = {
   Wishlist: lazy(() => import('./pages/Wishlist')),
@@ -72,6 +79,8 @@ const InfoPages = {
   Vaagai: lazy(() => import('./pages/vaagai')),
   Varnam: lazy(() => import('./pages/varnam')),
   Siragugal: lazy(() => import('./pages/siragugal')),
+
+  
 };
 
 // Loading component
@@ -266,6 +275,7 @@ const App = () => {
               {/* Generate routes from component groups */}
               {createRoutes(UserPages, '')}
               {createRoutes(ProductPages, '')}
+              {createRoutes(workpage,'')}
               {createRoutes(CheckoutPages, '')}
               {createRoutes(InfoPages, '')}
               
