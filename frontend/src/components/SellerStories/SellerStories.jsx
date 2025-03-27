@@ -8,7 +8,7 @@ const SellerStories = () => {
     <div className="seller-stories-container">
       <div className="seller-stories-left">
         <h2>SELLER STORIES</h2>
-        <p>Learn more about the Kreators we support and their journey to bring to you their passionate and innovative products, right at your doorstep!</p>
+        <p>Learn more about the Creators we support and their journey to bring to you their passionate and innovative products, right at your doorstep!</p>
         <Link to="/AboutPage" className="know-sellers-btn">
           Know our sellers
         </Link>

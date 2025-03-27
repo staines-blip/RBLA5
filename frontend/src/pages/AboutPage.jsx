@@ -31,20 +31,14 @@ const AboutPage = () => {
         <div className="hero-section">
           <div className="heading">
             <h1>
-              A social enterprise An authentic platform for pure craft.
+               An authentic platform for pure craft.
             </h1>
           </div>
           <div className="content">
             <p>
-              The India Craft House is a digital platform for some of the world's oldest
-              and most intricate craft forms. We started this social enterprise close to
-              10 years ago in order to preserve, showcase and share the talent of
-              India's artisans with the world. We hope to be able to raise the dignity
-              of the Indian artisan in our own way and kindle an interest and support
-              for an unsurpassed legacy of craft that spans millennia and spreads
-              across the length and breadth of the land. It is our effort to curate an
-              undeniably unique selection of traditional art and craft translated into a
-              range of beautiful, contemporary products.
+            UnityThreads is a digital platform for some of the world's oldest and most intricate craft forms, with a special focus on the art of weaving and textile creation. We started this social enterprise close to 10 years ago in order to preserve, showcase, and share the talent of Tamil Nadu's artisans with the world. At UnityThreads, we believe in the power of connection—bringing together artisans from diverse regions of Tamil Nadu to create threads of unity through their craft.
+
+
             </p>
           </div>
         </div>
@@ -52,16 +46,11 @@ const AboutPage = () => {
         {/* Artisan Section */}
         <div className="section artisan-section">
           <div className="heading">
-            <h3>Established in 2010, Gurgaon, India.</h3>
+            <h3>Established in 2019, Chennai, India.</h3>
           </div>
           <div className="content"><center>
             <p>
-              We are headquartered in Gurgaon, India near the capital city of
-              New Delhi. Our objective has always been to empower our
-              artisans to deliver sustainable products of the finest quality. We
-              devote ourselves to these causes. Each of our products are
-              handcrafted and unique. Each product tells the unique story of
-              the artisan who made it.
+              WWe are headquartered in Chennai, India, the capital of Tamil Nadu, the city of dreams. Our objective has always been to empower our artisans to deliver sustainable products of the finest quality. We devote ourselves to these causes. Each of our products is handcrafted and unique. Each product tells the unique story of the artisan who made it.
             </p></center>
             <div className="artisan-image">
               <img src={artisanImage} alt="Artisan crafting" />
