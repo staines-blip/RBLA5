@@ -20,6 +20,7 @@ import './App.css';
 
 
 
+
 // Set default Axios base URL
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -51,6 +52,7 @@ const workpage ={
   Tailoring: lazy(()=>import('./pages/tailoring')),
   Handmade: lazy(()=>import('./pages/handmade')),
   Whyvarnam:lazy(()=>import('./pages/whyvarnam')),
+  Bulkorders: lazy(()=>import('./pages/bulkorders'),)
 }
 
 // the userpages are loaded here with the lazy load 
