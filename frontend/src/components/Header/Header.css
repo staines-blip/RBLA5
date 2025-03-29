@@ -41,6 +41,11 @@ body {
   top: 0;
   z-index: 1000; /* Ensures it stays above other content */
 }
+.logo h2 {
+  font-size: 24px; /* Adjust as needed */
+  font-weight: bold; /* Ensure consistent weight */
+}
+
 /* Logo */
 .logo {
   flex: 0 0 auto;

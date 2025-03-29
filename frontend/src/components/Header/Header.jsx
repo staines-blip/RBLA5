@@ -30,7 +30,7 @@ const Header = () => {
 
   const worksCategories = [
     { name: "Blockprinting", path: "/block" },
-    { name: "Tailoring", path: "/tailoruing" },
+    { name: "Tailoring", path: "/tailoring" },
     { name: "Handmade Products", path: "/handmade" },
     
   ];
@@ -134,7 +134,8 @@ const Header = () => {
       <div className="top-bar">
         <div className="logo">
           <Link to="/">
-            <h2>ஒன்றிணை நூலிழை</h2>
+          <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Unity Threads</h2>
+      <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>ஒன்றிணை நூலிழை</h2>
           </Link>
         </div>
 

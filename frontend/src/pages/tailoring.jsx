@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./block.css";
+import "./tailoring.css";
 import vaalogo from "../components/Assets/vaalogo.png"; 
 import img1 from "../components/Assets/v6.png"; 
 import img2 from "../components/Assets/v9.png";
@@ -11,8 +11,7 @@ import feature3 from "../components/Assets/v8.png";
 import Slider from "react-slick";
 import { FaHandsHelping } from "react-icons/fa";
 
-
-const Block = () => {
+const Tailoring = () => {  // ✅ Capitalized component name
   const navigate = useNavigate(); 
   const images = [img1, img2, img3]; // Array of images
 
@@ -30,27 +29,19 @@ const Block = () => {
   };
 
   return (
-    <div className="block-page">
+    <div className="tailoring-page">
       {/* Header */}
-      <header className="block-header">
+      <header className="tailoring-header">
         <img src={vaalogo} alt="Block Logo" className="block-logo" />
-        <h1>Block Printing</h1>
+        <h1>Tailoring</h1>
         <p>Your partner in excellence and innovation.</p>
       </header>
 
       {/* About Section */}
-      <section className="block-about">
-        <h2>About Block Printing</h2>
+      <section className="tailoring-about">
+        <h2>About Tailoring</h2>
         <p>
-        At Varnam, we take pride in preserving and promoting the ancient art of block printing, 
-        a tradition that dates back centuries in the rich tapestry of Indian culture. Block printing is more than just a craft; 
-        it's a celebration of heritage, creativity, and craftsmanship.Originating in regions like Rajasthan and Gujarat, 
-        block printing has been passed down through generations, with artisans honing their skills and refining techniques over centuries. 
-        At Varnam, we pay homage to this heritage by working with master craftsmen who embody the spirit of this timeless art form.
-        Block printing is a labor-intensive process that requires precision, patience, and passion.
-         It begins with the carving of intricate designs onto wooden blocks, each meticulously crafted to perfection. 
-         These blocks are then dipped into natural dyes made from plants,
-         minerals, and other organic sources, ensuring vibrant colors and eco-friendly production.
+        At Varnam, we believe that tailoring is more than just stitching fabric; it's about creating timeless pieces that embody style, comfort, and individuality. With a deep-rooted appreciation for craftsmanship and attention to detail, our tailors bring decades of expertise to every garment they create.Tailoring is a skill that requires precision and an eye for detail. From taking accurate measurements to selecting the finest fabrics, our skilled tailors ensure that each garment is crafted to perfection. Whether it's a bespoke suit, a traditional kurta, or a contemporary dress, every stitch is meticulously placed to achieve the perfect fit and silhouette.At Varnam, we understand that every individual is unique, which is why we offer customization options for our tailored garments. From choosing fabrics and colors to selecting design details and embellishments, customers have the opportunity to personalize their garments.
         </p>
       </section>
 
@@ -82,7 +73,7 @@ const Block = () => {
             <img src={feature1} alt="Unique Designs" />
             <h3>Unique Designs</h3>
             <p>
-              Our products feature unique designs inspired by the rich cultural heritage of India. From vibrant block-printed textiles to intricately embroidered garments, each item tells a story and celebrates the diversity of our artistic traditions.
+            Our products feature unique designs inspired by the rich cultural heritage of India. From vibrant block-printed textiles to intricately embroidered garments, each item tells a story and celebrates the diversity of our artistic traditions.
             </p>
           </div>
           <div className="feature-card">
@@ -103,17 +94,17 @@ const Block = () => {
       </section>
 
       <div className="image-gallery">
-  {images.map((src, index) => (
-    <div key={index} className="image-item">
-      <img src={src} alt={`Gallery Image ${index + 1}`} className="gallery-img" />
-      <div className="overlay">
-        <FaHandsHelping className="overlay-icon" />
+        {images.map((src, index) => (
+          <div key={index} className="image-item">
+            <img src={src} alt={`Gallery Image ${index + 1}`} className="gallery-img" />
+            <div className="overlay">
+              <FaHandsHelping className="overlay-icon" />
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-    </div>
     </div>
   );
 };
 
-export default Block;
+export default Tailoring; // ✅ Export the correctly named component

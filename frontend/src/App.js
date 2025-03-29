@@ -15,6 +15,7 @@ import MyOrders from './pages/User/Orders/MyOrders/MyOrders';
 import OrderDetails from './pages/User/Orders/OrderDetails/OrderDetails';
 import OrderTracking from './pages/User/Orders/OrderTracking/OrderTracking';
 import './App.css';
+import Handmmade from './pages/handmade';
 
 
 
@@ -46,6 +47,8 @@ const ProductPages = {
 
 const workpage ={
   Block: lazy(()=>import('./pages/block')),
+  Tailoring: lazy(()=>import('./pages/tailoring')),
+  Handmade: lazy(()=>import('./pages/handmade')),
 }
 
 // the userpages are loaded here with the lazy load 
