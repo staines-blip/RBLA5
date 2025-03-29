@@ -21,6 +21,7 @@ import v16 from "../components/Assets/v16.png";
 import blockPrinting from "../components/Assets/block-printing.png";
 import tailoring from "../components/Assets/tailoring.png";
 import handmade from "../components/Assets/handmade.png";
+import { Link } from "react-router-dom";
 
 
 
@@ -126,6 +127,11 @@ const Varnam = () => {
           <img src={varlogo} alt="Varnam Logo" className="varnam-logo" />
           <h1>Varnam Unit</h1>
           <p>MADE BY SURVIVORS OF BONDED LABOUR</p>
+          <button>
+  <Link to="/whyvarnam" style={{ textDecoration: "none", color: "inherit" }}>
+    WHY VARNAM
+  </Link>
+</button>
         </div>
       </header>
 
