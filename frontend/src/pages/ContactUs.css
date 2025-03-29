@@ -2,68 +2,68 @@
 body {
   margin: 0;
   font-family: "Poppins", Arial, sans-serif;
-  color: #333;
+  color: #4a3728;
   background-color: #f9f9f9;
+  padding-top: 50px;
 }
 
 /* Contact Us Section */
 .contact-us {
   display: flex;
-  width: 100vw; /* Full viewport width */
-  min-height: 100vh; /* Full viewport height */
-  background-color: #fff; /* White background for the section */
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #fff;
+  flex-wrap: wrap;
 }
 
 /* Left Section */
 .contact-us-left {
   flex: 1;
-  padding: 60px 80px; /* Adjusted padding for balance */
+  padding: 60px 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #f5f1ed; /* Light beige background as in the image */
+  background-color: #f5f1ed;
 }
 
 .contact-us-left h1 {
-  font-size: 3.5rem;
-  font-weight: 500;
-  color: #4a3728; /* Dark brown color for the heading */
+  font-size: 3rem;
+  font-weight: 600;
   margin-bottom: 1rem;
 }
 
 .underline {
-  width: 50px;
-  height: 2px;
-  background-color: #d3c8b5; /* Light beige underline */
-  margin: 0 auto 2rem auto;
+  width: 60px;
+  height: 3px;
+  background-color: #d8433e;
+  margin-bottom: 2rem;
 }
 
 .contact-us-left p {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.6;
-  color: #4a3728;
   margin-bottom: 2rem;
   max-width: 500px;
 }
 
 /* Contact Details */
 .contact-details h3 {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: bold;
   text-transform: uppercase;
-  color: #4a3728;
   margin-bottom: 0.5rem;
 }
 
 .contact-details a {
   font-size: 1.1rem;
-  color: #4a3728;
   text-decoration: none;
+  font-weight: 500;
   transition: color 0.3s ease;
+  color: red;
 }
 
 .contact-details a:hover {
-  color: #80002f; /* Hover color matching the theme */
+  color: black;
 }
 
 /* Phone Numbers */
@@ -85,20 +85,111 @@ body {
 
 .social-icons a {
   font-size: 1.5rem;
-  color: #4a3728;
-  transition: color 0.3s ease;
+  background: #f5f1ed;
+  padding: 10px;
+  border-radius: 50%;
+  transition: 0.3s;
 }
 
 .social-icons a:hover {
-  color: #80002f;
+  color: #fff;
+  background-color: black;
 }
 
 /* Right Section */
 .contact-us-right {
   flex: 1;
-  background-size: cover;
-  background-position: center;
-  min-height: 100%; /* Ensure it takes the full height of the parent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f1ed;
+  padding: 20px;
+}
+
+/* Contact Form Container */
+.contact-form-container {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.contact-form-container p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+/* Contact Form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.input-field {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.input-field input,
+.input-field textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 8px;
+  background: transparent;
+}
+
+.input-field textarea {
+  height: 100px;
+  resize: none;
+}
+
+.input-icon {
+  color: #999;
+  margin-left: 10px;
+}
+
+/* Submit Button */
+.submit-btn {
+  background-color: #d8433e;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #80002f;
 }
 
 /* Responsive Design */
@@ -108,7 +199,7 @@ body {
   }
 
   .contact-us-left h1 {
-    font-size: 3rem;
+    font-size: 2.8rem;
   }
 }
 
@@ -137,7 +228,8 @@ body {
   }
 
   .contact-us-right {
-    min-height: 400px; /* Ensure image section has height on mobile */
+    min-height: auto;
+    padding: 30px;
   }
 }
 
@@ -159,6 +251,11 @@ body {
   }
 
   .contact-us-right {
-    min-height: 300px;
+    min-height: auto;
+  }
+
+  .form-group {
+    flex-direction: column;
+    gap: 10px;
   }
 }
