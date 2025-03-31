@@ -146,6 +146,8 @@ const Header = () => {
   const handleProductClick = () => {
     setSearchResults([]);  // Clear search results
     setQuery("");         // Clear search query
+    setIsProductsOpen(false); // Close products dropdown
+    setIsworksOpen(false);   // Close works dropdown
   };
 
   return (
@@ -156,7 +158,7 @@ const Header = () => {
 
       <div className="top-bar">
         <div className="logo">
-          <Link to="/">
+          <Link to="/" onClick={handleProductClick}>
           <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Unity Threads</h2>
       <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>ஒன்றிணை நூலிழை</h2>
           </Link>
@@ -257,8 +259,8 @@ const Header = () => {
 
       <nav className="main-nav">
         <ul>
-          <li><Link to="/">HOME</Link></li>
-          <li><Link to="/aboutpage">ABOUT US</Link></li>
+          <li><Link to="/" onClick={handleProductClick}>HOME</Link></li>
+          <li><Link to="/aboutpage" onClick={handleProductClick}>ABOUT US</Link></li>
           <li className={`products-dropdown ${isProductsOpen ? 'active' : ''}`}>
             <div className="nav-link" onClick={toggleProducts}>
               PRODUCTS <FontAwesomeIcon icon={faChevronDown} className={`dropdown-icon ${isProductsOpen ? 'open' : ''}`} />
@@ -269,6 +271,7 @@ const Header = () => {
                   key={category.path} 
                   to={category.path}
                   className="dropdown-item"
+                  onClick={handleProductClick}
                 >
                   {category.name}
                 </Link>
@@ -285,14 +288,15 @@ const Header = () => {
                   key={category.path} 
                   to={category.path}
                   className="dropdown-item"
+                  onClick={handleProductClick}
                 >
                   {category.name}
                 </Link>
               ))}
             </div>
           </li>
-          <li><Link to="/gallery">GALLERY</Link></li>
-          <li><Link to="/contactus">CONTACT US</Link></li>
+          <li><Link to="/gallery" onClick={handleProductClick}>GALLERY</Link></li>
+          <li><Link to="/contactus" onClick={handleProductClick}>CONTACT US</Link></li>
         </ul>
       </nav>
 
