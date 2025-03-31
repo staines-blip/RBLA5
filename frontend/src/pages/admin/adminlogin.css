@@ -177,7 +177,6 @@
   margin-right: 5px; /* Adds space between checkbox and label */
 }
 
-
 .forgot-password {
   color: #666;
   text-decoration: none;
@@ -192,22 +191,41 @@
 /* Login Button */
 .login-button {
   width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #4B3F72 0%, #1F1B3C 100%);
-  color: white;
+  padding: 15px;
+  margin-top: 20px;
   border: none;
-  border-radius: 25px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4B3F72 0%, #1F1B3C 100%);
+  color: white;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .login-button:hover {
+  background: linear-gradient(135deg, #5C4D8A 0%, #2A2550 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(75, 63, 114, 0.3);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.login-button.secondary {
+  background: linear-gradient(135deg, #2C2559 0%, #1A1730 100%);
+  margin-top: 10px;
+}
+
+.login-button.secondary:hover {
+  background: linear-gradient(135deg, #3A3172 0%, #231F43 100%);
 }
 
 /* Back to Home */

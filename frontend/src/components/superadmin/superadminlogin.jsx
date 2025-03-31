@@ -108,6 +108,14 @@ const SuperadminLogin = ({ onLogin }) => {
               <button type="submit" className="login-button" disabled={isLoading}>
                 {isLoading ? 'Logging in...' : 'Login'}
               </button>
+              <button 
+                type="button" 
+                className="login-button"
+                onClick={() => navigate('/UserLogin')}
+                disabled={isLoading}
+              >
+                Back to User Login
+              </button>
             </form>
           </div>
         </div>

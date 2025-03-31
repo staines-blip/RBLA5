@@ -118,6 +118,14 @@ const AdminLogin = () => {
             <button type="submit" className="login-button" disabled={isLoading}>
               {isLoading ? "Logging in..." : "LOGIN"}
             </button>
+            <button 
+              type="button" 
+              className="login-button secondary"
+              onClick={() => navigate('/UserLogin')}
+              disabled={isLoading}
+            >
+              BACK TO USER LOGIN
+            </button>
           </form>
         </div>
 
