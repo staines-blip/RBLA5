@@ -142,6 +142,12 @@ const Header = () => {
         <div className="top-right">
           <div className="search-container">
             <div className="search-bar">
+              {isAuthenticated && (
+                <div className="login-status">
+                  <FontAwesomeIcon icon={faUser} className="status-icon" />
+                  <span>Logged In</span>
+                </div>
+              )}
               <input
                 type="text"
                 value={query}
@@ -152,10 +158,34 @@ const Header = () => {
               <button className="search-button" onClick={handleSearch}>
                 <FontAwesomeIcon icon={faSearch} />
               </button>
-              {isAuthenticated && (
-                <div className="login-status">
-                  <FontAwesomeIcon icon={faUser} className="status-icon" />
-                  <span>Logged In</span>
+              {searchResults.length > 0 && (
+                <div className="search-results">
+                  {searchResults.map((product) => (
+                    <Link 
+                      to={`/product/${product._id}`} 
+                      key={product._id} 
+                      className="search-result-item"
+                      onClick={handleProductClick}
+                    >
+                      <img 
+                        src={product.image_url.startsWith('http') ? product.image_url : `http://localhost:5000${product.image_url}`} 
+                        alt={product.name}
+                        onError={(e) => {
+                          console.log('Image failed to load:', product.image_url);
+                          e.target.src = 'https://via.placeholder.com/40';
+                        }}
+                      />
+                      <div className="search-result-info">
+                        <div className="search-result-name">{product.name}</div>
+                        <div className="search-result-price">₹{product.new_price}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+              {query && searchResults.length === 0 && (
+                <div className="search-results">
+                  <div className="no-results">No products found</div>
                 </div>
               )}
             </div>
@@ -237,28 +267,6 @@ const Header = () => {
         </ul>
       </nav>
 
-      {searchResults.length > 0 && (
-        <div className="search-results">
-          <ul>
-            {searchResults.map((product) => (
-              <li key={product._id}>
-                <Link to={`/product/${product._id}`} onClick={handleProductClick}>
-                  <div className="search-result-item">
-                    <img src={product.image_url} alt={product.name} className="search-result-image" />
-                    <div className="search-result-details">
-                      <span className="product-name">{product.name}</span>
-                      <span className="product-price">₹{product.new_price}</span>
-                      {product.old_price > product.new_price && (
-                        <span className="product-old-price">₹{product.old_price}</span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

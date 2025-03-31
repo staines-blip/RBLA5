@@ -16,9 +16,13 @@ exports.searchProducts = async (req, res) => {
 
         const products = await Product.find(searchCriteria)
             .populate('category', 'name')
-            .populate('unit', 'name')
-            .select('name description new_price old_price image_url category unit')
+            .select('name description new_price old_price image_url category')
             .limit(10);
+
+        // Log the first product to see the image_url structure
+        if (products.length > 0) {
+            console.log('First product image_url:', products[0].image_url);
+        }
 
         res.status(200).json({
             success: true,
