@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserShield, FaPlus, FaEye, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { getAllAdmins, getAdminStats, createAdmin, updateAdmin, deleteAdmin } from '../../../services/superadmin/adminService';
+import { getAllAdmins, createAdmin, updateAdmin, deleteAdmin } from '../../../services/superadmin/adminService';
 import AdminRegistration from '../adminregistration';
 import './admins.css';
 
@@ -11,9 +11,7 @@ const Admins = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState({
-    totalAdmins: 0,
-    activeAdmins: 0,
-    inactiveAdmins: 0
+    totalAdmins: 0
   });
 
   // State for modals
@@ -27,10 +25,28 @@ const Admins = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredAdmins, setFilteredAdmins] = useState([]);
 
-  // Fetch admins and stats on component mount
+  // Fetch admins and update count
+  const fetchAdmins = async () => {
+    try {
+      setLoading(true);
+      const response = await getAllAdmins();
+      setAdmins(response.admins || []);
+      // Update total count from admins array
+      setStats(prev => ({
+        ...prev,
+        totalAdmins: response.admins?.length || 0
+      }));
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+      toast.error('Failed to fetch admins');
+    }
+  };
+
+  // Fetch admins on component mount
   useEffect(() => {
     fetchAdmins();
-    fetchStats();
   }, []);
 
   // Update filtered admins when admins or search query changes
@@ -46,31 +62,6 @@ const Admins = () => {
       setFilteredAdmins([]);
     }
   }, [admins, searchQuery]);
-
-  // Fetch all admins
-  const fetchAdmins = async () => {
-    try {
-      setLoading(true);
-      const response = await getAllAdmins();
-      setAdmins(response.admins || []);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-      toast.error('Failed to fetch admins');
-    }
-  };
-
-  // Fetch admin statistics
-  const fetchStats = async () => {
-    try {
-      const response = await getAdminStats();
-      setStats(response.stats);
-    } catch (err) {
-      console.error('Failed to fetch admin statistics:', err);
-      toast.error('Failed to fetch admin statistics');
-    }
-  };
 
   // Handle admin creation
   const handleCreateClick = () => {
@@ -102,7 +93,6 @@ const Admins = () => {
       toast.success('Admin deleted successfully');
       setShowDeleteModal(false);
       fetchAdmins();
-      fetchStats();
     } catch (err) {
       toast.error('Failed to delete admin');
     }
@@ -150,32 +140,12 @@ const Admins = () => {
       </div>
 
       {/* Statistics */}
-      <div className="admins-stats">
+      <div className="admin-stats">
         <div className="stat-card">
-          <div className="stat-icon">
-            <FaUserShield />
-          </div>
+          <FaUserShield className="stat-icon" />
           <div className="stat-info">
             <h3>Total Admins</h3>
             <p>{stats.totalAdmins}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <FaUserShield />
-          </div>
-          <div className="stat-info">
-            <h3>Active Admins</h3>
-            <p>{stats.activeAdmins}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <FaUserShield />
-          </div>
-          <div className="stat-info">
-            <h3>Inactive Admins</h3>
-            <p>{stats.inactiveAdmins}</p>
           </div>
         </div>
       </div>
@@ -263,7 +233,6 @@ const Admins = () => {
             <AdminRegistration onSuccess={() => {
               setShowCreateModal(false);
               fetchAdmins();
-              fetchStats();
             }} />
             <button className="close-button" onClick={() => setShowCreateModal(false)}>
               Close
@@ -300,7 +269,6 @@ const Admins = () => {
               onSuccess={() => {
                 setShowEditModal(false);
                 fetchAdmins();
-                fetchStats();
               }}
             />
             <button className="close-button" onClick={() => setShowEditModal(false)}>
