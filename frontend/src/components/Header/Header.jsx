@@ -6,6 +6,7 @@ import { faSearch, faChevronDown, faUser, faSignOutAlt, faUserCircle, faShopping
 import { useUser } from '../../Context/UserContext';
 import { useCart } from '../../Context/CartContext';
 import { useWishlist } from '../../Context/WishlistContext';
+import axios from 'axios';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isworksOpen, setIsworksOpen] = useState(false);
+  const [userName, setUserName] = useState("");
 
   const productCategories = [
     { name: "Paper Files", path: "/paperfiles" },
@@ -34,6 +36,27 @@ const Header = () => {
     { name: "Handmade Products", path: "/handmade" },
     
   ];
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUserProfile();
+    }
+  }, [isAuthenticated]);
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/user/profile', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.data.success && response.data.data.name) {
+        setUserName(response.data.data.name);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -143,10 +166,16 @@ const Header = () => {
           <div className="search-container">
             <div className="search-bar">
               {isAuthenticated && (
-                <div className="login-status">
-                  <FontAwesomeIcon icon={faUser} className="status-icon" />
-                  <span>Logged In</span>
-                </div>
+                <>
+                  <div className="login-indicator">
+                    <span className="status-dot"></span>
+                    <span>Logged In</span>
+                  </div>
+                  <div className="user-welcome">
+                    <FontAwesomeIcon icon={faUser} className="user-icon" />
+                    <span className="user-name">Hi, {userName || 'User'}</span>
+                  </div>
+                </>
               )}
               <input
                 type="text"
