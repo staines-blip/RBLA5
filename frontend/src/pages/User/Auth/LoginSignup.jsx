@@ -17,13 +17,91 @@ const LoginSignup = () => {
     password: '',
     confirmPassword: '',
   });
+  const [validationErrors, setValidationErrors] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false
+  });
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Email validation function
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      return 'Email is required';
+    }
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    return '';
+  };
+
+  // Password validation function
+  const validatePassword = (password) => {
+    const requirements = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*]/.test(password)
+    };
+    
+    setPasswordRequirements(requirements);
+
+    if (!password) {
+      return 'Password is required';
+    }
+    
+    const missingRequirements = [];
+    if (!requirements.length) missingRequirements.push('at least 8 characters');
+    if (!requirements.uppercase) missingRequirements.push('one uppercase letter');
+    if (!requirements.lowercase) missingRequirements.push('one lowercase letter');
+    if (!requirements.number) missingRequirements.push('one number');
+    if (!requirements.special) missingRequirements.push('one special character (!@#$%^&*)');
+
+    return missingRequirements.length > 0 
+      ? `Password must contain ${missingRequirements.join(', ')}`
+      : '';
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
     setError('');
+
+    // Add validation while keeping original functionality
+    if (name === 'email') {
+      setValidationErrors(prev => ({
+        ...prev,
+        email: validateEmail(value)
+      }));
+    } else if (name === 'password') {
+      setValidationErrors(prev => ({
+        ...prev,
+        password: validatePassword(value)
+      }));
+    } else if (name === 'confirmPassword') {
+      if (value !== formData.password) {
+        setValidationErrors(prev => ({
+          ...prev,
+          confirmPassword: 'Passwords do not match'
+        }));
+      } else {
+        setValidationErrors(prev => ({
+          ...prev,
+          confirmPassword: ''
+        }));
+      }
+    }
   };
 
   const handleSendOtp = async (e) => {
@@ -95,6 +173,22 @@ const LoginSignup = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    // Validate before submission
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+    
+    setValidationErrors({
+      email: emailError,
+      password: passwordError,
+      confirmPassword: ''
+    });
+
+    // If there are validation errors, don't proceed
+    if (emailError || passwordError) {
+      return;
+    }
+
     setLoading(true);
     setError('');
     setMessage('');
@@ -160,7 +254,11 @@ const LoginSignup = () => {
                 onChange={handleChange}
                 required
                 disabled={loading}
+                className={validationErrors.email ? 'error' : ''}
               />
+              {validationErrors.email && (
+                <div className="error-message">{validationErrors.email}</div>
+              )}
             </div>
             <div className="form-group">
               <input
@@ -171,7 +269,33 @@ const LoginSignup = () => {
                 onChange={handleChange}
                 required
                 disabled={loading}
+                className={validationErrors.password ? 'error' : ''}
               />
+              {formData.password && (
+                <div className="password-requirements">
+                  <p>Password Requirements:</p>
+                  <ul>
+                    <li className={passwordRequirements.length ? 'met' : 'not-met'}>
+                      {passwordRequirements.length ? '✓' : '✗'} At least 8 characters
+                    </li>
+                    <li className={passwordRequirements.uppercase ? 'met' : 'not-met'}>
+                      {passwordRequirements.uppercase ? '✓' : '✗'} One uppercase letter
+                    </li>
+                    <li className={passwordRequirements.lowercase ? 'met' : 'not-met'}>
+                      {passwordRequirements.lowercase ? '✓' : '✗'} One lowercase letter
+                    </li>
+                    <li className={passwordRequirements.number ? 'met' : 'not-met'}>
+                      {passwordRequirements.number ? '✓' : '✗'} One number
+                    </li>
+                    <li className={passwordRequirements.special ? 'met' : 'not-met'}>
+                      {passwordRequirements.special ? '✓' : '✗'} One special character (!@#$%^&*)
+                    </li>
+                  </ul>
+                </div>
+              )}
+              {validationErrors.password && (
+                <div className="error-message">{validationErrors.password}</div>
+              )}
             </div>
             <button type="submit" className="auth-button" disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
@@ -188,9 +312,11 @@ const LoginSignup = () => {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
-                    disabled={loading}
+                    className={validationErrors.email ? 'error' : ''}
                   />
+                  {validationErrors.email && (
+                    <div className="error-message">{validationErrors.email}</div>
+                  )}
                 </div>
                 <button onClick={handleSendOtp} className="auth-button" disabled={loading}>
                   {loading ? 'Sending...' : 'Send OTP'}
@@ -226,9 +352,33 @@ const LoginSignup = () => {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
-                    required
-                    disabled={loading}
+                    className={validationErrors.password ? 'error' : ''}
                   />
+                  {formData.password && (
+                    <div className="password-requirements">
+                      <p>Password Requirements:</p>
+                      <ul>
+                        <li className={passwordRequirements.length ? 'met' : 'not-met'}>
+                          {passwordRequirements.length ? '✓' : '✗'} At least 8 characters
+                        </li>
+                        <li className={passwordRequirements.uppercase ? 'met' : 'not-met'}>
+                          {passwordRequirements.uppercase ? '✓' : '✗'} One uppercase letter
+                        </li>
+                        <li className={passwordRequirements.lowercase ? 'met' : 'not-met'}>
+                          {passwordRequirements.lowercase ? '✓' : '✗'} One lowercase letter
+                        </li>
+                        <li className={passwordRequirements.number ? 'met' : 'not-met'}>
+                          {passwordRequirements.number ? '✓' : '✗'} One number
+                        </li>
+                        <li className={passwordRequirements.special ? 'met' : 'not-met'}>
+                          {passwordRequirements.special ? '✓' : '✗'} One special character (!@#$%^&*)
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                  {validationErrors.password && (
+                    <div className="error-message">{validationErrors.password}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <input
@@ -237,11 +387,13 @@ const LoginSignup = () => {
                     placeholder="Confirm Password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    required
-                    disabled={loading}
+                    className={validationErrors.confirmPassword ? 'error' : ''}
                   />
+                  {validationErrors.confirmPassword && (
+                    <div className="error-message">{validationErrors.confirmPassword}</div>
+                  )}
                 </div>
-                <button onClick={handleSignup} className="auth-button" disabled={loading}>
+                <button onClick={handleSignup} className="auth-button" disabled={loading || Object.values(validationErrors).some(error => error)}>
                   {loading ? 'Signing up...' : 'Complete Signup'}
                 </button>
               </>

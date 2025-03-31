@@ -34,6 +34,7 @@ const Profile = () => {
         profileCompleted: false
     });
     const [isEditing, setIsEditing] = useState(false);
+    const [validationError, setValidationError] = useState('');
     const [message, setMessage] = useState({ text: '', type: '' });
     const [loading, setLoading] = useState(true);
 
@@ -58,16 +59,51 @@ const Profile = () => {
         }
     };
 
+    const validatePhoneNumber = (number) => {
+        if (!number) {
+            return 'Phone number is required';
+        }
+        if (!/^\d{10}$/.test(number)) {
+            return 'Phone number must be exactly 10 digits';
+        }
+        if (!/^[6-9]\d{9}$/.test(number)) {
+            return 'Phone number must start with 6, 7, 8, or 9';
+        }
+        return '';
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProfile(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        
+        if (name === 'phoneNumber') {
+            // Only allow digits and limit to 10 characters
+            const sanitizedValue = value.replace(/\D/g, '').slice(0, 10);
+            setProfile(prev => ({
+                ...prev,
+                [name]: sanitizedValue
+            }));
+            
+            // Validate phone number
+            const error = validatePhoneNumber(sanitizedValue);
+            setValidationError(error);
+        } else {
+            setProfile(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate phone number before submission
+        const phoneError = validatePhoneNumber(profile.phoneNumber);
+        if (phoneError) {
+            setValidationError(phoneError);
+            return;
+        }
+
         try {
             const response = await updateProfile(token, {
                 name: profile.name,
@@ -77,6 +113,7 @@ const Profile = () => {
             if (response.success) {
                 setMessage({ text: 'Profile updated successfully', type: 'success' });
                 setIsEditing(false);
+                setValidationError('');
             }
         } catch (error) {
             setMessage({
@@ -175,8 +212,15 @@ const Profile = () => {
                                     name="phoneNumber"
                                     value={profile.phoneNumber}
                                     onChange={handleInputChange}
-                                    placeholder="Enter your phone number"
+                                    placeholder="Enter 10 digit mobile number"
+                                    className={validationError ? 'error' : ''}
                                 />
+                                {validationError && (
+                                    <div className="validation-error">{validationError}</div>
+                                )}
+                                {!validationError && profile.phoneNumber && (
+                                    <div className="validation-success">✓ Valid phone number</div>
+                                )}
                             </div>
                             <div className="button-group">
                                 <button type="submit" className="save-button">

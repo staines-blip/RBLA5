@@ -135,6 +135,51 @@ body {
   border-radius: 4px;
 }
 
+/* Password Requirements Styles */
+.password-requirements {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.password-requirements p {
+  margin: 0 0 5px 0;
+  font-size: 0.9em;
+  color: #666;
+  font-weight: 500;
+}
+
+.password-requirements ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 5px 0;
+}
+
+.password-requirements li {
+  margin: 5px 0;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.password-requirements .met {
+  color: #28a745;
+}
+
+.password-requirements .not-met {
+  color: #dc3545;
+}
+
+/* Error message styling */
+.error-message {
+  color: #dc3545;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
 /* Form styling */
 .auth-form {
   display: flex;
