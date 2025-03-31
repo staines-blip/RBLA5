@@ -4,7 +4,6 @@ import {
     getAllProducts, 
     toggleProductActive, 
     deleteProduct,
-    getAllCategories,
     updateAllProductStocks
 } from '../../../services/adminapi/index';
 import { isAdminLoggedIn, getAdminStore } from '../../../services/adminAuthService';
@@ -39,7 +38,7 @@ const ProductList = () => {
                     setAdminStore(store);
                 }
                 
-                await Promise.all([fetchProducts()]);
+                await fetchProducts();
             } catch (error) {
                 console.error('Authentication check failed:', error);
                 navigate('/admin/login');
@@ -171,8 +170,17 @@ const ProductList = () => {
                     >
                         <option value="">All Categories</option>
                         {products.map(product => (
-                            <option key={product.category?._id} value={product.category?._id}>{product.category?.name}</option>
-                        ))}
+                            product.category && (
+                                <option key={product.category._id} value={product.category._id}>
+                                    {product.category.name}
+                                </option>
+                            )
+                        )).filter((option, index, self) => 
+                            option && // Remove null/undefined
+                            self.findIndex(t => 
+                                t && t.props.value === option.props.value
+                            ) === index // Remove duplicates
+                        )}
                     </select>
                     <select
                         name="isActive"
