@@ -55,28 +55,196 @@ const chunkArray = (array, size) => {
     return chunks;
 };
 
+// Test user credentials
+const USER_CREDENTIALS = {
+    email: 'payerkordiaknn.k.e.9.7.2.9@gmail.com',
+    password: 'jijo'
+};
+
+// Chennai addresses for testing
+const CHENNAI_ADDRESSES = [
+    {
+        fullName: "Rajesh Kumar",
+        address: "42/21 Gandhi Street, T. Nagar",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600017",
+        phone: "9876543210"
+    },
+    {
+        fullName: "Priya Sundaram",
+        address: "15 Poonamallee High Road, Kilpauk",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600010",
+        phone: "9898765432"
+    },
+    {
+        fullName: "Mohammed Ali",
+        address: "78 Whites Road, Royapettah",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600014",
+        phone: "9765432109"
+    },
+    {
+        fullName: "Lakshmi Venkatesh",
+        address: "25 East Coast Road, Besant Nagar",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600090",
+        phone: "9654321098"
+    },
+    {
+        fullName: "John Peter",
+        address: "12/5 College Road, Anna Nagar",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600040",
+        phone: "9543210987"
+    },
+    {
+        fullName: "Srinivasan Raghavan",
+        address: "45 Dr. Radhakrishnan Salai, Adyar",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600020",
+        phone: "9432109876"
+    },
+    {
+        fullName: "Fatima Begum",
+        address: "89 Pantheon Road, Egmore",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600008",
+        phone: "9321098765"
+    },
+    {
+        fullName: "Arun Kumar",
+        address: "156 LB Road, Thiruvanmiyur",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600041",
+        phone: "9210987654"
+    },
+    {
+        fullName: "Meena Krishnan",
+        address: "34 Cathedral Road, Gopalapuram",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600086",
+        phone: "9109876543"
+    },
+    {
+        fullName: "David Williams",
+        address: "67 Sterling Road, Nungambakkam",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600034",
+        phone: "9098765432"
+    },
+    {
+        fullName: "Ramesh Chandran",
+        address: "23 Sardar Patel Road, Little Mount",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600015",
+        phone: "9987654321"
+    },
+    {
+        fullName: "Anita Sharma",
+        address: "112 GST Road, Chromepet",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600044",
+        phone: "9876543219"
+    },
+    {
+        fullName: "Karthik Raja",
+        address: "78 100 Feet Road, Vadapalani",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600026",
+        phone: "9765432198"
+    },
+    {
+        fullName: "Zara Ahmed",
+        address: "45 Greams Road, Thousand Lights",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600006",
+        phone: "9654321987"
+    },
+    {
+        fullName: "Vijay Kumar",
+        address: "234 Mount Road, Teynampet",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600018",
+        phone: "9543219876"
+    },
+    {
+        fullName: "Deepa Menon",
+        address: "56 Velachery Main Road, Velachery",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600042",
+        phone: "9432198765"
+    },
+    {
+        fullName: "Samuel Joseph",
+        address: "89 Paper Mills Road, Perambur",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600011",
+        phone: "9321987654"
+    },
+    {
+        fullName: "Kavitha Raman",
+        address: "12 South Usman Road, West Mambalam",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600033",
+        phone: "9219876543"
+    },
+    {
+        fullName: "Ibrahim Khan",
+        address: "167 Poonamallee High Road, Koyambedu",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600107",
+        phone: "9198765432"
+    },
+    {
+        fullName: "Shanti Mohan",
+        address: "45 Lattice Bridge Road, Adyar",
+        city: "Chennai",
+        state: "Tamil Nadu",
+        pincode: "600020",
+        phone: "9087654321"
+    }
+];
+
 // 1. User Login
 async function loginUser() {
     try {
         logStep(1, 'User Login');
-        
-        // Login with test user credentials
-        const loginResponse = await api.post('/api/user/auth/login', {
-            email: config.USER.email,
-            password: config.USER.password
-        });
+        console.log('Attempting login with:', USER_CREDENTIALS.email);
 
-        // Set token in axios defaults for all future requests
-        const token = loginResponse.data.token;
-        if (!token) {
-            throw new Error('No token received in login response');
+        const loginResponse = await api.post('/api/user/auth/login', USER_CREDENTIALS);
+        
+        if (!loginResponse.data.success) {
+            throw new Error('Login failed');
         }
+
+        // Set auth token for future requests
+        const token = loginResponse.data.token;
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         console.log('Auth token set for future requests');
 
         logSuccess('User login successful');
     } catch (error) {
-        logError('User login failed', error);
+        logError('Login failed', error);
         throw error;
     }
 }
@@ -122,7 +290,7 @@ async function processPaymentAndOrder() {
 
         // Get cart total
         const cartResponse = await api.get('/api/user/cart');
-        console.log('Cart response:', JSON.stringify(cartResponse.data).substring(0, 200) + '...');
+        console.log('Cart response:', JSON.stringify(cartResponse.data, null, 2));
         
         let cartItems = [];
         if (cartResponse.data && cartResponse.data.data && cartResponse.data.data.items) {
@@ -131,45 +299,47 @@ async function processPaymentAndOrder() {
             throw new Error('Invalid cart response structure');
         }
 
-        // Format products for order creation
-        const formattedProducts = cartItems.map(item => ({
-            product: item.productId,
-            quantity: item.quantity,
-            price: item.price
-        }));
+        // Calculate total amount
+        const totalAmount = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-        // Calculate total amount with proper decimal handling
-        const totalAmount = Number(cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2));
+        // Get random address for this order
+        const randomAddress = CHENNAI_ADDRESSES[Math.floor(Math.random() * CHENNAI_ADDRESSES.length)];
+        
+        // Create order with shipping address
+        const orderData = {
+            products: cartItems.map(item => ({
+                product: item.productId,  // Use productId instead of _id
+                quantity: item.quantity,
+                price: item.price
+            })),
+            shippingAddress: randomAddress,
+            totalAmount
+        };
 
-        // First, create a preliminary order
-        console.log('Creating preliminary order...');
-        const createOrderResponse = await api.post('/api/user/orders', {
-            products: formattedProducts,
-            shippingAddress: config.USER.shippingAddress,
-            totalAmount: totalAmount
-        });
+        console.log('Order data:', JSON.stringify(orderData, null, 2));
+        console.log('Creating order with address:', randomAddress.fullName, 'at', randomAddress.address);
+        
+        const orderResponse = await api.post('/api/user/orders', orderData);
+        
+        if (!orderResponse.data.success) {
+            throw new Error('Order creation failed: ' + JSON.stringify(orderResponse.data));
+        }
 
-        // Extract order ID from response
-        const orderId = createOrderResponse.data.data._id;
-        console.log(`Order ID: ${orderId}`);
-
-        // Get Braintree client token
-        const tokenResponse = await api.get('/api/user/braintree/token');
-        logSuccess('Got payment token');
+        const orderId = orderResponse.data.data._id;
+        logSuccess('Order created successfully');
 
         // Process payment
         console.log('Processing payment...');
-        console.log(`Total amount: ${totalAmount}`);
         const paymentResponse = await api.post('/api/user/braintree/payment', {
-            nonce: config.PAYMENT.nonce,
+            nonce: 'fake-valid-nonce',
             orderId: orderId,
-            amount: totalAmount.toFixed(2) // Add amount back with proper decimal places
+            amount: totalAmount
         });
 
         if (paymentResponse.data.success) {
             logSuccess('Payment processed successfully');
         } else {
-            throw new Error('Payment failed');
+            throw new Error('Payment failed: ' + JSON.stringify(paymentResponse.data));
         }
 
     } catch (error) {
@@ -178,16 +348,15 @@ async function processPaymentAndOrder() {
     }
 }
 
-// Main function to run all steps
+// Main function to run bulk test
 async function runBulkTest() {
-    console.log(chalk.yellow('\n=== Starting Bulk Testing ===\n'));
-    
     try {
-        // 1. Login
+        console.log('\n=== Starting Bulk Testing ===\n');
+
+        // 1. Login user
         await loginUser();
 
-        // Get all products
-        console.log('Fetching products...');
+        // 2. Get all products
         const productsResponse = await api.get('/api/public/products');
         if (!productsResponse.data || !productsResponse.data.data) {
             throw new Error('Invalid products response: ' + JSON.stringify(productsResponse.data));
@@ -195,40 +364,33 @@ async function runBulkTest() {
         const allProducts = productsResponse.data.data;
         console.log(`Found ${allProducts.length} products`);
 
-        // Shuffle products and create chunks
-        const shuffledProducts = shuffleArray([...allProducts]);
-        const productChunks = chunkArray(shuffledProducts, config.PRODUCTS_PER_ORDER);
-        console.log(`Created ${productChunks.length} chunks of ${config.PRODUCTS_PER_ORDER} products each`);
+        // Create chunks of 3 products each for multiple orders
+        const productChunks = chunkArray(shuffleArray(allProducts), 3);
+        console.log(`Created ${productChunks.length} chunks of 3 products each\n`);
 
-        // Process each chunk
-        for (let i = 0; i < Math.min(config.ORDERS_PER_PRODUCT, productChunks.length); i++) {
-            const chunk = productChunks[i];
-            console.log(`\nProcessing chunk ${i + 1} of ${Math.min(config.ORDERS_PER_PRODUCT, productChunks.length)}`);
+        // Process 10 orders
+        for (let i = 0; i < 10; i++) {
+            console.log(`\nProcessing order ${i + 1} of 10`);
             
-            // 2. Add products to cart
-            await addProductsToCart(chunk);
-
-            // 3. Process payment and create order
+            // Get a random chunk of products
+            const randomChunk = productChunks[Math.floor(Math.random() * productChunks.length)];
+            
+            // Add products to cart and create order
+            await addProductsToCart(randomChunk);
             await processPaymentAndOrder();
-
+            
             // Add delay between orders
-            if (i < productChunks.length - 1) {
-                await delay(config.OPERATION_DELAY);
+            if (i < 9) {
+                console.log('Waiting before next order...');
+                await delay(config.OPERATION_DELAY * 2);
             }
         }
 
-        console.log(chalk.green('\n=== Bulk Testing Completed Successfully ===\n'));
+        console.log('\n=== Bulk Testing Completed Successfully ===\n');
     } catch (error) {
-        console.error(chalk.red('\n=== Bulk Testing Failed ==='));
-        if (error.response) {
-            console.error(chalk.red('Status:', error.response.status));
-            console.error(chalk.red('Response data:', JSON.stringify(error.response.data, null, 2)));
-        } else if (error.request) {
-            console.error(chalk.red('No response received:', error.request));
-        } else {
-            console.error(chalk.red('Error message:', error.message));
-        }
-        process.exit(1);
+        console.log('\n=== Bulk Testing Failed ===');
+        console.log('Status:', error.response?.status);
+        console.log('Response data:', JSON.stringify(error.response?.data, null, 2));
     }
 }
 

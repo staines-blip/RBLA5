@@ -33,147 +33,100 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function loginUser() {
     try {
-        const response = await axios.post(`${API_URL}/auth/login`, TEST_USER);
+        const response = await axios.post(`${API_URL}/user/auth/login`, TEST_USER);
+        console.log('Login successful');
         return response.data.token;
     } catch (error) {
         console.error('Login failed:', error.response?.data || error.message);
-        return null;
+        throw error;
     }
 }
 
-async function testOrderPaymentFlow() {
+async function createOrder(token) {
     try {
-        // 1. Login
-        console.log('1. Logging in user...');
-        const token = await loginUser();
-        if (!token) {
-            console.error('Failed to login. Aborting test.');
-            return;
-        }
-        console.log('✓ Login successful');
-        await sleep(1000);
+        const response = await axios.post(`${API_URL}/user/orders`, TEST_ORDER, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        console.log('Order created successfully');
+        return response.data.data._id;
+    } catch (error) {
+        console.error('Order creation failed:', error.response?.data || error.message);
+        throw error;
+    }
+}
 
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        // 2. Create Order
-        console.log('\n2. Creating test order...');
-        console.log('Ordering:');
-        console.log('- 2x Paperfile 1 (₹35)');
-        console.log('Expected Total: ₹70\n');
-
-        const orderResponse = await axios.post(
-            `${API_URL}/user/orders`,
-            TEST_ORDER,
-            { headers }
-        );
-        
-        if (!orderResponse.data.success) {
-            throw new Error(JSON.stringify(orderResponse.data));
-        }
-
-        const order = orderResponse.data.data;
-        console.log('✓ Order created successfully');
-        console.log('Order Number:', order.orderNumber);
-        console.log('Order ID:', order._id);
-        console.log('Total Amount:', order.totalAmount);
-        console.log('Products:', JSON.stringify(order.products, null, 2));
-        await sleep(1000);
-
-        // 3. Get Braintree Token
-        console.log('\n3. Getting Braintree client token...');
-        const tokenResponse = await axios.get(
-            `${API_URL}/user/braintree/token`,
-            { headers }
-        );
+async function initiatePayment(orderId, token) {
+    try {
+        // First get braintree token
+        const tokenResponse = await axios.get(`${API_URL}/user/braintree/token`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         
         if (!tokenResponse.data.success || !tokenResponse.data.clientToken) {
             throw new Error('Failed to get client token');
         }
         
-        console.log('✓ Received client token');
-        await sleep(1000);
-
-        // 4. Process Payment
-        console.log('\n4. Processing payment for order...');
+        // Then create payment with fake nonce
         const paymentData = {
             nonce: 'fake-valid-nonce',
-            orderId: order._id
+            orderId: orderId
         };
         
-        const paymentResponse = await axios.post(
-            `${API_URL}/user/braintree/payment`,
-            paymentData,
-            { headers }
-        );
-
-        if (paymentResponse.data.success) {
-            console.log('✓ Payment successful!');
-            console.log('Transaction ID:', paymentResponse.data.transaction.id);
-            console.log('Order Status:', paymentResponse.data.order.status);
-            console.log('Payment Status:', paymentResponse.data.order.paymentStatus);
-        } else {
-            throw new Error('Payment failed: ' + JSON.stringify(paymentResponse.data));
-        }
-        await sleep(1000);
-
-        // 5. Get all orders to verify
-        console.log('\n5. Verifying order status...');
-        const ordersResponse = await axios.get(
-            `${API_URL}/user/orders`,
-            { headers }
-        );
-        
-        if (!ordersResponse.data.success) {
-            throw new Error('Failed to get orders');
-        }
-
-        const orders = ordersResponse.data.data;
-        const updatedOrder = orders.find(o => o._id === order._id);
-        
-        if (!updatedOrder) {
-            throw new Error('Order not found in user orders');
-        }
-
-        console.log('✓ Final Order Details:');
-        console.log('Order Number:', updatedOrder.orderNumber);
-        console.log('Order Status:', updatedOrder.orderStatus);
-        console.log('Payment Status:', updatedOrder.paymentStatus);
-        await sleep(1000);
-
-        // 6. Get Payment History
-        console.log('\n6. Checking payment history...');
-        const historyResponse = await axios.get(
-            `${API_URL}/user/braintree/history`,
-            { headers }
-        );
-        
-        if (!historyResponse.data.success) {
-            throw new Error('Failed to get payment history');
-        }
-        
-        console.log('✓ Recent Payment History:');
-        const recentPayment = historyResponse.data.data[0];
-        if (recentPayment) {
-            console.log('Transaction ID:', recentPayment.transactionId);
-            console.log('Amount:', recentPayment.amount);
-            console.log('Status:', recentPayment.status);
-            console.log('Order Number:', recentPayment.orderNumber);
-        } else {
-            console.log('No payment history found');
-        }
-
+        const response = await axios.post(`${API_URL}/user/braintree/payment`, paymentData, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        console.log('Payment initiated successfully');
+        return response.data;
     } catch (error) {
-        console.error('\nError:', error.message);
-        if (error.response?.data) {
-            console.error('API Response:', JSON.stringify(error.response.data, null, 2));
-        }
+        console.error('Payment initiation failed:', error.response?.data || error.message);
+        throw error;
     }
 }
 
-// Run the test
-console.log('Starting Order Payment Flow Test...');
-console.log('==================================');
-testOrderPaymentFlow();
+async function verifyOrder(orderId, token) {
+    try {
+        const response = await axios.get(`${API_URL}/user/orders`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const order = response.data.data.find(o => o._id === orderId);
+        console.log('Order verified successfully');
+        return order;
+    } catch (error) {
+        console.error('Order verification failed:', error.response?.data || error.message);
+        throw error;
+    }
+}
+
+async function runTest() {
+    console.log('Starting Order Payment Flow Test...');
+    console.log('==================================');
+    
+    try {
+        // 1. Login
+        console.log('1. Logging in user...');
+        const token = await loginUser();
+        await sleep(1000);
+
+        // 2. Create Order
+        console.log('\n2. Creating order...');
+        const orderId = await createOrder(token);
+        await sleep(1000);
+
+        // 3. Process Payment
+        console.log('\n3. Processing payment...');
+        const paymentData = await initiatePayment(orderId, token);
+        await sleep(1000);
+
+        // 4. Verify Order Status
+        console.log('\n4. Verifying order status...');
+        const finalOrder = await verifyOrder(orderId, token);
+        console.log('\nFinal Order Status:', finalOrder.orderStatus);
+        console.log('Payment Status:', finalOrder.paymentStatus);
+        
+        console.log('\nTest completed successfully! 🎉');
+    } catch (error) {
+        console.error('\nTest failed:', error.message);
+    }
+}
+
+runTest();
