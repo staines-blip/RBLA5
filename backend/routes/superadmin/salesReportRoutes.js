@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const salesReportController = require('../../controllers/superadmin/salesReportController');
-const auth = require('../../middleware/superadminmiddleware');
+const superadminMiddleware = require('../../middleware/superadminmiddleware');
 
 // Apply superadmin authentication to all routes
-router.use(auth);
+router.use(superadminMiddleware);
 
 // Revenue Analysis
 router.get('/revenue', salesReportController.getRevenueAnalysis);

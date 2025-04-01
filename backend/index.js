@@ -19,7 +19,7 @@ const superadminReviewRoutes = require('./routes/superadmin/reviewRoutes');
 const superadminSalesReportRoutes = require('./routes/superadmin/salesReportRoutes');
 const superadminWorkerRoutes = require('./routes/superadmin/workerRoutes');
 const superadminUserRoutes = require('./routes/superadmin/users');
-
+const superadminStoreRoutes = require('./routes/superadmin/storeRoutes');
 // const unitRoutes = require('./routes/unitRoutes'); // Commented out as unit field is replaced by store
 const customerRoutes = require('./routes/superadmin/customerRoutes');
 const adminRoutes = require('./routes/superadmin/admins');
@@ -89,6 +89,7 @@ app.use('/api/superadmin/reviews', superadminReviewRoutes);
 app.use('/api/superadmin/sales', superadminSalesReportRoutes);
 app.use('/api/superadmin/workers', superadminWorkerRoutes);
 app.use('/api/superadmin/users', superadminUserRoutes);
+app.use('/api/superadmin/stores', superadminStoreRoutes);
 // app.use('/api/units', unitRoutes); // Commented out as unit field is replaced by store
 app.use('/api/superadmin/customers', customerRoutes);
 app.use('/api/superadmin/admins', adminRoutes);

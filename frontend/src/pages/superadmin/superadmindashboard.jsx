@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, PieChart, Pie, BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Cell } from 'recharts';
-import { FaTachometerAlt, FaUsers, FaBox, FaUserShield, FaShoppingCart, FaCreditCard, FaComments, FaChartLine, FaSignOutAlt, FaUserFriends, FaHome, FaUserTie, FaBoxes, FaStar, FaChartBar } from "react-icons/fa";
+import { FaTachometerAlt, FaUsers, FaBox, FaUserShield, FaShoppingCart, FaCreditCard, FaComments, FaChartLine, FaSignOutAlt, FaUserFriends, FaHome, FaUserTie, FaBoxes, FaStar, FaChartBar, FaStore } from "react-icons/fa";
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -18,6 +18,7 @@ const Reviews = lazy(() => import('./reviews/reviews'));
 const SalesReport = lazy(() => import('./sales/SalesReports'));
 const Users = lazy(() => import('./users'));
 const Analytics = lazy(() => import('./analytics/Analytics'));
+const Stores = lazy(() => import('./stores/Stores'));
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -508,7 +509,8 @@ const SuperAdminDashboard = () => {
       users: 'Users Management opened',
       workers: 'Workers Management opened',
       salesReport: 'Sales Report opened',
-      analytics: 'Analytics opened'
+      analytics: 'Analytics opened',
+      stores: 'Stores Management opened'
     };
     
     if (notificationMessages[component]) {
@@ -546,6 +548,8 @@ const SuperAdminDashboard = () => {
         return () => <FaChartLine className="toast-custom-icon" />;
       case 'analytics':
         return () => <FaChartBar className="toast-custom-icon" />;
+      case 'stores':
+        return () => <FaStore className="toast-custom-icon" />;
       default:
         return null;
     }
@@ -586,6 +590,8 @@ const SuperAdminDashboard = () => {
         return <Users />;
       case 'analytics':
         return <Analytics />;
+      case 'stores':
+        return <Stores />;
       default:
         return <DashboardHome />;
     }
@@ -657,6 +663,12 @@ const SuperAdminDashboard = () => {
             onClick={() => handleComponentChange('analytics')}
           >
             <FaChartBar /> Analytics
+          </button>
+          <button 
+            className={activeComponent === 'stores' ? 'active' : ''} 
+            onClick={() => handleComponentChange('stores')}
+          >
+            <FaStore /> Stores
           </button>
           <button className="logout-button" onClick={handleLogout}>
             <FaSignOutAlt /> Logout
