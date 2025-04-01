@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Bags.css';
 import Header from '../components/Header/Header';
 
-import Marquee from './Marquee';
+
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Bags = () => {
@@ -66,7 +66,7 @@ const Bags = () => {
   return (
     <div className="bags-container">
       <Header />
-      <Marquee />
+      
       
       <div className="main-content">
         <h1>Welcome to the Bags Collection!</h1>

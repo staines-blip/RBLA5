@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Cupcoaster.css';
 import Header from '../components/Header/Header';
-import Marquee from './Marquee';
+
 
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
@@ -66,7 +66,7 @@ const Cupcoaster = () => {
   return (
     <div className="cupcoaster-container">
       <Header />
-      <Marquee />
+     
       
       <div className="main-content">
         <h1>Welcome to the Cup Coasters Collection!</h1>

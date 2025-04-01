@@ -120,3 +120,85 @@ body, html {
     width: 90%;
   }
 }
+
+
+/* Bulk Orders Section */
+.bulk-orders {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 80px;
+  background-color: #f8f2e9;
+}
+
+.bulk-orders-content {
+  max-width: 50%;
+}
+
+.bulk-orders h1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+}
+
+.underline {
+  width: 80px;
+  height: 2px;
+  background-color: #bfa574;
+  margin: 10px 0;
+}
+
+.bulk-orders p {
+  font-size: 18px;
+  color: #444;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.bulk-orders-btn,
+.bulk-btn {
+  padding: 12px 25px;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.bulk-orders-btn {
+  background-color: transparent;
+  color: #8b6f4e;
+  margin-right: 15px;
+  border:2px solid #8b6f4e ;
+}
+
+.bulk-orders-btn:hover {
+  background-color: #6a5038;
+  color: white;
+}
+
+.bulk-btn {
+  background-color: transparent;
+  color: #8b6f4e;
+  border: 2px solid #8b6f4e;
+}
+
+.bulk-btn:hover {
+  background-color: #8b6f4e;
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .bulk-orders {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .bulk-orders-btn,
+  .bulk-btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

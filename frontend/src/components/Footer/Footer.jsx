@@ -69,7 +69,7 @@ const Footer = () => {
           <p>Designed & Developed by MCA'24 @MCC</p>
         </div>
       </div>
-      <Chatbot/>
+      {/*<Chatbot/>*/}
     </footer>
   );
 };

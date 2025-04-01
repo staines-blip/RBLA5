@@ -73,7 +73,7 @@ const FashionForward = () => {
           {categories.map(category => (
             <div key={category.id} className="category-card">
               <img src={category.image} alt={category.title} />
-              <h3>{category.title}</h3>
+              <center><h3>{category.title}</h3></center>
             </div>
           ))}
         </Slider>

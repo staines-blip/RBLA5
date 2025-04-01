@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Bedsheets.css';
 import Header from '../components/Header/Header';
 
-import Marquee from './Marquee';
+
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Bedsheets = () => {
@@ -66,7 +66,7 @@ const Bedsheets = () => {
   return (
     <div className="bedsheets-container">
       <Header />
-      <Marquee />
+      
       
       <div className="main-content">
         <h1>Welcome to the Bedsheets Collection!</h1>
