@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Towels.css';
 import Header from '../components/Header/Header';
 
-import Marquee from './Marquee';
+
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Towels = () => {
@@ -61,7 +61,7 @@ const Towels = () => {
   return (
     <div className="Towels-container">
       <Header />
-      <Marquee />
+      
       
       <div className="main-content">
         <h1>Welcome to the Towels Collection!</h1>

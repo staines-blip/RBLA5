@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Bamboo.css';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import Marquee from './Marquee';
+
 import { getProductsByCategory } from '../services/publicapi/productAPI';
 
 const Bamboo = () => {
@@ -66,7 +66,7 @@ const Bamboo = () => {
   return (
     <div className="bamboo-container">
       <Header />
-      <Marquee />
+   
       
       <div className="main-content">
         <h1>Welcome to the Bamboo Collection!</h1>
