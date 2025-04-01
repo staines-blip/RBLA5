@@ -344,6 +344,7 @@ const ProductList = () => {
                                 <th>Store</th>
                                 <th>Category</th>
                                 <th>Price (₹)</th>
+                                <th>Size (B×H)</th>
                                 <th>Stock</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -354,7 +355,14 @@ const ProductList = () => {
                                 <tr key={product._id} className={!product.isActive ? 'inactive-product' : ''}>
                                     <td>
                                         <div className="product-image">
-                                            <img src={product.image_url || '/placeholder.png'} alt={product.name} />
+                                            <img 
+                                                src={`http://localhost:5000${product.image_url}`}
+                                                alt={product.name}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = '/placeholder.png';
+                                                }}
+                                            />
                                         </div>
                                     </td>
                                     <td>{product.name}</td>
@@ -366,6 +374,11 @@ const ProductList = () => {
                                             {product.old_price && (
                                                 <span className="old-price">₹{product.old_price}</span>
                                             )}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="size-info">
+                                            {product.size ? `${product.size.breadth}×${product.size.height}` : 'N/A'}
                                         </div>
                                     </td>
                                     <td className={product.stock < 5 ? 'low-stock' : ''}>{product.stock}</td>
