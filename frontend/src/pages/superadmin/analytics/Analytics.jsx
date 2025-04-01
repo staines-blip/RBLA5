@@ -1,64 +1,26 @@
 import React from 'react';
-import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './Analytics.css';
 
 const Analytics = () => {
-  // Sample data - replace with real data from your backend
-  const monthlyData = [
-    { month: 'Jan', sales: 4000, users: 240, orders: 150 },
-    { month: 'Feb', sales: 3000, users: 198, orders: 120 },
-    { month: 'Mar', sales: 5000, users: 300, orders: 180 },
-    { month: 'Apr', sales: 2780, users: 208, orders: 140 },
-    { month: 'May', sales: 1890, users: 250, orders: 160 },
-    { month: 'Jun', sales: 2390, users: 280, orders: 175 }
-  ];
-
   return (
-    <div className="analytics-container">
-      <h1>Data Analytics Dashboard</h1>
-      
-      <div className="analytics-grid">
-        <div className="chart-card">
-          <h2>Monthly Sales Overview</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="sales" stroke="#8884d8" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="chart-card">
-          <h2>User Growth</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="users" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="chart-card">
-          <h2>Order Trends</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="orders" stroke="#ffc658" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+    <div className="analytics-container" style={{ padding: "20px", height: "100vh" }}>
+      <h1 style={{ marginBottom: "20px" }}>Analytics Dashboard</h1>
+      <div className="mongodb-chart-container" style={{ height: "calc(100vh - 100px)" }}>
+        <iframe
+          style={{
+            background: "#FFFFFF",
+            border: "none",
+            borderRadius: "8px",
+            boxShadow: "0 2px 10px 0 rgba(70, 76, 79, .2)",
+            width: "100%",
+            height: "100%",
+            minHeight: "600px",
+          }}
+          src="https://charts.mongodb.com/charts-backend-data-ejmjhdz/public/dashboards/db604455-1592-4a10-9ed6-9533a169c216"
+          title="MongoDB Charts Dashboard"
+          frameBorder="0"
+          allowFullScreen
+        ></iframe>
       </div>
     </div>
   );
