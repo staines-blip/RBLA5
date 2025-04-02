@@ -237,9 +237,13 @@ const ProductList = () => {
                                 <tr key={product._id}>
                                     <td>
                                         <img 
-                                            src={product.image_url} 
+                                            src={product.image_url ? `http://localhost:5000${product.image_url}` : '/placeholder-image.jpg'}
                                             alt={product.name}
                                             className="product-thumbnail"
+                                            onError={(e) => {
+                                                console.error('Image failed to load:', e.target.src);
+                                                e.target.src = '/placeholder-image.jpg';
+                                            }}
                                         />
                                     </td>
                                     <td>{product.name}</td>
